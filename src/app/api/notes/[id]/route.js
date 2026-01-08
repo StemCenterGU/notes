@@ -1,27 +1,32 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET /api/notes/[id] - Fetches a single note by its ID
 export async function GET(req, { params }) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
 
   try {
-    const { id } = params
+    const { id } = await params
     const note = await prisma.note.findUnique({
       where: { id },
       include: {
         _count: {
           select: { reviews: true },
+        },
+        verifiedBy: {
+          select: { name: true, email: true },
         },
       },
     })
@@ -57,18 +62,20 @@ export async function GET(req, { params }) {
 
 // PUT /api/notes/[id] - Updates a note
 export async function PUT(req, { params }) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
 
   try {
-    const { id: noteId } = params
+    const { id: noteId } = await params
     const note = await prisma.note.findUnique({ where: { id: noteId } })
 
     if (!note) {
@@ -101,18 +108,20 @@ export async function PUT(req, { params }) {
 
 // DELETE /api/notes/[id] - Deletes a note
 export async function DELETE(req, { params }) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
 
   try {
-    const { id: noteId } = params
+    const { id: noteId } = await params
     const note = await prisma.note.findUnique({ where: { id: noteId } })
 
     if (!note) {

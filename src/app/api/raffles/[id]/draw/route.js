@@ -1,21 +1,24 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
+import { randomInt } from 'crypto'
 import prisma from '@/lib/prisma'
 
 // POST /api/raffles/[id]/draw
 export async function POST(req, { params }) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   try {
-    const { id } = params
+    const { id } = await params
     const raffle = await prisma.raffle.findUnique({
       where: { id },
       include: {
@@ -48,9 +51,9 @@ export async function POST(req, { params }) {
           break // No more unique users to draw from
         }
 
-        const winnerIndex = Math.floor(Math.random() * availableEntries.length)
+        const winnerIndex = randomInt(availableEntries.length)
         const winningEntry = availableEntries[winnerIndex]
-        
+
         winners.push(winningEntry)
       }
     }

@@ -1,21 +1,20 @@
-// src/app/api/auth/get-role/route.js
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export const runtime = 'nodejs' // This route runs in the Node.js environment
+export const dynamic = 'force-dynamic'
 
 export async function GET(req) {
-  const session = await getSession(req)
-  const user = session?.user
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  if (!user) {
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     const dbUser = await prisma.user.findUnique({
-      where: { auth0Id: user.sub },
+      where: { supabaseId: user.id },
       select: { role: true },
     })
 

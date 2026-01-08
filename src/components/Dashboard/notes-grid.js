@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import VerifiedBadge from "@/components/VerifiedBadge"
 
 export default function NotesGrid({ notes, showUploader = false, currentUserId, onEdit, onDelete }) {
   const getFileIcon = (fileType) => {
@@ -43,9 +44,12 @@ export default function NotesGrid({ notes, showUploader = false, currentUserId, 
                 {getFileIcon(note.fileType)}
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold truncate text-foreground group-hover:text-primary transition">
-                  {note.title}
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold truncate text-foreground group-hover:text-primary transition">
+                    {note.title}
+                  </h3>
+                  {note.isVerified && <VerifiedBadge size="small" />}
+                </div>
                 {note.course && (
                   <p className="text-sm text-muted-foreground">
                     {note.course.name}{" "}

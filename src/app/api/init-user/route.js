@@ -1,30 +1,30 @@
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(req) {
-  const session = await getSession(req)
-  const user = session?.user
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  if (!user) {
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     // Try to find the user in the database
     let dbUser = await prisma.user.findUnique({
-      where: { auth0Id: user.sub },
+      where: { supabaseId: user.id },
     })
 
     // If the user doesn't exist, create them
     if (!dbUser) {
       dbUser = await prisma.user.create({
         data: {
-          auth0Id: user.sub,
+          supabaseId: user.id,
           email: user.email,
-          name: user.name,
+          name: user.user_metadata?.full_name || user.email?.split('@')[0],
           role: 'STUDENT', // Default role
           kudosPoints: 0,
         },
@@ -37,4 +37,3 @@ export async function GET(req) {
     return NextResponse.json({ error: 'Failed to initialize user' }, { status: 500 })
   }
 }
-

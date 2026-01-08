@@ -1,26 +1,27 @@
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(req) {
-  const session = await getSession(req) // Correctly pass the request object
-  const user = session?.user
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  if (!user) {
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     const dbUser = await prisma.user.findUnique({
-      where: { auth0Id: user.sub },
+      where: { supabaseId: user.id },
     })
 
     if (!dbUser) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    // Single query with reviews included - no N+1
     const notes = await prisma.note.findMany({
       where: { uploaderId: dbUser.id },
       include: {
@@ -30,28 +31,24 @@ export async function GET(req) {
           },
         },
         semester: true,
+        reviews: {
+          select: { rating: true },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
     })
 
-    const notesWithRatings = await Promise.all(
-      notes.map(async (note) => {
-        const aggregate = await prisma.review.aggregate({
-          _avg: {
-            rating: true,
-          },
-          where: {
-            noteId: note.id,
-          },
-        })
-        return {
-          ...note,
-          averageRating: aggregate._avg.rating || 0,
-        }
-      }),
-    )
+    // Calculate averages in memory - much faster than N separate queries
+    const notesWithRatings = notes.map((note) => {
+      const ratings = note.reviews.map((r) => r.rating)
+      const averageRating = ratings.length > 0
+        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        : 0
+      const { reviews, ...noteWithoutReviews } = note
+      return { ...noteWithoutReviews, averageRating }
+    })
 
     return NextResponse.json({ notes: notesWithRatings })
   } catch (error) {

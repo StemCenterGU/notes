@@ -1,6 +1,6 @@
 'use client'
 
-export function TestimonialsSection() {
+export default function AboutUsPage() {
   return (
     <section
       id="testimonials"

@@ -1,17 +1,20 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import prisma from '@/lib/prisma'
 import { randomUUID } from 'crypto'
 
-export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function POST(req) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

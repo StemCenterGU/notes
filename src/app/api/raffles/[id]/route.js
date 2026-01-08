@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 
 // GET /api/raffles/[id]
 export async function GET(req, { params }) {
-  const { id } = params
+  const { id } = await params
   try {
     const raffle = await prisma.raffle.findUnique({
       where: { id },
@@ -31,18 +31,20 @@ export async function GET(req, { params }) {
 
 // PUT /api/raffles/[id]
 export async function PUT(req, { params }) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   try {
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
     const { title, description, startTime, endTime } = body
 
@@ -64,23 +66,25 @@ export async function PUT(req, { params }) {
 
 // DELETE /api/raffles/[id]
 export async function DELETE(req, { params }) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-  
+
   try {
-    const { id } = params
+    const { id } = await params
     // Prisma requires deleting related records first
     await prisma.raffleEntry.deleteMany({ where: { raffleId: id } })
     await prisma.rafflePrize.deleteMany({ where: { raffleId: id } })
     await prisma.raffle.delete({ where: { id } })
-    
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error(`Failed to delete raffle:`, error)

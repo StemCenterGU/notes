@@ -1,12 +1,12 @@
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 export async function POST(request) {
-  const session = await getSession(request)
-  const user = session?.user
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  if (!user) {
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -18,7 +18,7 @@ export async function POST(request) {
 
   try {
     const dbUser = await prisma.user.findUnique({
-      where: { auth0Id: user.sub },
+      where: { supabaseId: user.id },
       select: { id: true },
     })
 
@@ -48,7 +48,7 @@ export async function POST(request) {
     console.error(`Error creating ${type}:`, error)
     // Provide a more specific error message if possible (e.g., unique constraint violation)
     if (error.code === 'P2002') {
-        return NextResponse.json({ error: `A ${type} with these details already exists.` }, { status: 409 });
+      return NextResponse.json({ error: `A ${type} with these details already exists.` }, { status: 409 })
     }
     return NextResponse.json({ error: `Failed to create ${type}` }, { status: 500 })
   }

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(npm install)",
+      "Bash(npx prisma db push:*)",
+      "Bash(curl:*)",
+      "Bash(ping:*)",
+      "Bash(npm run dev:*)"
+    ]
+  }
+}

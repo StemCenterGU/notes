@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@auth0/nextjs-auth0/edge'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 
 // GET /api/raffles?status=active
@@ -40,12 +40,14 @@ export async function GET(req) {
 
 // POST /api/raffles
 export async function POST(req) {
-  const session = await getSession(req)
-  if (!session?.user) {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { auth0Id: session.user.sub } })
+  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
