@@ -9,12 +9,21 @@ import { MobileNav } from "./MobileNav"
 import { ThemeToggler } from "@/components/ThemeToggler"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useEffect, useState } from "react"
 
 export function AppHeader({ variant = "app" }) {
   const { user, role, isLoading } = useUser()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+    <header 
+      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
+      suppressHydrationWarning
+    >
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         {/* Left side: Logo + Nav */}
         <div className="flex items-center gap-6">
@@ -28,7 +37,11 @@ export function AppHeader({ variant = "app" }) {
 
         {/* Right side: Theme + User + Mobile Menu */}
         <div className="flex items-center gap-3">
-          <ThemeToggler />
+          {mounted ? (
+            <ThemeToggler />
+          ) : (
+            <div className="h-10 w-10" /> // Placeholder to prevent layout shift
+          )}
 
           {isLoading && (
             <div className="hidden md:flex items-center gap-3">
@@ -37,7 +50,7 @@ export function AppHeader({ variant = "app" }) {
             </div>
           )}
 
-          {!isLoading && user && (
+          {!isLoading && user && mounted && (
             <UserMenu user={user} className="hidden md:flex" />
           )}
 
@@ -47,7 +60,11 @@ export function AppHeader({ variant = "app" }) {
             </Link>
           )}
 
-          <MobileNav variant={variant} role={role} user={user} />
+          {mounted ? (
+            <MobileNav variant={variant} role={role} user={user} />
+          ) : (
+            <div className="h-10 w-10 md:hidden" /> // Placeholder for mobile menu
+          )}
         </div>
       </div>
     </header>

@@ -6,7 +6,7 @@
     "seed": "node prisma/seed.js"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "vercel-build": "prisma generate && next build",
     "start": "next start",

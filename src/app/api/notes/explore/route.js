@@ -63,7 +63,13 @@ export async function GET(req) {
     const [courses, professors, semesters] = await prisma.$transaction([
       prisma.course.findMany({ distinct: ['name'] }),
       prisma.professor.findMany({ distinct: ['name'] }),
-      prisma.semester.findMany({ distinct: ['name', 'year'] }),
+      prisma.semester.findMany({ 
+        distinct: ['name', 'year'],
+        orderBy: [
+          { year: 'desc' },  // Latest year first
+          { name: 'asc' },   // Fall before Spring within same year (Fall < Spring alphabetically)
+        ],
+      }),
     ])
 
     const filterOptions = {
