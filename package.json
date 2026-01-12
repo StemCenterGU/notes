@@ -40,6 +40,7 @@
     "jsonwebtoken": "9.0.3",
     "lucide": "^0.486.0",
     "lucide-react": "^0.476.0",
+    "mammoth": "1.11.0",
     "next": "16.1.0",
     "next-themes": "0.4.6",
     "postcss": "8.5.6",
@@ -47,7 +48,8 @@
     "react-dom": "19.1.4",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "3.4.4",
-    "tailwindcss-animate": "1.0.7"
+    "tailwindcss-animate": "1.0.7",
+    "xlsx": "0.18.5"
   },
   "devDependencies": {
     "@swc-node/register": "1.10.10",

@@ -35,9 +35,11 @@ export default function ViewNotePage() {
   const params = useParams()
   const router = useRouter()
   const { id } = params
-  const { role } = useUser()
+  const { role, user } = useUser()
 
   const canVerify = ['PROFESSOR', 'ADMIN'].includes(role)
+  // Allow download if note indicates user can download (from API)
+  const canDownload = note?.canDownload ?? false
 
   const fetchNoteAndReviews = useCallback(async () => {
     if (id) {
@@ -114,7 +116,7 @@ export default function ViewNotePage() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 h-[80vh]">
-            <NoteViewer filePath={note.fileUrl} onClose={() => router.back()} />
+            <NoteViewer filePath={note.fileUrl} onClose={() => router.back()} allowDownload={canDownload} />
           </div>
           <div>
             <div className="flex items-center gap-3 flex-wrap">
