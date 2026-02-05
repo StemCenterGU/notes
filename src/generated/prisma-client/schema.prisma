@@ -1,0 +1,209 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma-client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                 String        @id @default(cuid())
+  email              String        @unique
+  name               String?
+  role               Role          @default(STUDENT)
+  supabaseId         String        @unique
+  kudosPoints        Int           @default(0)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  notes              Note[]
+  reviews            Review[]
+  raffleEntries      RaffleEntry[]
+  UserCourses        UserCourses[]
+  createdCourses     Course[]      @relation("CreatedCourses")
+  createdProfessors  Professor[]   @relation("CreatedProfessors")
+  createdSemesters   Semester[]    @relation("CreatedSemesters")
+  createdAccessCodes AccessCode[]  @relation("CreatedAccessCodes")
+  verifiedNotes      Note[]        @relation("VerifiedNotes")
+
+  @@map("user_roles")
+}
+
+model Course {
+  id          String        @id @default(cuid())
+  name        String
+  code        String
+  professorId String?
+  createdAt   DateTime      @default(now())
+  professor   Professor?    @relation(fields: [professorId], references: [id])
+  notes       Note[]
+  UserCourses UserCourses[]
+  createdById String
+  createdBy   User          @relation("CreatedCourses", fields: [createdById], references: [id])
+}
+
+model Professor {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?
+  courses     Course[]
+  createdById String
+  createdBy   User     @relation("CreatedProfessors", fields: [createdById], references: [id])
+}
+
+model Semester {
+  id          String @id @default(cuid())
+  name        String
+  year        Int
+  notes       Note[]
+  createdById String
+  createdBy   User   @relation("CreatedSemesters", fields: [createdById], references: [id])
+}
+
+model Note {
+  id            String           @id @default(cuid())
+  title         String
+  createdAt     DateTime         @default(now())
+  filePath      String
+  fileType      String
+  fileUrl       String
+  uploaderId    String
+  courseId      String
+  description   String?
+  updatedAt     DateTime         @updatedAt
+  semesterId    String?
+  isVerified    Boolean          @default(false)
+  verifiedAt    DateTime?
+  verifiedById  String?
+  course        Course           @relation(fields: [courseId], references: [id])
+  semester      Semester?        @relation(fields: [semesterId], references: [id])
+  uploader      User             @relation(fields: [uploaderId], references: [id])
+  verifiedBy    User?            @relation("VerifiedNotes", fields: [verifiedById], references: [id])
+  reviews       Review[]
+  raffleEntries RaffleEntry[]
+  accessCodes   AccessCodeNote[]
+
+  @@index([uploaderId])
+  @@index([courseId])
+  @@index([semesterId])
+  @@index([verifiedById])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  noteId    String
+  userId    String
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, userId])
+  @@index([noteId])
+  @@index([userId])
+}
+
+model Raffle {
+  id            String        @id @default(cuid())
+  title         String
+  description   String?
+  startTime     DateTime      @map("start_time")
+  endTime       DateTime      @map("end_time")
+  createdAt     DateTime      @default(now())
+  raffle_prizes RafflePrize[]
+  entries       RaffleEntry[]
+
+  @@map("raffles")
+}
+
+model RafflePrize {
+  id          String  @id @default(cuid())
+  raffleId    String
+  name        String
+  description String?
+  imageUrl    String? @map("image_url")
+  quantity    Int     @default(1)
+  size        String?
+  color       String?
+  metadata    Json?
+  raffles     Raffle  @relation(fields: [raffleId], references: [id])
+
+  @@map("raffle_prizes")
+}
+
+model RaffleEntry {
+  id        String   @id @default(cuid())
+  raffle    Raffle   @relation(fields: [raffleId], references: [id], onDelete: Cascade)
+  raffleId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  noteId    String
+  isWinner  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([raffleId])
+  @@index([userId])
+  @@index([noteId])
+}
+
+model UserCourses {
+  A          String
+  B          String
+  Course     Course @relation(fields: [A], references: [id])
+  user_roles User   @relation(fields: [B], references: [id])
+
+  @@id([A, B])
+  @@map("_UserCourses")
+}
+
+enum Role {
+  STUDENT
+  PROFESSOR
+  ADMIN
+  TUTOR
+}
+
+// Secure Temporary Access System
+model AccessCode {
+  id          String @id @default(cuid())
+  code        String @unique
+  createdBy   User   @relation("CreatedAccessCodes", fields: [createdById], references: [id])
+  createdById String
+
+  // Time settings
+  duration  Int? // Duration in minutes (if set)
+  expiresAt DateTime // When the code expires
+
+  // Session tracking
+  activatedAt   DateTime? // When student first used the code
+  deviceId      String? // Lock to one device
+  studentEmail  String? // Who used it
+  lastHeartbeat DateTime? // Last activity timestamp
+
+  isUsed    Boolean @default(false)
+  isRevoked Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  notes AccessCodeNote[]
+
+  @@index([code])
+  @@index([createdById])
+  @@map("access_codes")
+}
+
+model AccessCodeNote {
+  id           String     @id @default(cuid())
+  accessCode   AccessCode @relation(fields: [accessCodeId], references: [id], onDelete: Cascade)
+  accessCodeId String
+  note         Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  noteId       String
+
+  @@unique([accessCodeId, noteId])
+  @@index([accessCodeId])
+  @@map("access_code_notes")
+}

@@ -17,6 +17,36 @@ export default function SecureViewPage() {
   const [expiresAt, setExpiresAt] = useState(null)
   const [error, setError] = useState('')
 
+  // Add global styles to prevent selection and dragging (must be before conditional returns)
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.textContent = `
+      * {
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        -khtml-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      img, iframe {
+        -webkit-user-drag: none !important;
+        -khtml-user-drag: none !important;
+        -moz-user-drag: none !important;
+        -o-user-drag: none !important;
+        user-drag: none !important;
+        pointer-events: auto !important;
+      }
+    `
+    document.head.appendChild(style)
+    return () => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style)
+      }
+    }
+  }, [])
+
   useEffect(() => {
     // Get session data from storage
     const storedToken = sessionStorage.getItem('accessToken')

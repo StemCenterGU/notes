@@ -8,13 +8,24 @@ export async function GET() {
     const [courses, professors, semesters] = await prisma.$transaction([
       prisma.course.findMany(),
       prisma.professor.findMany(),
-      prisma.semester.findMany(),
+      prisma.semester.findMany({
+        orderBy: [
+          { year: 'desc' },  // Latest year first
+          { name: 'asc' },   // Fall before Spring within same year (Fall < Spring alphabetically)
+        ],
+      }),
     ])
+
+    // Format semesters as "Spring 2026" for display
+    const formattedSemesters = semesters.map(semester => ({
+      ...semester,
+      name: `${semester.name} ${semester.year}`,
+    }))
 
     return NextResponse.json({
       courses,
       professors,
-      semesters,
+      semesters: formattedSemesters,
     })
   } catch (error) {
     console.error('Error fetching academic data:', error)

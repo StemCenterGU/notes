@@ -20,20 +20,35 @@ export async function GET(req) {
 
     // If the user doesn't exist, create them
     if (!dbUser) {
-      dbUser = await prisma.user.create({
-        data: {
-          supabaseId: user.id,
-          email: user.email,
-          name: user.user_metadata?.full_name || user.email?.split('@')[0],
-          role: 'STUDENT', // Default role
-          kudosPoints: 0,
-        },
-      })
+      try {
+        dbUser = await prisma.user.create({
+          data: {
+            supabaseId: user.id,
+            email: user.email,
+            name: user.user_metadata?.full_name || user.email?.split('@')[0],
+            role: 'STUDENT', // Default role
+            kudosPoints: 0,
+          },
+        })
+      } catch (createError) {
+        // Handle duplicate email error (user might have been created between check and create)
+        if (createError.code === 'P2002' && createError.meta?.target?.includes('email')) {
+          // Try to find by email instead
+          dbUser = await prisma.user.findUnique({
+            where: { email: user.email },
+          })
+        } else {
+          throw createError
+        }
+      }
     }
 
     return NextResponse.json({ user: dbUser })
   } catch (error) {
     console.error('Error initializing user:', error)
-    return NextResponse.json({ error: 'Failed to initialize user' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Failed to initialize user',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    }, { status: 500 })
   }
 }

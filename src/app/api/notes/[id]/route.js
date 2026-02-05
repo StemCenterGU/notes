@@ -53,6 +53,10 @@ export async function GET(req, { params }) {
     })
     note.averageRating = aggregate._avg.rating || 0
 
+    // Add ownership info for download permission
+    note.isOwner = note.uploaderId === dbUser.id
+    note.canDownload = note.isOwner || isPrivileged
+
     return NextResponse.json({ note })
   } catch (error) {
     console.error(`Failed to fetch note:`, error)

@@ -38,6 +38,11 @@ export async function POST(request) {
         break
       case 'semester':
         result = await prisma.semester.create({ data: createData })
+        // Format semester name as "Spring 2025" for display consistency
+        result = {
+          ...result,
+          name: `${result.name} ${result.year}`,
+        }
         break
       default:
         return NextResponse.json({ error: 'Invalid type' }, { status: 400 })
