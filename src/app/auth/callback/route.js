@@ -3,9 +3,15 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 export async function GET(request) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
+
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+
+  if (!baseUrl) {
+    throw new Error('NEXT_PUBLIC_APP_URL is not defined')
+  }
 
   if (code) {
     const supabase = await createClient()
@@ -36,17 +42,9 @@ export async function GET(request) {
         console.error('Error creating user in database:', dbError)
       }
 
-      const forwardedHost = request.headers.get('x-forwarded-host')
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
+      return NextResponse.redirect(`${baseUrl}${next}`)
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_failed`)
+  return NextResponse.redirect(`${baseUrl}/login?error=auth_failed`)
 }
