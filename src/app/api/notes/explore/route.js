@@ -22,7 +22,7 @@ export async function GET(req) {
     }
 
     // Security Check: Only allow certain roles to explore
-    if (!['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)) {
+    if (!['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

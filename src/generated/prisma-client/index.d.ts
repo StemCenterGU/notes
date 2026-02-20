@@ -82,7 +82,8 @@ export namespace $Enums {
   STUDENT: 'STUDENT',
   PROFESSOR: 'PROFESSOR',
   ADMIN: 'ADMIN',
-  TUTOR: 'TUTOR'
+  TUTOR: 'TUTOR',
+  LEAD_TUTOR: 'LEAD_TUTOR'
 };
 
 export type Role = (typeof Role)[keyof typeof Role]

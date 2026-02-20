@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 
-const ROLES = ["STUDENT", "TUTOR", "ADMIN", "PROFESSOR"]
+const ROLES = ["STUDENT", "TUTOR", "LEAD_TUTOR", "PROFESSOR", "ADMIN"]
 
 export default function UserManagementPage() {
   const [users, setUsers] = useState([])

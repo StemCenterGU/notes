@@ -17,7 +17,7 @@ export async function DELETE(req, { params }) {
     where: { supabaseId: user.id },
   })
 
-  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)) {
+  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -33,8 +33,8 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ error: 'Access code not found' }, { status: 404 })
     }
 
-    // Only the creator or an admin can revoke
-    if (accessCode.createdById !== dbUser.id && dbUser.role !== 'ADMIN') {
+    // Only the creator, an admin, or a lead tutor can revoke
+    if (accessCode.createdById !== dbUser.id && !['ADMIN', 'LEAD_TUTOR'].includes(dbUser.role)) {
       return NextResponse.json({ error: 'Cannot revoke this code' }, { status: 403 })
     }
 
@@ -65,7 +65,7 @@ export async function GET(req, { params }) {
     where: { supabaseId: user.id },
   })
 
-  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)) {
+  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -92,8 +92,8 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Access code not found' }, { status: 404 })
     }
 
-    // Only creator or admin can view details
-    if (accessCode.createdById !== dbUser.id && dbUser.role !== 'ADMIN') {
+    // Only creator, admin, or lead tutor can view details
+    if (accessCode.createdById !== dbUser.id && !['ADMIN', 'LEAD_TUTOR'].includes(dbUser.role)) {
       return NextResponse.json({ error: 'Cannot view this code' }, { status: 403 })
     }
 

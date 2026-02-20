@@ -265,7 +265,8 @@ exports.Role = exports.$Enums.Role = {
   STUDENT: 'STUDENT',
   PROFESSOR: 'PROFESSOR',
   ADMIN: 'ADMIN',
-  TUTOR: 'TUTOR'
+  TUTOR: 'TUTOR',
+  LEAD_TUTOR: 'LEAD_TUTOR'
 };
 
 exports.Prisma.ModelName = {

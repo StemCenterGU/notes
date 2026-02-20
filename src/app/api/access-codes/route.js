@@ -23,7 +23,7 @@ export async function POST(req) {
     where: { supabaseId: user.id },
   })
 
-  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)) {
+  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden - Tutors only' }, { status: 403 })
   }
 
@@ -123,7 +123,7 @@ export async function GET(req) {
     where: { supabaseId: user.id },
   })
 
-  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)) {
+  if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
