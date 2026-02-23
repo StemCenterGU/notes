@@ -69,6 +69,21 @@ export type RaffleEntry = $Result.DefaultSelection<Prisma.$RaffleEntryPayload>
  */
 export type UserCourses = $Result.DefaultSelection<Prisma.$UserCoursesPayload>
 /**
+ * Model TutorReview
+ * 
+ */
+export type TutorReview = $Result.DefaultSelection<Prisma.$TutorReviewPayload>
+/**
+ * Model Tag
+ * 
+ */
+export type Tag = $Result.DefaultSelection<Prisma.$TagPayload>
+/**
+ * Model NoteTag
+ * 
+ */
+export type NoteTag = $Result.DefaultSelection<Prisma.$NoteTagPayload>
+/**
  * Model AccessCode
  * 
  */
@@ -93,11 +108,50 @@ export namespace $Enums {
 
 export type Role = (typeof Role)[keyof typeof Role]
 
+
+export const TagCategory: {
+  RESOURCE_TYPE: 'RESOURCE_TYPE',
+  STUDY_CYCLE: 'STUDY_CYCLE',
+  GENERAL: 'GENERAL'
+};
+
+export type TagCategory = (typeof TagCategory)[keyof typeof TagCategory]
+
+
+export const NoteStatus: {
+  UNREVIEWED: 'UNREVIEWED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type NoteStatus = (typeof NoteStatus)[keyof typeof NoteStatus]
+
+
+export const ReviewDecision: {
+  APPROVE: 'APPROVE',
+  REJECT: 'REJECT',
+  COMMENT_ONLY: 'COMMENT_ONLY'
+};
+
+export type ReviewDecision = (typeof ReviewDecision)[keyof typeof ReviewDecision]
+
 }
 
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type TagCategory = $Enums.TagCategory
+
+export const TagCategory: typeof $Enums.TagCategory
+
+export type NoteStatus = $Enums.NoteStatus
+
+export const NoteStatus: typeof $Enums.NoteStatus
+
+export type ReviewDecision = $Enums.ReviewDecision
+
+export const ReviewDecision: typeof $Enums.ReviewDecision
 
 /**
  * ##  Prisma Client ʲˢ
@@ -333,6 +387,36 @@ export class PrismaClient<
     * ```
     */
   get userCourses(): Prisma.UserCoursesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tutorReview`: Exposes CRUD operations for the **TutorReview** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TutorReviews
+    * const tutorReviews = await prisma.tutorReview.findMany()
+    * ```
+    */
+  get tutorReview(): Prisma.TutorReviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tag`: Exposes CRUD operations for the **Tag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tags
+    * const tags = await prisma.tag.findMany()
+    * ```
+    */
+  get tag(): Prisma.TagDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.noteTag`: Exposes CRUD operations for the **NoteTag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NoteTags
+    * const noteTags = await prisma.noteTag.findMany()
+    * ```
+    */
+  get noteTag(): Prisma.NoteTagDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.accessCode`: Exposes CRUD operations for the **AccessCode** model.
@@ -804,6 +888,9 @@ export namespace Prisma {
     RafflePrize: 'RafflePrize',
     RaffleEntry: 'RaffleEntry',
     UserCourses: 'UserCourses',
+    TutorReview: 'TutorReview',
+    Tag: 'Tag',
+    NoteTag: 'NoteTag',
     AccessCode: 'AccessCode',
     AccessCodeNote: 'AccessCodeNote'
   };
@@ -824,7 +911,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "department" | "course" | "professor" | "semester" | "note" | "review" | "raffle" | "rafflePrize" | "raffleEntry" | "userCourses" | "accessCode" | "accessCodeNote"
+      modelProps: "user" | "department" | "course" | "professor" | "semester" | "note" | "review" | "raffle" | "rafflePrize" | "raffleEntry" | "userCourses" | "tutorReview" | "tag" | "noteTag" | "accessCode" | "accessCodeNote"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1642,6 +1729,228 @@ export namespace Prisma {
           }
         }
       }
+      TutorReview: {
+        payload: Prisma.$TutorReviewPayload<ExtArgs>
+        fields: Prisma.TutorReviewFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TutorReviewFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TutorReviewFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>
+          }
+          findFirst: {
+            args: Prisma.TutorReviewFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TutorReviewFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>
+          }
+          findMany: {
+            args: Prisma.TutorReviewFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>[]
+          }
+          create: {
+            args: Prisma.TutorReviewCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>
+          }
+          createMany: {
+            args: Prisma.TutorReviewCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TutorReviewCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>[]
+          }
+          delete: {
+            args: Prisma.TutorReviewDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>
+          }
+          update: {
+            args: Prisma.TutorReviewUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>
+          }
+          deleteMany: {
+            args: Prisma.TutorReviewDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TutorReviewUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TutorReviewUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>[]
+          }
+          upsert: {
+            args: Prisma.TutorReviewUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TutorReviewPayload>
+          }
+          aggregate: {
+            args: Prisma.TutorReviewAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTutorReview>
+          }
+          groupBy: {
+            args: Prisma.TutorReviewGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TutorReviewGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TutorReviewCountArgs<ExtArgs>
+            result: $Utils.Optional<TutorReviewCountAggregateOutputType> | number
+          }
+        }
+      }
+      Tag: {
+        payload: Prisma.$TagPayload<ExtArgs>
+        fields: Prisma.TagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          findFirst: {
+            args: Prisma.TagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          findMany: {
+            args: Prisma.TagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          create: {
+            args: Prisma.TagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          createMany: {
+            args: Prisma.TagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          delete: {
+            args: Prisma.TagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          update: {
+            args: Prisma.TagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          deleteMany: {
+            args: Prisma.TagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          upsert: {
+            args: Prisma.TagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          aggregate: {
+            args: Prisma.TagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTag>
+          }
+          groupBy: {
+            args: Prisma.TagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TagCountArgs<ExtArgs>
+            result: $Utils.Optional<TagCountAggregateOutputType> | number
+          }
+        }
+      }
+      NoteTag: {
+        payload: Prisma.$NoteTagPayload<ExtArgs>
+        fields: Prisma.NoteTagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NoteTagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NoteTagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>
+          }
+          findFirst: {
+            args: Prisma.NoteTagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NoteTagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>
+          }
+          findMany: {
+            args: Prisma.NoteTagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>[]
+          }
+          create: {
+            args: Prisma.NoteTagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>
+          }
+          createMany: {
+            args: Prisma.NoteTagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NoteTagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>[]
+          }
+          delete: {
+            args: Prisma.NoteTagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>
+          }
+          update: {
+            args: Prisma.NoteTagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>
+          }
+          deleteMany: {
+            args: Prisma.NoteTagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NoteTagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NoteTagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>[]
+          }
+          upsert: {
+            args: Prisma.NoteTagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoteTagPayload>
+          }
+          aggregate: {
+            args: Prisma.NoteTagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNoteTag>
+          }
+          groupBy: {
+            args: Prisma.NoteTagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NoteTagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NoteTagCountArgs<ExtArgs>
+            result: $Utils.Optional<NoteTagCountAggregateOutputType> | number
+          }
+        }
+      }
       AccessCode: {
         payload: Prisma.$AccessCodePayload<ExtArgs>
         fields: Prisma.AccessCodeFieldRefs
@@ -1885,6 +2194,9 @@ export namespace Prisma {
     rafflePrize?: RafflePrizeOmit
     raffleEntry?: RaffleEntryOmit
     userCourses?: UserCoursesOmit
+    tutorReview?: TutorReviewOmit
+    tag?: TagOmit
+    noteTag?: NoteTagOmit
     accessCode?: AccessCodeOmit
     accessCodeNote?: AccessCodeNoteOmit
   }
@@ -1991,6 +2303,8 @@ export namespace Prisma {
     createdDepartments: number
     createdAccessCodes: number
     verifiedNotes: number
+    createdTags: number
+    tutorReviews: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2004,6 +2318,8 @@ export namespace Prisma {
     createdDepartments?: boolean | UserCountOutputTypeCountCreatedDepartmentsArgs
     createdAccessCodes?: boolean | UserCountOutputTypeCountCreatedAccessCodesArgs
     verifiedNotes?: boolean | UserCountOutputTypeCountVerifiedNotesArgs
+    createdTags?: boolean | UserCountOutputTypeCountCreatedTagsArgs
+    tutorReviews?: boolean | UserCountOutputTypeCountTutorReviewsArgs
   }
 
   // Custom InputTypes
@@ -2085,6 +2401,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountVerifiedNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NoteWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCreatedTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TagWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTutorReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TutorReviewWhereInput
   }
 
 
@@ -2236,14 +2566,18 @@ export namespace Prisma {
 
   export type NoteCountOutputType = {
     reviews: number
+    tutorReviews: number
     raffleEntries: number
     accessCodes: number
+    noteTags: number
   }
 
   export type NoteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | NoteCountOutputTypeCountReviewsArgs
+    tutorReviews?: boolean | NoteCountOutputTypeCountTutorReviewsArgs
     raffleEntries?: boolean | NoteCountOutputTypeCountRaffleEntriesArgs
     accessCodes?: boolean | NoteCountOutputTypeCountAccessCodesArgs
+    noteTags?: boolean | NoteCountOutputTypeCountNoteTagsArgs
   }
 
   // Custom InputTypes
@@ -2267,6 +2601,13 @@ export namespace Prisma {
   /**
    * NoteCountOutputType without action
    */
+  export type NoteCountOutputTypeCountTutorReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TutorReviewWhereInput
+  }
+
+  /**
+   * NoteCountOutputType without action
+   */
   export type NoteCountOutputTypeCountRaffleEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RaffleEntryWhereInput
   }
@@ -2276,6 +2617,13 @@ export namespace Prisma {
    */
   export type NoteCountOutputTypeCountAccessCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccessCodeNoteWhereInput
+  }
+
+  /**
+   * NoteCountOutputType without action
+   */
+  export type NoteCountOutputTypeCountNoteTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoteTagWhereInput
   }
 
 
@@ -2316,6 +2664,37 @@ export namespace Prisma {
    */
   export type RaffleCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RaffleEntryWhereInput
+  }
+
+
+  /**
+   * Count Type TagCountOutputType
+   */
+
+  export type TagCountOutputType = {
+    noteTags: number
+  }
+
+  export type TagCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    noteTags?: boolean | TagCountOutputTypeCountNoteTagsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TagCountOutputType without action
+   */
+  export type TagCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TagCountOutputType
+     */
+    select?: TagCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TagCountOutputType without action
+   */
+  export type TagCountOutputTypeCountNoteTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoteTagWhereInput
   }
 
 
@@ -2586,6 +2965,8 @@ export namespace Prisma {
     createdDepartments?: boolean | User$createdDepartmentsArgs<ExtArgs>
     createdAccessCodes?: boolean | User$createdAccessCodesArgs<ExtArgs>
     verifiedNotes?: boolean | User$verifiedNotesArgs<ExtArgs>
+    createdTags?: boolean | User$createdTagsArgs<ExtArgs>
+    tutorReviews?: boolean | User$tutorReviewsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2634,6 +3015,8 @@ export namespace Prisma {
     createdDepartments?: boolean | User$createdDepartmentsArgs<ExtArgs>
     createdAccessCodes?: boolean | User$createdAccessCodesArgs<ExtArgs>
     verifiedNotes?: boolean | User$verifiedNotesArgs<ExtArgs>
+    createdTags?: boolean | User$createdTagsArgs<ExtArgs>
+    tutorReviews?: boolean | User$tutorReviewsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2652,6 +3035,8 @@ export namespace Prisma {
       createdDepartments: Prisma.$DepartmentPayload<ExtArgs>[]
       createdAccessCodes: Prisma.$AccessCodePayload<ExtArgs>[]
       verifiedNotes: Prisma.$NotePayload<ExtArgs>[]
+      createdTags: Prisma.$TagPayload<ExtArgs>[]
+      tutorReviews: Prisma.$TutorReviewPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3066,6 +3451,8 @@ export namespace Prisma {
     createdDepartments<T extends User$createdDepartmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdDepartmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdAccessCodes<T extends User$createdAccessCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$createdAccessCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     verifiedNotes<T extends User$verifiedNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$verifiedNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdTags<T extends User$createdTagsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdTagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tutorReviews<T extends User$tutorReviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$tutorReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3728,6 +4115,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NoteScalarFieldEnum | NoteScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdTags
+   */
+  export type User$createdTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    where?: TagWhereInput
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    cursor?: TagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * User.tutorReviews
+   */
+  export type User$tutorReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    where?: TutorReviewWhereInput
+    orderBy?: TutorReviewOrderByWithRelationInput | TutorReviewOrderByWithRelationInput[]
+    cursor?: TutorReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TutorReviewScalarFieldEnum | TutorReviewScalarFieldEnum[]
   }
 
   /**
@@ -8271,6 +8706,8 @@ export namespace Prisma {
     isVerified: boolean | null
     verifiedAt: Date | null
     verifiedById: string | null
+    status: $Enums.NoteStatus | null
+    isPublic: boolean | null
   }
 
   export type NoteMaxAggregateOutputType = {
@@ -8289,6 +8726,8 @@ export namespace Prisma {
     isVerified: boolean | null
     verifiedAt: Date | null
     verifiedById: string | null
+    status: $Enums.NoteStatus | null
+    isPublic: boolean | null
   }
 
   export type NoteCountAggregateOutputType = {
@@ -8307,6 +8746,8 @@ export namespace Prisma {
     isVerified: number
     verifiedAt: number
     verifiedById: number
+    status: number
+    isPublic: number
     _all: number
   }
 
@@ -8327,6 +8768,8 @@ export namespace Prisma {
     isVerified?: true
     verifiedAt?: true
     verifiedById?: true
+    status?: true
+    isPublic?: true
   }
 
   export type NoteMaxAggregateInputType = {
@@ -8345,6 +8788,8 @@ export namespace Prisma {
     isVerified?: true
     verifiedAt?: true
     verifiedById?: true
+    status?: true
+    isPublic?: true
   }
 
   export type NoteCountAggregateInputType = {
@@ -8363,6 +8808,8 @@ export namespace Prisma {
     isVerified?: true
     verifiedAt?: true
     verifiedById?: true
+    status?: true
+    isPublic?: true
     _all?: true
   }
 
@@ -8454,6 +8901,8 @@ export namespace Prisma {
     isVerified: boolean
     verifiedAt: Date | null
     verifiedById: string | null
+    status: $Enums.NoteStatus
+    isPublic: boolean
     _count: NoteCountAggregateOutputType | null
     _min: NoteMinAggregateOutputType | null
     _max: NoteMaxAggregateOutputType | null
@@ -8489,14 +8938,18 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: boolean
     verifiedById?: boolean
+    status?: boolean
+    isPublic?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     semester?: boolean | Note$semesterArgs<ExtArgs>
     professor?: boolean | Note$professorArgs<ExtArgs>
     uploader?: boolean | UserDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Note$verifiedByArgs<ExtArgs>
     reviews?: boolean | Note$reviewsArgs<ExtArgs>
+    tutorReviews?: boolean | Note$tutorReviewsArgs<ExtArgs>
     raffleEntries?: boolean | Note$raffleEntriesArgs<ExtArgs>
     accessCodes?: boolean | Note$accessCodesArgs<ExtArgs>
+    noteTags?: boolean | Note$noteTagsArgs<ExtArgs>
     _count?: boolean | NoteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["note"]>
 
@@ -8516,6 +8969,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: boolean
     verifiedById?: boolean
+    status?: boolean
+    isPublic?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     semester?: boolean | Note$semesterArgs<ExtArgs>
     professor?: boolean | Note$professorArgs<ExtArgs>
@@ -8539,6 +8994,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: boolean
     verifiedById?: boolean
+    status?: boolean
+    isPublic?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     semester?: boolean | Note$semesterArgs<ExtArgs>
     professor?: boolean | Note$professorArgs<ExtArgs>
@@ -8562,9 +9019,11 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: boolean
     verifiedById?: boolean
+    status?: boolean
+    isPublic?: boolean
   }
 
-  export type NoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "createdAt" | "filePath" | "fileType" | "fileUrl" | "uploaderId" | "courseId" | "description" | "updatedAt" | "semesterId" | "professorId" | "isVerified" | "verifiedAt" | "verifiedById", ExtArgs["result"]["note"]>
+  export type NoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "createdAt" | "filePath" | "fileType" | "fileUrl" | "uploaderId" | "courseId" | "description" | "updatedAt" | "semesterId" | "professorId" | "isVerified" | "verifiedAt" | "verifiedById" | "status" | "isPublic", ExtArgs["result"]["note"]>
   export type NoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     semester?: boolean | Note$semesterArgs<ExtArgs>
@@ -8572,8 +9031,10 @@ export namespace Prisma {
     uploader?: boolean | UserDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Note$verifiedByArgs<ExtArgs>
     reviews?: boolean | Note$reviewsArgs<ExtArgs>
+    tutorReviews?: boolean | Note$tutorReviewsArgs<ExtArgs>
     raffleEntries?: boolean | Note$raffleEntriesArgs<ExtArgs>
     accessCodes?: boolean | Note$accessCodesArgs<ExtArgs>
+    noteTags?: boolean | Note$noteTagsArgs<ExtArgs>
     _count?: boolean | NoteCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type NoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8600,8 +9061,10 @@ export namespace Prisma {
       uploader: Prisma.$UserPayload<ExtArgs>
       verifiedBy: Prisma.$UserPayload<ExtArgs> | null
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      tutorReviews: Prisma.$TutorReviewPayload<ExtArgs>[]
       raffleEntries: Prisma.$RaffleEntryPayload<ExtArgs>[]
       accessCodes: Prisma.$AccessCodeNotePayload<ExtArgs>[]
+      noteTags: Prisma.$NoteTagPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8619,6 +9082,8 @@ export namespace Prisma {
       isVerified: boolean
       verifiedAt: Date | null
       verifiedById: string | null
+      status: $Enums.NoteStatus
+      isPublic: boolean
     }, ExtArgs["result"]["note"]>
     composites: {}
   }
@@ -9019,8 +9484,10 @@ export namespace Prisma {
     uploader<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     verifiedBy<T extends Note$verifiedByArgs<ExtArgs> = {}>(args?: Subset<T, Note$verifiedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     reviews<T extends Note$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Note$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tutorReviews<T extends Note$tutorReviewsArgs<ExtArgs> = {}>(args?: Subset<T, Note$tutorReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     raffleEntries<T extends Note$raffleEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Note$raffleEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RaffleEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessCodes<T extends Note$accessCodesArgs<ExtArgs> = {}>(args?: Subset<T, Note$accessCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessCodeNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    noteTags<T extends Note$noteTagsArgs<ExtArgs> = {}>(args?: Subset<T, Note$noteTagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9065,6 +9532,8 @@ export namespace Prisma {
     readonly isVerified: FieldRef<"Note", 'Boolean'>
     readonly verifiedAt: FieldRef<"Note", 'DateTime'>
     readonly verifiedById: FieldRef<"Note", 'String'>
+    readonly status: FieldRef<"Note", 'NoteStatus'>
+    readonly isPublic: FieldRef<"Note", 'Boolean'>
   }
     
 
@@ -9542,6 +10011,30 @@ export namespace Prisma {
   }
 
   /**
+   * Note.tutorReviews
+   */
+  export type Note$tutorReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    where?: TutorReviewWhereInput
+    orderBy?: TutorReviewOrderByWithRelationInput | TutorReviewOrderByWithRelationInput[]
+    cursor?: TutorReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TutorReviewScalarFieldEnum | TutorReviewScalarFieldEnum[]
+  }
+
+  /**
    * Note.raffleEntries
    */
   export type Note$raffleEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9587,6 +10080,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccessCodeNoteScalarFieldEnum | AccessCodeNoteScalarFieldEnum[]
+  }
+
+  /**
+   * Note.noteTags
+   */
+  export type Note$noteTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    where?: NoteTagWhereInput
+    orderBy?: NoteTagOrderByWithRelationInput | NoteTagOrderByWithRelationInput[]
+    cursor?: NoteTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NoteTagScalarFieldEnum | NoteTagScalarFieldEnum[]
   }
 
   /**
@@ -15087,6 +15604,3247 @@ export namespace Prisma {
 
 
   /**
+   * Model TutorReview
+   */
+
+  export type AggregateTutorReview = {
+    _count: TutorReviewCountAggregateOutputType | null
+    _avg: TutorReviewAvgAggregateOutputType | null
+    _sum: TutorReviewSumAggregateOutputType | null
+    _min: TutorReviewMinAggregateOutputType | null
+    _max: TutorReviewMaxAggregateOutputType | null
+  }
+
+  export type TutorReviewAvgAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type TutorReviewSumAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type TutorReviewMinAggregateOutputType = {
+    id: string | null
+    noteId: string | null
+    reviewerId: string | null
+    comment: string | null
+    rating: number | null
+    decision: $Enums.ReviewDecision | null
+    createdAt: Date | null
+  }
+
+  export type TutorReviewMaxAggregateOutputType = {
+    id: string | null
+    noteId: string | null
+    reviewerId: string | null
+    comment: string | null
+    rating: number | null
+    decision: $Enums.ReviewDecision | null
+    createdAt: Date | null
+  }
+
+  export type TutorReviewCountAggregateOutputType = {
+    id: number
+    noteId: number
+    reviewerId: number
+    comment: number
+    rating: number
+    decision: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TutorReviewAvgAggregateInputType = {
+    rating?: true
+  }
+
+  export type TutorReviewSumAggregateInputType = {
+    rating?: true
+  }
+
+  export type TutorReviewMinAggregateInputType = {
+    id?: true
+    noteId?: true
+    reviewerId?: true
+    comment?: true
+    rating?: true
+    decision?: true
+    createdAt?: true
+  }
+
+  export type TutorReviewMaxAggregateInputType = {
+    id?: true
+    noteId?: true
+    reviewerId?: true
+    comment?: true
+    rating?: true
+    decision?: true
+    createdAt?: true
+  }
+
+  export type TutorReviewCountAggregateInputType = {
+    id?: true
+    noteId?: true
+    reviewerId?: true
+    comment?: true
+    rating?: true
+    decision?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TutorReviewAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TutorReview to aggregate.
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TutorReviews to fetch.
+     */
+    orderBy?: TutorReviewOrderByWithRelationInput | TutorReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TutorReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TutorReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TutorReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TutorReviews
+    **/
+    _count?: true | TutorReviewCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TutorReviewAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TutorReviewSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TutorReviewMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TutorReviewMaxAggregateInputType
+  }
+
+  export type GetTutorReviewAggregateType<T extends TutorReviewAggregateArgs> = {
+        [P in keyof T & keyof AggregateTutorReview]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTutorReview[P]>
+      : GetScalarType<T[P], AggregateTutorReview[P]>
+  }
+
+
+
+
+  export type TutorReviewGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TutorReviewWhereInput
+    orderBy?: TutorReviewOrderByWithAggregationInput | TutorReviewOrderByWithAggregationInput[]
+    by: TutorReviewScalarFieldEnum[] | TutorReviewScalarFieldEnum
+    having?: TutorReviewScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TutorReviewCountAggregateInputType | true
+    _avg?: TutorReviewAvgAggregateInputType
+    _sum?: TutorReviewSumAggregateInputType
+    _min?: TutorReviewMinAggregateInputType
+    _max?: TutorReviewMaxAggregateInputType
+  }
+
+  export type TutorReviewGroupByOutputType = {
+    id: string
+    noteId: string
+    reviewerId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt: Date
+    _count: TutorReviewCountAggregateOutputType | null
+    _avg: TutorReviewAvgAggregateOutputType | null
+    _sum: TutorReviewSumAggregateOutputType | null
+    _min: TutorReviewMinAggregateOutputType | null
+    _max: TutorReviewMaxAggregateOutputType | null
+  }
+
+  type GetTutorReviewGroupByPayload<T extends TutorReviewGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TutorReviewGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TutorReviewGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TutorReviewGroupByOutputType[P]>
+            : GetScalarType<T[P], TutorReviewGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TutorReviewSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    noteId?: boolean
+    reviewerId?: boolean
+    comment?: boolean
+    rating?: boolean
+    decision?: boolean
+    createdAt?: boolean
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tutorReview"]>
+
+  export type TutorReviewSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    noteId?: boolean
+    reviewerId?: boolean
+    comment?: boolean
+    rating?: boolean
+    decision?: boolean
+    createdAt?: boolean
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tutorReview"]>
+
+  export type TutorReviewSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    noteId?: boolean
+    reviewerId?: boolean
+    comment?: boolean
+    rating?: boolean
+    decision?: boolean
+    createdAt?: boolean
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tutorReview"]>
+
+  export type TutorReviewSelectScalar = {
+    id?: boolean
+    noteId?: boolean
+    reviewerId?: boolean
+    comment?: boolean
+    rating?: boolean
+    decision?: boolean
+    createdAt?: boolean
+  }
+
+  export type TutorReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "noteId" | "reviewerId" | "comment" | "rating" | "decision" | "createdAt", ExtArgs["result"]["tutorReview"]>
+  export type TutorReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TutorReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TutorReviewIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TutorReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TutorReview"
+    objects: {
+      note: Prisma.$NotePayload<ExtArgs>
+      reviewer: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      noteId: string
+      reviewerId: string
+      comment: string
+      rating: number
+      decision: $Enums.ReviewDecision
+      createdAt: Date
+    }, ExtArgs["result"]["tutorReview"]>
+    composites: {}
+  }
+
+  type TutorReviewGetPayload<S extends boolean | null | undefined | TutorReviewDefaultArgs> = $Result.GetResult<Prisma.$TutorReviewPayload, S>
+
+  type TutorReviewCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TutorReviewFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TutorReviewCountAggregateInputType | true
+    }
+
+  export interface TutorReviewDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TutorReview'], meta: { name: 'TutorReview' } }
+    /**
+     * Find zero or one TutorReview that matches the filter.
+     * @param {TutorReviewFindUniqueArgs} args - Arguments to find a TutorReview
+     * @example
+     * // Get one TutorReview
+     * const tutorReview = await prisma.tutorReview.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TutorReviewFindUniqueArgs>(args: SelectSubset<T, TutorReviewFindUniqueArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TutorReview that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TutorReviewFindUniqueOrThrowArgs} args - Arguments to find a TutorReview
+     * @example
+     * // Get one TutorReview
+     * const tutorReview = await prisma.tutorReview.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TutorReviewFindUniqueOrThrowArgs>(args: SelectSubset<T, TutorReviewFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TutorReview that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewFindFirstArgs} args - Arguments to find a TutorReview
+     * @example
+     * // Get one TutorReview
+     * const tutorReview = await prisma.tutorReview.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TutorReviewFindFirstArgs>(args?: SelectSubset<T, TutorReviewFindFirstArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TutorReview that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewFindFirstOrThrowArgs} args - Arguments to find a TutorReview
+     * @example
+     * // Get one TutorReview
+     * const tutorReview = await prisma.tutorReview.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TutorReviewFindFirstOrThrowArgs>(args?: SelectSubset<T, TutorReviewFindFirstOrThrowArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TutorReviews that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TutorReviews
+     * const tutorReviews = await prisma.tutorReview.findMany()
+     * 
+     * // Get first 10 TutorReviews
+     * const tutorReviews = await prisma.tutorReview.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tutorReviewWithIdOnly = await prisma.tutorReview.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TutorReviewFindManyArgs>(args?: SelectSubset<T, TutorReviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TutorReview.
+     * @param {TutorReviewCreateArgs} args - Arguments to create a TutorReview.
+     * @example
+     * // Create one TutorReview
+     * const TutorReview = await prisma.tutorReview.create({
+     *   data: {
+     *     // ... data to create a TutorReview
+     *   }
+     * })
+     * 
+     */
+    create<T extends TutorReviewCreateArgs>(args: SelectSubset<T, TutorReviewCreateArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TutorReviews.
+     * @param {TutorReviewCreateManyArgs} args - Arguments to create many TutorReviews.
+     * @example
+     * // Create many TutorReviews
+     * const tutorReview = await prisma.tutorReview.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TutorReviewCreateManyArgs>(args?: SelectSubset<T, TutorReviewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TutorReviews and returns the data saved in the database.
+     * @param {TutorReviewCreateManyAndReturnArgs} args - Arguments to create many TutorReviews.
+     * @example
+     * // Create many TutorReviews
+     * const tutorReview = await prisma.tutorReview.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TutorReviews and only return the `id`
+     * const tutorReviewWithIdOnly = await prisma.tutorReview.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TutorReviewCreateManyAndReturnArgs>(args?: SelectSubset<T, TutorReviewCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TutorReview.
+     * @param {TutorReviewDeleteArgs} args - Arguments to delete one TutorReview.
+     * @example
+     * // Delete one TutorReview
+     * const TutorReview = await prisma.tutorReview.delete({
+     *   where: {
+     *     // ... filter to delete one TutorReview
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TutorReviewDeleteArgs>(args: SelectSubset<T, TutorReviewDeleteArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TutorReview.
+     * @param {TutorReviewUpdateArgs} args - Arguments to update one TutorReview.
+     * @example
+     * // Update one TutorReview
+     * const tutorReview = await prisma.tutorReview.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TutorReviewUpdateArgs>(args: SelectSubset<T, TutorReviewUpdateArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TutorReviews.
+     * @param {TutorReviewDeleteManyArgs} args - Arguments to filter TutorReviews to delete.
+     * @example
+     * // Delete a few TutorReviews
+     * const { count } = await prisma.tutorReview.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TutorReviewDeleteManyArgs>(args?: SelectSubset<T, TutorReviewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TutorReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TutorReviews
+     * const tutorReview = await prisma.tutorReview.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TutorReviewUpdateManyArgs>(args: SelectSubset<T, TutorReviewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TutorReviews and returns the data updated in the database.
+     * @param {TutorReviewUpdateManyAndReturnArgs} args - Arguments to update many TutorReviews.
+     * @example
+     * // Update many TutorReviews
+     * const tutorReview = await prisma.tutorReview.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TutorReviews and only return the `id`
+     * const tutorReviewWithIdOnly = await prisma.tutorReview.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TutorReviewUpdateManyAndReturnArgs>(args: SelectSubset<T, TutorReviewUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TutorReview.
+     * @param {TutorReviewUpsertArgs} args - Arguments to update or create a TutorReview.
+     * @example
+     * // Update or create a TutorReview
+     * const tutorReview = await prisma.tutorReview.upsert({
+     *   create: {
+     *     // ... data to create a TutorReview
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TutorReview we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TutorReviewUpsertArgs>(args: SelectSubset<T, TutorReviewUpsertArgs<ExtArgs>>): Prisma__TutorReviewClient<$Result.GetResult<Prisma.$TutorReviewPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TutorReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewCountArgs} args - Arguments to filter TutorReviews to count.
+     * @example
+     * // Count the number of TutorReviews
+     * const count = await prisma.tutorReview.count({
+     *   where: {
+     *     // ... the filter for the TutorReviews we want to count
+     *   }
+     * })
+    **/
+    count<T extends TutorReviewCountArgs>(
+      args?: Subset<T, TutorReviewCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TutorReviewCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TutorReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TutorReviewAggregateArgs>(args: Subset<T, TutorReviewAggregateArgs>): Prisma.PrismaPromise<GetTutorReviewAggregateType<T>>
+
+    /**
+     * Group by TutorReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TutorReviewGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TutorReviewGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TutorReviewGroupByArgs['orderBy'] }
+        : { orderBy?: TutorReviewGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TutorReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTutorReviewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TutorReview model
+   */
+  readonly fields: TutorReviewFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TutorReview.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TutorReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    note<T extends NoteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NoteDefaultArgs<ExtArgs>>): Prisma__NoteClient<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reviewer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TutorReview model
+   */
+  interface TutorReviewFieldRefs {
+    readonly id: FieldRef<"TutorReview", 'String'>
+    readonly noteId: FieldRef<"TutorReview", 'String'>
+    readonly reviewerId: FieldRef<"TutorReview", 'String'>
+    readonly comment: FieldRef<"TutorReview", 'String'>
+    readonly rating: FieldRef<"TutorReview", 'Int'>
+    readonly decision: FieldRef<"TutorReview", 'ReviewDecision'>
+    readonly createdAt: FieldRef<"TutorReview", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TutorReview findUnique
+   */
+  export type TutorReviewFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which TutorReview to fetch.
+     */
+    where: TutorReviewWhereUniqueInput
+  }
+
+  /**
+   * TutorReview findUniqueOrThrow
+   */
+  export type TutorReviewFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which TutorReview to fetch.
+     */
+    where: TutorReviewWhereUniqueInput
+  }
+
+  /**
+   * TutorReview findFirst
+   */
+  export type TutorReviewFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which TutorReview to fetch.
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TutorReviews to fetch.
+     */
+    orderBy?: TutorReviewOrderByWithRelationInput | TutorReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TutorReviews.
+     */
+    cursor?: TutorReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TutorReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TutorReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TutorReviews.
+     */
+    distinct?: TutorReviewScalarFieldEnum | TutorReviewScalarFieldEnum[]
+  }
+
+  /**
+   * TutorReview findFirstOrThrow
+   */
+  export type TutorReviewFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which TutorReview to fetch.
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TutorReviews to fetch.
+     */
+    orderBy?: TutorReviewOrderByWithRelationInput | TutorReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TutorReviews.
+     */
+    cursor?: TutorReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TutorReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TutorReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TutorReviews.
+     */
+    distinct?: TutorReviewScalarFieldEnum | TutorReviewScalarFieldEnum[]
+  }
+
+  /**
+   * TutorReview findMany
+   */
+  export type TutorReviewFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which TutorReviews to fetch.
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TutorReviews to fetch.
+     */
+    orderBy?: TutorReviewOrderByWithRelationInput | TutorReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TutorReviews.
+     */
+    cursor?: TutorReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TutorReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TutorReviews.
+     */
+    skip?: number
+    distinct?: TutorReviewScalarFieldEnum | TutorReviewScalarFieldEnum[]
+  }
+
+  /**
+   * TutorReview create
+   */
+  export type TutorReviewCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TutorReview.
+     */
+    data: XOR<TutorReviewCreateInput, TutorReviewUncheckedCreateInput>
+  }
+
+  /**
+   * TutorReview createMany
+   */
+  export type TutorReviewCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TutorReviews.
+     */
+    data: TutorReviewCreateManyInput | TutorReviewCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TutorReview createManyAndReturn
+   */
+  export type TutorReviewCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * The data used to create many TutorReviews.
+     */
+    data: TutorReviewCreateManyInput | TutorReviewCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TutorReview update
+   */
+  export type TutorReviewUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TutorReview.
+     */
+    data: XOR<TutorReviewUpdateInput, TutorReviewUncheckedUpdateInput>
+    /**
+     * Choose, which TutorReview to update.
+     */
+    where: TutorReviewWhereUniqueInput
+  }
+
+  /**
+   * TutorReview updateMany
+   */
+  export type TutorReviewUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TutorReviews.
+     */
+    data: XOR<TutorReviewUpdateManyMutationInput, TutorReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which TutorReviews to update
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * Limit how many TutorReviews to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TutorReview updateManyAndReturn
+   */
+  export type TutorReviewUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * The data used to update TutorReviews.
+     */
+    data: XOR<TutorReviewUpdateManyMutationInput, TutorReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which TutorReviews to update
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * Limit how many TutorReviews to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TutorReview upsert
+   */
+  export type TutorReviewUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TutorReview to update in case it exists.
+     */
+    where: TutorReviewWhereUniqueInput
+    /**
+     * In case the TutorReview found by the `where` argument doesn't exist, create a new TutorReview with this data.
+     */
+    create: XOR<TutorReviewCreateInput, TutorReviewUncheckedCreateInput>
+    /**
+     * In case the TutorReview was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TutorReviewUpdateInput, TutorReviewUncheckedUpdateInput>
+  }
+
+  /**
+   * TutorReview delete
+   */
+  export type TutorReviewDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+    /**
+     * Filter which TutorReview to delete.
+     */
+    where: TutorReviewWhereUniqueInput
+  }
+
+  /**
+   * TutorReview deleteMany
+   */
+  export type TutorReviewDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TutorReviews to delete
+     */
+    where?: TutorReviewWhereInput
+    /**
+     * Limit how many TutorReviews to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TutorReview without action
+   */
+  export type TutorReviewDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TutorReview
+     */
+    select?: TutorReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TutorReview
+     */
+    omit?: TutorReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TutorReviewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Tag
+   */
+
+  export type AggregateTag = {
+    _count: TagCountAggregateOutputType | null
+    _min: TagMinAggregateOutputType | null
+    _max: TagMaxAggregateOutputType | null
+  }
+
+  export type TagMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    category: $Enums.TagCategory | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type TagMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    category: $Enums.TagCategory | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type TagCountAggregateOutputType = {
+    id: number
+    name: number
+    category: number
+    createdById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TagMinAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type TagMaxAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type TagCountAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    createdById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tag to aggregate.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Tags
+    **/
+    _count?: true | TagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TagMaxAggregateInputType
+  }
+
+  export type GetTagAggregateType<T extends TagAggregateArgs> = {
+        [P in keyof T & keyof AggregateTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTag[P]>
+      : GetScalarType<T[P], AggregateTag[P]>
+  }
+
+
+
+
+  export type TagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TagWhereInput
+    orderBy?: TagOrderByWithAggregationInput | TagOrderByWithAggregationInput[]
+    by: TagScalarFieldEnum[] | TagScalarFieldEnum
+    having?: TagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TagCountAggregateInputType | true
+    _min?: TagMinAggregateInputType
+    _max?: TagMaxAggregateInputType
+  }
+
+  export type TagGroupByOutputType = {
+    id: string
+    name: string
+    category: $Enums.TagCategory
+    createdById: string
+    createdAt: Date
+    _count: TagCountAggregateOutputType | null
+    _min: TagMinAggregateOutputType | null
+    _max: TagMaxAggregateOutputType | null
+  }
+
+  type GetTagGroupByPayload<T extends TagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TagGroupByOutputType[P]>
+            : GetScalarType<T[P], TagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    noteTags?: boolean | Tag$noteTagsArgs<ExtArgs>
+    _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectScalar = {
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+  }
+
+  export type TagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "createdById" | "createdAt", ExtArgs["result"]["tag"]>
+  export type TagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    noteTags?: boolean | Tag$noteTagsArgs<ExtArgs>
+    _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Tag"
+    objects: {
+      createdBy: Prisma.$UserPayload<ExtArgs>
+      noteTags: Prisma.$NoteTagPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      category: $Enums.TagCategory
+      createdById: string
+      createdAt: Date
+    }, ExtArgs["result"]["tag"]>
+    composites: {}
+  }
+
+  type TagGetPayload<S extends boolean | null | undefined | TagDefaultArgs> = $Result.GetResult<Prisma.$TagPayload, S>
+
+  type TagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TagCountAggregateInputType | true
+    }
+
+  export interface TagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Tag'], meta: { name: 'Tag' } }
+    /**
+     * Find zero or one Tag that matches the filter.
+     * @param {TagFindUniqueArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TagFindUniqueArgs>(args: SelectSubset<T, TagFindUniqueArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TagFindUniqueOrThrowArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TagFindUniqueOrThrowArgs>(args: SelectSubset<T, TagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindFirstArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TagFindFirstArgs>(args?: SelectSubset<T, TagFindFirstArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindFirstOrThrowArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TagFindFirstOrThrowArgs>(args?: SelectSubset<T, TagFindFirstOrThrowArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tags
+     * const tags = await prisma.tag.findMany()
+     * 
+     * // Get first 10 Tags
+     * const tags = await prisma.tag.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tagWithIdOnly = await prisma.tag.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TagFindManyArgs>(args?: SelectSubset<T, TagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tag.
+     * @param {TagCreateArgs} args - Arguments to create a Tag.
+     * @example
+     * // Create one Tag
+     * const Tag = await prisma.tag.create({
+     *   data: {
+     *     // ... data to create a Tag
+     *   }
+     * })
+     * 
+     */
+    create<T extends TagCreateArgs>(args: SelectSubset<T, TagCreateArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tags.
+     * @param {TagCreateManyArgs} args - Arguments to create many Tags.
+     * @example
+     * // Create many Tags
+     * const tag = await prisma.tag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TagCreateManyArgs>(args?: SelectSubset<T, TagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tags and returns the data saved in the database.
+     * @param {TagCreateManyAndReturnArgs} args - Arguments to create many Tags.
+     * @example
+     * // Create many Tags
+     * const tag = await prisma.tag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tags and only return the `id`
+     * const tagWithIdOnly = await prisma.tag.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TagCreateManyAndReturnArgs>(args?: SelectSubset<T, TagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tag.
+     * @param {TagDeleteArgs} args - Arguments to delete one Tag.
+     * @example
+     * // Delete one Tag
+     * const Tag = await prisma.tag.delete({
+     *   where: {
+     *     // ... filter to delete one Tag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TagDeleteArgs>(args: SelectSubset<T, TagDeleteArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tag.
+     * @param {TagUpdateArgs} args - Arguments to update one Tag.
+     * @example
+     * // Update one Tag
+     * const tag = await prisma.tag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TagUpdateArgs>(args: SelectSubset<T, TagUpdateArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tags.
+     * @param {TagDeleteManyArgs} args - Arguments to filter Tags to delete.
+     * @example
+     * // Delete a few Tags
+     * const { count } = await prisma.tag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TagDeleteManyArgs>(args?: SelectSubset<T, TagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tags
+     * const tag = await prisma.tag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TagUpdateManyArgs>(args: SelectSubset<T, TagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tags and returns the data updated in the database.
+     * @param {TagUpdateManyAndReturnArgs} args - Arguments to update many Tags.
+     * @example
+     * // Update many Tags
+     * const tag = await prisma.tag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tags and only return the `id`
+     * const tagWithIdOnly = await prisma.tag.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TagUpdateManyAndReturnArgs>(args: SelectSubset<T, TagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tag.
+     * @param {TagUpsertArgs} args - Arguments to update or create a Tag.
+     * @example
+     * // Update or create a Tag
+     * const tag = await prisma.tag.upsert({
+     *   create: {
+     *     // ... data to create a Tag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TagUpsertArgs>(args: SelectSubset<T, TagUpsertArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagCountArgs} args - Arguments to filter Tags to count.
+     * @example
+     * // Count the number of Tags
+     * const count = await prisma.tag.count({
+     *   where: {
+     *     // ... the filter for the Tags we want to count
+     *   }
+     * })
+    **/
+    count<T extends TagCountArgs>(
+      args?: Subset<T, TagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TagAggregateArgs>(args: Subset<T, TagAggregateArgs>): Prisma.PrismaPromise<GetTagAggregateType<T>>
+
+    /**
+     * Group by Tag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TagGroupByArgs['orderBy'] }
+        : { orderBy?: TagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Tag model
+   */
+  readonly fields: TagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Tag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    noteTags<T extends Tag$noteTagsArgs<ExtArgs> = {}>(args?: Subset<T, Tag$noteTagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Tag model
+   */
+  interface TagFieldRefs {
+    readonly id: FieldRef<"Tag", 'String'>
+    readonly name: FieldRef<"Tag", 'String'>
+    readonly category: FieldRef<"Tag", 'TagCategory'>
+    readonly createdById: FieldRef<"Tag", 'String'>
+    readonly createdAt: FieldRef<"Tag", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Tag findUnique
+   */
+  export type TagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag findUniqueOrThrow
+   */
+  export type TagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag findFirst
+   */
+  export type TagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag findFirstOrThrow
+   */
+  export type TagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag findMany
+   */
+  export type TagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tags to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag create
+   */
+  export type TagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Tag.
+     */
+    data: XOR<TagCreateInput, TagUncheckedCreateInput>
+  }
+
+  /**
+   * Tag createMany
+   */
+  export type TagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Tags.
+     */
+    data: TagCreateManyInput | TagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tag createManyAndReturn
+   */
+  export type TagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * The data used to create many Tags.
+     */
+    data: TagCreateManyInput | TagCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Tag update
+   */
+  export type TagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Tag.
+     */
+    data: XOR<TagUpdateInput, TagUncheckedUpdateInput>
+    /**
+     * Choose, which Tag to update.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag updateMany
+   */
+  export type TagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Tags.
+     */
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyInput>
+    /**
+     * Filter which Tags to update
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag updateManyAndReturn
+   */
+  export type TagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * The data used to update Tags.
+     */
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyInput>
+    /**
+     * Filter which Tags to update
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Tag upsert
+   */
+  export type TagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Tag to update in case it exists.
+     */
+    where: TagWhereUniqueInput
+    /**
+     * In case the Tag found by the `where` argument doesn't exist, create a new Tag with this data.
+     */
+    create: XOR<TagCreateInput, TagUncheckedCreateInput>
+    /**
+     * In case the Tag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TagUpdateInput, TagUncheckedUpdateInput>
+  }
+
+  /**
+   * Tag delete
+   */
+  export type TagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter which Tag to delete.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag deleteMany
+   */
+  export type TagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tags to delete
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag.noteTags
+   */
+  export type Tag$noteTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    where?: NoteTagWhereInput
+    orderBy?: NoteTagOrderByWithRelationInput | NoteTagOrderByWithRelationInput[]
+    cursor?: NoteTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NoteTagScalarFieldEnum | NoteTagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag without action
+   */
+  export type TagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NoteTag
+   */
+
+  export type AggregateNoteTag = {
+    _count: NoteTagCountAggregateOutputType | null
+    _min: NoteTagMinAggregateOutputType | null
+    _max: NoteTagMaxAggregateOutputType | null
+  }
+
+  export type NoteTagMinAggregateOutputType = {
+    noteId: string | null
+    tagId: string | null
+  }
+
+  export type NoteTagMaxAggregateOutputType = {
+    noteId: string | null
+    tagId: string | null
+  }
+
+  export type NoteTagCountAggregateOutputType = {
+    noteId: number
+    tagId: number
+    _all: number
+  }
+
+
+  export type NoteTagMinAggregateInputType = {
+    noteId?: true
+    tagId?: true
+  }
+
+  export type NoteTagMaxAggregateInputType = {
+    noteId?: true
+    tagId?: true
+  }
+
+  export type NoteTagCountAggregateInputType = {
+    noteId?: true
+    tagId?: true
+    _all?: true
+  }
+
+  export type NoteTagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NoteTag to aggregate.
+     */
+    where?: NoteTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NoteTags to fetch.
+     */
+    orderBy?: NoteTagOrderByWithRelationInput | NoteTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NoteTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NoteTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NoteTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NoteTags
+    **/
+    _count?: true | NoteTagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NoteTagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NoteTagMaxAggregateInputType
+  }
+
+  export type GetNoteTagAggregateType<T extends NoteTagAggregateArgs> = {
+        [P in keyof T & keyof AggregateNoteTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNoteTag[P]>
+      : GetScalarType<T[P], AggregateNoteTag[P]>
+  }
+
+
+
+
+  export type NoteTagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoteTagWhereInput
+    orderBy?: NoteTagOrderByWithAggregationInput | NoteTagOrderByWithAggregationInput[]
+    by: NoteTagScalarFieldEnum[] | NoteTagScalarFieldEnum
+    having?: NoteTagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NoteTagCountAggregateInputType | true
+    _min?: NoteTagMinAggregateInputType
+    _max?: NoteTagMaxAggregateInputType
+  }
+
+  export type NoteTagGroupByOutputType = {
+    noteId: string
+    tagId: string
+    _count: NoteTagCountAggregateOutputType | null
+    _min: NoteTagMinAggregateOutputType | null
+    _max: NoteTagMaxAggregateOutputType | null
+  }
+
+  type GetNoteTagGroupByPayload<T extends NoteTagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NoteTagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NoteTagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NoteTagGroupByOutputType[P]>
+            : GetScalarType<T[P], NoteTagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NoteTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    noteId?: boolean
+    tagId?: boolean
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["noteTag"]>
+
+  export type NoteTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    noteId?: boolean
+    tagId?: boolean
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["noteTag"]>
+
+  export type NoteTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    noteId?: boolean
+    tagId?: boolean
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["noteTag"]>
+
+  export type NoteTagSelectScalar = {
+    noteId?: boolean
+    tagId?: boolean
+  }
+
+  export type NoteTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"noteId" | "tagId", ExtArgs["result"]["noteTag"]>
+  export type NoteTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+  export type NoteTagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+  export type NoteTagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    note?: boolean | NoteDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+
+  export type $NoteTagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NoteTag"
+    objects: {
+      note: Prisma.$NotePayload<ExtArgs>
+      tag: Prisma.$TagPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      noteId: string
+      tagId: string
+    }, ExtArgs["result"]["noteTag"]>
+    composites: {}
+  }
+
+  type NoteTagGetPayload<S extends boolean | null | undefined | NoteTagDefaultArgs> = $Result.GetResult<Prisma.$NoteTagPayload, S>
+
+  type NoteTagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NoteTagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NoteTagCountAggregateInputType | true
+    }
+
+  export interface NoteTagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NoteTag'], meta: { name: 'NoteTag' } }
+    /**
+     * Find zero or one NoteTag that matches the filter.
+     * @param {NoteTagFindUniqueArgs} args - Arguments to find a NoteTag
+     * @example
+     * // Get one NoteTag
+     * const noteTag = await prisma.noteTag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NoteTagFindUniqueArgs>(args: SelectSubset<T, NoteTagFindUniqueArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NoteTag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NoteTagFindUniqueOrThrowArgs} args - Arguments to find a NoteTag
+     * @example
+     * // Get one NoteTag
+     * const noteTag = await prisma.noteTag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NoteTagFindUniqueOrThrowArgs>(args: SelectSubset<T, NoteTagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NoteTag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagFindFirstArgs} args - Arguments to find a NoteTag
+     * @example
+     * // Get one NoteTag
+     * const noteTag = await prisma.noteTag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NoteTagFindFirstArgs>(args?: SelectSubset<T, NoteTagFindFirstArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NoteTag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagFindFirstOrThrowArgs} args - Arguments to find a NoteTag
+     * @example
+     * // Get one NoteTag
+     * const noteTag = await prisma.noteTag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NoteTagFindFirstOrThrowArgs>(args?: SelectSubset<T, NoteTagFindFirstOrThrowArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NoteTags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NoteTags
+     * const noteTags = await prisma.noteTag.findMany()
+     * 
+     * // Get first 10 NoteTags
+     * const noteTags = await prisma.noteTag.findMany({ take: 10 })
+     * 
+     * // Only select the `noteId`
+     * const noteTagWithNoteIdOnly = await prisma.noteTag.findMany({ select: { noteId: true } })
+     * 
+     */
+    findMany<T extends NoteTagFindManyArgs>(args?: SelectSubset<T, NoteTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NoteTag.
+     * @param {NoteTagCreateArgs} args - Arguments to create a NoteTag.
+     * @example
+     * // Create one NoteTag
+     * const NoteTag = await prisma.noteTag.create({
+     *   data: {
+     *     // ... data to create a NoteTag
+     *   }
+     * })
+     * 
+     */
+    create<T extends NoteTagCreateArgs>(args: SelectSubset<T, NoteTagCreateArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NoteTags.
+     * @param {NoteTagCreateManyArgs} args - Arguments to create many NoteTags.
+     * @example
+     * // Create many NoteTags
+     * const noteTag = await prisma.noteTag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NoteTagCreateManyArgs>(args?: SelectSubset<T, NoteTagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NoteTags and returns the data saved in the database.
+     * @param {NoteTagCreateManyAndReturnArgs} args - Arguments to create many NoteTags.
+     * @example
+     * // Create many NoteTags
+     * const noteTag = await prisma.noteTag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NoteTags and only return the `noteId`
+     * const noteTagWithNoteIdOnly = await prisma.noteTag.createManyAndReturn({
+     *   select: { noteId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NoteTagCreateManyAndReturnArgs>(args?: SelectSubset<T, NoteTagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NoteTag.
+     * @param {NoteTagDeleteArgs} args - Arguments to delete one NoteTag.
+     * @example
+     * // Delete one NoteTag
+     * const NoteTag = await prisma.noteTag.delete({
+     *   where: {
+     *     // ... filter to delete one NoteTag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NoteTagDeleteArgs>(args: SelectSubset<T, NoteTagDeleteArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NoteTag.
+     * @param {NoteTagUpdateArgs} args - Arguments to update one NoteTag.
+     * @example
+     * // Update one NoteTag
+     * const noteTag = await prisma.noteTag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NoteTagUpdateArgs>(args: SelectSubset<T, NoteTagUpdateArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NoteTags.
+     * @param {NoteTagDeleteManyArgs} args - Arguments to filter NoteTags to delete.
+     * @example
+     * // Delete a few NoteTags
+     * const { count } = await prisma.noteTag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NoteTagDeleteManyArgs>(args?: SelectSubset<T, NoteTagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NoteTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NoteTags
+     * const noteTag = await prisma.noteTag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NoteTagUpdateManyArgs>(args: SelectSubset<T, NoteTagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NoteTags and returns the data updated in the database.
+     * @param {NoteTagUpdateManyAndReturnArgs} args - Arguments to update many NoteTags.
+     * @example
+     * // Update many NoteTags
+     * const noteTag = await prisma.noteTag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NoteTags and only return the `noteId`
+     * const noteTagWithNoteIdOnly = await prisma.noteTag.updateManyAndReturn({
+     *   select: { noteId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NoteTagUpdateManyAndReturnArgs>(args: SelectSubset<T, NoteTagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NoteTag.
+     * @param {NoteTagUpsertArgs} args - Arguments to update or create a NoteTag.
+     * @example
+     * // Update or create a NoteTag
+     * const noteTag = await prisma.noteTag.upsert({
+     *   create: {
+     *     // ... data to create a NoteTag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NoteTag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NoteTagUpsertArgs>(args: SelectSubset<T, NoteTagUpsertArgs<ExtArgs>>): Prisma__NoteTagClient<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NoteTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagCountArgs} args - Arguments to filter NoteTags to count.
+     * @example
+     * // Count the number of NoteTags
+     * const count = await prisma.noteTag.count({
+     *   where: {
+     *     // ... the filter for the NoteTags we want to count
+     *   }
+     * })
+    **/
+    count<T extends NoteTagCountArgs>(
+      args?: Subset<T, NoteTagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NoteTagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NoteTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NoteTagAggregateArgs>(args: Subset<T, NoteTagAggregateArgs>): Prisma.PrismaPromise<GetNoteTagAggregateType<T>>
+
+    /**
+     * Group by NoteTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoteTagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NoteTagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NoteTagGroupByArgs['orderBy'] }
+        : { orderBy?: NoteTagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NoteTagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNoteTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NoteTag model
+   */
+  readonly fields: NoteTagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NoteTag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NoteTagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    note<T extends NoteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NoteDefaultArgs<ExtArgs>>): Prisma__NoteClient<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tag<T extends TagDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TagDefaultArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NoteTag model
+   */
+  interface NoteTagFieldRefs {
+    readonly noteId: FieldRef<"NoteTag", 'String'>
+    readonly tagId: FieldRef<"NoteTag", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NoteTag findUnique
+   */
+  export type NoteTagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * Filter, which NoteTag to fetch.
+     */
+    where: NoteTagWhereUniqueInput
+  }
+
+  /**
+   * NoteTag findUniqueOrThrow
+   */
+  export type NoteTagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * Filter, which NoteTag to fetch.
+     */
+    where: NoteTagWhereUniqueInput
+  }
+
+  /**
+   * NoteTag findFirst
+   */
+  export type NoteTagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * Filter, which NoteTag to fetch.
+     */
+    where?: NoteTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NoteTags to fetch.
+     */
+    orderBy?: NoteTagOrderByWithRelationInput | NoteTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NoteTags.
+     */
+    cursor?: NoteTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NoteTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NoteTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NoteTags.
+     */
+    distinct?: NoteTagScalarFieldEnum | NoteTagScalarFieldEnum[]
+  }
+
+  /**
+   * NoteTag findFirstOrThrow
+   */
+  export type NoteTagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * Filter, which NoteTag to fetch.
+     */
+    where?: NoteTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NoteTags to fetch.
+     */
+    orderBy?: NoteTagOrderByWithRelationInput | NoteTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NoteTags.
+     */
+    cursor?: NoteTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NoteTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NoteTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NoteTags.
+     */
+    distinct?: NoteTagScalarFieldEnum | NoteTagScalarFieldEnum[]
+  }
+
+  /**
+   * NoteTag findMany
+   */
+  export type NoteTagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * Filter, which NoteTags to fetch.
+     */
+    where?: NoteTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NoteTags to fetch.
+     */
+    orderBy?: NoteTagOrderByWithRelationInput | NoteTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NoteTags.
+     */
+    cursor?: NoteTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NoteTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NoteTags.
+     */
+    skip?: number
+    distinct?: NoteTagScalarFieldEnum | NoteTagScalarFieldEnum[]
+  }
+
+  /**
+   * NoteTag create
+   */
+  export type NoteTagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NoteTag.
+     */
+    data: XOR<NoteTagCreateInput, NoteTagUncheckedCreateInput>
+  }
+
+  /**
+   * NoteTag createMany
+   */
+  export type NoteTagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NoteTags.
+     */
+    data: NoteTagCreateManyInput | NoteTagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * NoteTag createManyAndReturn
+   */
+  export type NoteTagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * The data used to create many NoteTags.
+     */
+    data: NoteTagCreateManyInput | NoteTagCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NoteTag update
+   */
+  export type NoteTagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NoteTag.
+     */
+    data: XOR<NoteTagUpdateInput, NoteTagUncheckedUpdateInput>
+    /**
+     * Choose, which NoteTag to update.
+     */
+    where: NoteTagWhereUniqueInput
+  }
+
+  /**
+   * NoteTag updateMany
+   */
+  export type NoteTagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NoteTags.
+     */
+    data: XOR<NoteTagUpdateManyMutationInput, NoteTagUncheckedUpdateManyInput>
+    /**
+     * Filter which NoteTags to update
+     */
+    where?: NoteTagWhereInput
+    /**
+     * Limit how many NoteTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NoteTag updateManyAndReturn
+   */
+  export type NoteTagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * The data used to update NoteTags.
+     */
+    data: XOR<NoteTagUpdateManyMutationInput, NoteTagUncheckedUpdateManyInput>
+    /**
+     * Filter which NoteTags to update
+     */
+    where?: NoteTagWhereInput
+    /**
+     * Limit how many NoteTags to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NoteTag upsert
+   */
+  export type NoteTagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NoteTag to update in case it exists.
+     */
+    where: NoteTagWhereUniqueInput
+    /**
+     * In case the NoteTag found by the `where` argument doesn't exist, create a new NoteTag with this data.
+     */
+    create: XOR<NoteTagCreateInput, NoteTagUncheckedCreateInput>
+    /**
+     * In case the NoteTag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NoteTagUpdateInput, NoteTagUncheckedUpdateInput>
+  }
+
+  /**
+   * NoteTag delete
+   */
+  export type NoteTagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+    /**
+     * Filter which NoteTag to delete.
+     */
+    where: NoteTagWhereUniqueInput
+  }
+
+  /**
+   * NoteTag deleteMany
+   */
+  export type NoteTagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NoteTags to delete
+     */
+    where?: NoteTagWhereInput
+    /**
+     * Limit how many NoteTags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NoteTag without action
+   */
+  export type NoteTagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NoteTag
+     */
+    select?: NoteTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NoteTag
+     */
+    omit?: NoteTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteTagInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model AccessCode
    */
 
@@ -17426,7 +21184,9 @@ export namespace Prisma {
     professorId: 'professorId',
     isVerified: 'isVerified',
     verifiedAt: 'verifiedAt',
-    verifiedById: 'verifiedById'
+    verifiedById: 'verifiedById',
+    status: 'status',
+    isPublic: 'isPublic'
   };
 
   export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
@@ -17489,6 +21249,38 @@ export namespace Prisma {
   };
 
   export type UserCoursesScalarFieldEnum = (typeof UserCoursesScalarFieldEnum)[keyof typeof UserCoursesScalarFieldEnum]
+
+
+  export const TutorReviewScalarFieldEnum: {
+    id: 'id',
+    noteId: 'noteId',
+    reviewerId: 'reviewerId',
+    comment: 'comment',
+    rating: 'rating',
+    decision: 'decision',
+    createdAt: 'createdAt'
+  };
+
+  export type TutorReviewScalarFieldEnum = (typeof TutorReviewScalarFieldEnum)[keyof typeof TutorReviewScalarFieldEnum]
+
+
+  export const TagScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    category: 'category',
+    createdById: 'createdById',
+    createdAt: 'createdAt'
+  };
+
+  export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+  export const NoteTagScalarFieldEnum: {
+    noteId: 'noteId',
+    tagId: 'tagId'
+  };
+
+  export type NoteTagScalarFieldEnum = (typeof NoteTagScalarFieldEnum)[keyof typeof NoteTagScalarFieldEnum]
 
 
   export const AccessCodeScalarFieldEnum: {
@@ -17628,6 +21420,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'NoteStatus'
+   */
+  export type EnumNoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'NoteStatus[]'
+   */
+  export type ListEnumNoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -17638,6 +21444,34 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReviewDecision'
+   */
+  export type EnumReviewDecisionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewDecision'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReviewDecision[]'
+   */
+  export type ListEnumReviewDecisionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewDecision[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TagCategory'
+   */
+  export type EnumTagCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TagCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'TagCategory[]'
+   */
+  export type ListEnumTagCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TagCategory[]'>
     
 
 
@@ -17680,6 +21514,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentListRelationFilter
     createdAccessCodes?: AccessCodeListRelationFilter
     verifiedNotes?: NoteListRelationFilter
+    createdTags?: TagListRelationFilter
+    tutorReviews?: TutorReviewListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17701,6 +21537,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentOrderByRelationAggregateInput
     createdAccessCodes?: AccessCodeOrderByRelationAggregateInput
     verifiedNotes?: NoteOrderByRelationAggregateInput
+    createdTags?: TagOrderByRelationAggregateInput
+    tutorReviews?: TutorReviewOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -17725,6 +21563,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentListRelationFilter
     createdAccessCodes?: AccessCodeListRelationFilter
     verifiedNotes?: NoteListRelationFilter
+    createdTags?: TagListRelationFilter
+    tutorReviews?: TutorReviewListRelationFilter
   }, "id" | "email" | "supabaseId">
 
   export type UserOrderByWithAggregationInput = {
@@ -18022,14 +21862,18 @@ export namespace Prisma {
     isVerified?: BoolFilter<"Note"> | boolean
     verifiedAt?: DateTimeNullableFilter<"Note"> | Date | string | null
     verifiedById?: StringNullableFilter<"Note"> | string | null
+    status?: EnumNoteStatusFilter<"Note"> | $Enums.NoteStatus
+    isPublic?: BoolFilter<"Note"> | boolean
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     semester?: XOR<SemesterNullableScalarRelationFilter, SemesterWhereInput> | null
     professor?: XOR<ProfessorNullableScalarRelationFilter, ProfessorWhereInput> | null
     uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
     verifiedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     reviews?: ReviewListRelationFilter
+    tutorReviews?: TutorReviewListRelationFilter
     raffleEntries?: RaffleEntryListRelationFilter
     accessCodes?: AccessCodeNoteListRelationFilter
+    noteTags?: NoteTagListRelationFilter
   }
 
   export type NoteOrderByWithRelationInput = {
@@ -18048,14 +21892,18 @@ export namespace Prisma {
     isVerified?: SortOrder
     verifiedAt?: SortOrderInput | SortOrder
     verifiedById?: SortOrderInput | SortOrder
+    status?: SortOrder
+    isPublic?: SortOrder
     course?: CourseOrderByWithRelationInput
     semester?: SemesterOrderByWithRelationInput
     professor?: ProfessorOrderByWithRelationInput
     uploader?: UserOrderByWithRelationInput
     verifiedBy?: UserOrderByWithRelationInput
     reviews?: ReviewOrderByRelationAggregateInput
+    tutorReviews?: TutorReviewOrderByRelationAggregateInput
     raffleEntries?: RaffleEntryOrderByRelationAggregateInput
     accessCodes?: AccessCodeNoteOrderByRelationAggregateInput
+    noteTags?: NoteTagOrderByRelationAggregateInput
   }
 
   export type NoteWhereUniqueInput = Prisma.AtLeast<{
@@ -18077,14 +21925,18 @@ export namespace Prisma {
     isVerified?: BoolFilter<"Note"> | boolean
     verifiedAt?: DateTimeNullableFilter<"Note"> | Date | string | null
     verifiedById?: StringNullableFilter<"Note"> | string | null
+    status?: EnumNoteStatusFilter<"Note"> | $Enums.NoteStatus
+    isPublic?: BoolFilter<"Note"> | boolean
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     semester?: XOR<SemesterNullableScalarRelationFilter, SemesterWhereInput> | null
     professor?: XOR<ProfessorNullableScalarRelationFilter, ProfessorWhereInput> | null
     uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
     verifiedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     reviews?: ReviewListRelationFilter
+    tutorReviews?: TutorReviewListRelationFilter
     raffleEntries?: RaffleEntryListRelationFilter
     accessCodes?: AccessCodeNoteListRelationFilter
+    noteTags?: NoteTagListRelationFilter
   }, "id">
 
   export type NoteOrderByWithAggregationInput = {
@@ -18103,6 +21955,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     verifiedAt?: SortOrderInput | SortOrder
     verifiedById?: SortOrderInput | SortOrder
+    status?: SortOrder
+    isPublic?: SortOrder
     _count?: NoteCountOrderByAggregateInput
     _max?: NoteMaxOrderByAggregateInput
     _min?: NoteMinOrderByAggregateInput
@@ -18127,6 +21981,8 @@ export namespace Prisma {
     isVerified?: BoolWithAggregatesFilter<"Note"> | boolean
     verifiedAt?: DateTimeNullableWithAggregatesFilter<"Note"> | Date | string | null
     verifiedById?: StringNullableWithAggregatesFilter<"Note"> | string | null
+    status?: EnumNoteStatusWithAggregatesFilter<"Note"> | $Enums.NoteStatus
+    isPublic?: BoolWithAggregatesFilter<"Note"> | boolean
   }
 
   export type ReviewWhereInput = {
@@ -18445,6 +22301,180 @@ export namespace Prisma {
     B?: StringWithAggregatesFilter<"UserCourses"> | string
   }
 
+  export type TutorReviewWhereInput = {
+    AND?: TutorReviewWhereInput | TutorReviewWhereInput[]
+    OR?: TutorReviewWhereInput[]
+    NOT?: TutorReviewWhereInput | TutorReviewWhereInput[]
+    id?: StringFilter<"TutorReview"> | string
+    noteId?: StringFilter<"TutorReview"> | string
+    reviewerId?: StringFilter<"TutorReview"> | string
+    comment?: StringFilter<"TutorReview"> | string
+    rating?: IntFilter<"TutorReview"> | number
+    decision?: EnumReviewDecisionFilter<"TutorReview"> | $Enums.ReviewDecision
+    createdAt?: DateTimeFilter<"TutorReview"> | Date | string
+    note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
+    reviewer?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TutorReviewOrderByWithRelationInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    reviewerId?: SortOrder
+    comment?: SortOrder
+    rating?: SortOrder
+    decision?: SortOrder
+    createdAt?: SortOrder
+    note?: NoteOrderByWithRelationInput
+    reviewer?: UserOrderByWithRelationInput
+  }
+
+  export type TutorReviewWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    noteId_reviewerId?: TutorReviewNoteIdReviewerIdCompoundUniqueInput
+    AND?: TutorReviewWhereInput | TutorReviewWhereInput[]
+    OR?: TutorReviewWhereInput[]
+    NOT?: TutorReviewWhereInput | TutorReviewWhereInput[]
+    noteId?: StringFilter<"TutorReview"> | string
+    reviewerId?: StringFilter<"TutorReview"> | string
+    comment?: StringFilter<"TutorReview"> | string
+    rating?: IntFilter<"TutorReview"> | number
+    decision?: EnumReviewDecisionFilter<"TutorReview"> | $Enums.ReviewDecision
+    createdAt?: DateTimeFilter<"TutorReview"> | Date | string
+    note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
+    reviewer?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "noteId_reviewerId">
+
+  export type TutorReviewOrderByWithAggregationInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    reviewerId?: SortOrder
+    comment?: SortOrder
+    rating?: SortOrder
+    decision?: SortOrder
+    createdAt?: SortOrder
+    _count?: TutorReviewCountOrderByAggregateInput
+    _avg?: TutorReviewAvgOrderByAggregateInput
+    _max?: TutorReviewMaxOrderByAggregateInput
+    _min?: TutorReviewMinOrderByAggregateInput
+    _sum?: TutorReviewSumOrderByAggregateInput
+  }
+
+  export type TutorReviewScalarWhereWithAggregatesInput = {
+    AND?: TutorReviewScalarWhereWithAggregatesInput | TutorReviewScalarWhereWithAggregatesInput[]
+    OR?: TutorReviewScalarWhereWithAggregatesInput[]
+    NOT?: TutorReviewScalarWhereWithAggregatesInput | TutorReviewScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TutorReview"> | string
+    noteId?: StringWithAggregatesFilter<"TutorReview"> | string
+    reviewerId?: StringWithAggregatesFilter<"TutorReview"> | string
+    comment?: StringWithAggregatesFilter<"TutorReview"> | string
+    rating?: IntWithAggregatesFilter<"TutorReview"> | number
+    decision?: EnumReviewDecisionWithAggregatesFilter<"TutorReview"> | $Enums.ReviewDecision
+    createdAt?: DateTimeWithAggregatesFilter<"TutorReview"> | Date | string
+  }
+
+  export type TagWhereInput = {
+    AND?: TagWhereInput | TagWhereInput[]
+    OR?: TagWhereInput[]
+    NOT?: TagWhereInput | TagWhereInput[]
+    id?: StringFilter<"Tag"> | string
+    name?: StringFilter<"Tag"> | string
+    category?: EnumTagCategoryFilter<"Tag"> | $Enums.TagCategory
+    createdById?: StringFilter<"Tag"> | string
+    createdAt?: DateTimeFilter<"Tag"> | Date | string
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    noteTags?: NoteTagListRelationFilter
+  }
+
+  export type TagOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: UserOrderByWithRelationInput
+    noteTags?: NoteTagOrderByRelationAggregateInput
+  }
+
+  export type TagWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name_category?: TagNameCategoryCompoundUniqueInput
+    AND?: TagWhereInput | TagWhereInput[]
+    OR?: TagWhereInput[]
+    NOT?: TagWhereInput | TagWhereInput[]
+    name?: StringFilter<"Tag"> | string
+    category?: EnumTagCategoryFilter<"Tag"> | $Enums.TagCategory
+    createdById?: StringFilter<"Tag"> | string
+    createdAt?: DateTimeFilter<"Tag"> | Date | string
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    noteTags?: NoteTagListRelationFilter
+  }, "id" | "name_category">
+
+  export type TagOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    _count?: TagCountOrderByAggregateInput
+    _max?: TagMaxOrderByAggregateInput
+    _min?: TagMinOrderByAggregateInput
+  }
+
+  export type TagScalarWhereWithAggregatesInput = {
+    AND?: TagScalarWhereWithAggregatesInput | TagScalarWhereWithAggregatesInput[]
+    OR?: TagScalarWhereWithAggregatesInput[]
+    NOT?: TagScalarWhereWithAggregatesInput | TagScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Tag"> | string
+    name?: StringWithAggregatesFilter<"Tag"> | string
+    category?: EnumTagCategoryWithAggregatesFilter<"Tag"> | $Enums.TagCategory
+    createdById?: StringWithAggregatesFilter<"Tag"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Tag"> | Date | string
+  }
+
+  export type NoteTagWhereInput = {
+    AND?: NoteTagWhereInput | NoteTagWhereInput[]
+    OR?: NoteTagWhereInput[]
+    NOT?: NoteTagWhereInput | NoteTagWhereInput[]
+    noteId?: StringFilter<"NoteTag"> | string
+    tagId?: StringFilter<"NoteTag"> | string
+    note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
+    tag?: XOR<TagScalarRelationFilter, TagWhereInput>
+  }
+
+  export type NoteTagOrderByWithRelationInput = {
+    noteId?: SortOrder
+    tagId?: SortOrder
+    note?: NoteOrderByWithRelationInput
+    tag?: TagOrderByWithRelationInput
+  }
+
+  export type NoteTagWhereUniqueInput = Prisma.AtLeast<{
+    noteId_tagId?: NoteTagNoteIdTagIdCompoundUniqueInput
+    AND?: NoteTagWhereInput | NoteTagWhereInput[]
+    OR?: NoteTagWhereInput[]
+    NOT?: NoteTagWhereInput | NoteTagWhereInput[]
+    noteId?: StringFilter<"NoteTag"> | string
+    tagId?: StringFilter<"NoteTag"> | string
+    note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
+    tag?: XOR<TagScalarRelationFilter, TagWhereInput>
+  }, "noteId_tagId">
+
+  export type NoteTagOrderByWithAggregationInput = {
+    noteId?: SortOrder
+    tagId?: SortOrder
+    _count?: NoteTagCountOrderByAggregateInput
+    _max?: NoteTagMaxOrderByAggregateInput
+    _min?: NoteTagMinOrderByAggregateInput
+  }
+
+  export type NoteTagScalarWhereWithAggregatesInput = {
+    AND?: NoteTagScalarWhereWithAggregatesInput | NoteTagScalarWhereWithAggregatesInput[]
+    OR?: NoteTagScalarWhereWithAggregatesInput[]
+    NOT?: NoteTagScalarWhereWithAggregatesInput | NoteTagScalarWhereWithAggregatesInput[]
+    noteId?: StringWithAggregatesFilter<"NoteTag"> | string
+    tagId?: StringWithAggregatesFilter<"NoteTag"> | string
+  }
+
   export type AccessCodeWhereInput = {
     AND?: AccessCodeWhereInput | AccessCodeWhereInput[]
     OR?: AccessCodeWhereInput[]
@@ -18608,6 +22638,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -18629,6 +22661,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUpdateInput = {
@@ -18650,6 +22684,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -18671,6 +22707,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18959,14 +22997,18 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateInput = {
@@ -18985,9 +23027,13 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUpdateInput = {
@@ -19001,14 +23047,18 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateInput = {
@@ -19027,9 +23077,13 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteCreateManyInput = {
@@ -19048,6 +23102,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
   }
 
   export type NoteUpdateManyMutationInput = {
@@ -19061,6 +23117,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type NoteUncheckedUpdateManyInput = {
@@ -19079,6 +23137,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ReviewCreateInput = {
@@ -19390,6 +23450,167 @@ export namespace Prisma {
     B?: StringFieldUpdateOperationsInput | string
   }
 
+  export type TutorReviewCreateInput = {
+    id?: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+    note: NoteCreateNestedOneWithoutTutorReviewsInput
+    reviewer: UserCreateNestedOneWithoutTutorReviewsInput
+  }
+
+  export type TutorReviewUncheckedCreateInput = {
+    id?: string
+    noteId: string
+    reviewerId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+  }
+
+  export type TutorReviewUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NoteUpdateOneRequiredWithoutTutorReviewsNestedInput
+    reviewer?: UserUpdateOneRequiredWithoutTutorReviewsNestedInput
+  }
+
+  export type TutorReviewUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TutorReviewCreateManyInput = {
+    id?: string
+    noteId: string
+    reviewerId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+  }
+
+  export type TutorReviewUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TutorReviewUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagCreateInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutCreatedTagsInput
+    noteTags?: NoteTagCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUncheckedCreateInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdById: string
+    createdAt?: Date | string
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutCreatedTagsNestedInput
+    noteTags?: NoteTagUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    noteTags?: NoteTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagCreateManyInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdById: string
+    createdAt?: Date | string
+  }
+
+  export type TagUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoteTagCreateInput = {
+    note: NoteCreateNestedOneWithoutNoteTagsInput
+    tag: TagCreateNestedOneWithoutNoteTagsInput
+  }
+
+  export type NoteTagUncheckedCreateInput = {
+    noteId: string
+    tagId: string
+  }
+
+  export type NoteTagUpdateInput = {
+    note?: NoteUpdateOneRequiredWithoutNoteTagsNestedInput
+    tag?: TagUpdateOneRequiredWithoutNoteTagsNestedInput
+  }
+
+  export type NoteTagUncheckedUpdateInput = {
+    noteId?: StringFieldUpdateOperationsInput | string
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type NoteTagCreateManyInput = {
+    noteId: string
+    tagId: string
+  }
+
+  export type NoteTagUpdateManyMutationInput = {
+
+  }
+
+  export type NoteTagUncheckedUpdateManyInput = {
+    noteId?: StringFieldUpdateOperationsInput | string
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type AccessCodeCreateInput = {
     id?: string
     code: string
@@ -19651,6 +23872,18 @@ export namespace Prisma {
     none?: AccessCodeWhereInput
   }
 
+  export type TagListRelationFilter = {
+    every?: TagWhereInput
+    some?: TagWhereInput
+    none?: TagWhereInput
+  }
+
+  export type TutorReviewListRelationFilter = {
+    every?: TutorReviewWhereInput
+    some?: TutorReviewWhereInput
+    none?: TutorReviewWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -19689,6 +23922,14 @@ export namespace Prisma {
   }
 
   export type AccessCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TagOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TutorReviewOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19944,6 +24185,13 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type EnumNoteStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteStatus | EnumNoteStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteStatusFilter<$PrismaModel> | $Enums.NoteStatus
+  }
+
   export type CourseScalarRelationFilter = {
     is?: CourseWhereInput
     isNot?: CourseWhereInput
@@ -19965,7 +24213,17 @@ export namespace Prisma {
     none?: AccessCodeNoteWhereInput
   }
 
+  export type NoteTagListRelationFilter = {
+    every?: NoteTagWhereInput
+    some?: NoteTagWhereInput
+    none?: NoteTagWhereInput
+  }
+
   export type AccessCodeNoteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NoteTagOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19985,6 +24243,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     verifiedAt?: SortOrder
     verifiedById?: SortOrder
+    status?: SortOrder
+    isPublic?: SortOrder
   }
 
   export type NoteMaxOrderByAggregateInput = {
@@ -20003,6 +24263,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     verifiedAt?: SortOrder
     verifiedById?: SortOrder
+    status?: SortOrder
+    isPublic?: SortOrder
   }
 
   export type NoteMinOrderByAggregateInput = {
@@ -20021,6 +24283,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     verifiedAt?: SortOrder
     verifiedById?: SortOrder
+    status?: SortOrder
+    isPublic?: SortOrder
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -20043,6 +24307,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumNoteStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteStatus | EnumNoteStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteStatusWithAggregatesFilter<$PrismaModel> | $Enums.NoteStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNoteStatusFilter<$PrismaModel>
+    _max?: NestedEnumNoteStatusFilter<$PrismaModel>
   }
 
   export type NoteScalarRelationFilter = {
@@ -20270,6 +24544,137 @@ export namespace Prisma {
     B?: SortOrder
   }
 
+  export type EnumReviewDecisionFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewDecision | EnumReviewDecisionFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewDecisionFilter<$PrismaModel> | $Enums.ReviewDecision
+  }
+
+  export type TutorReviewNoteIdReviewerIdCompoundUniqueInput = {
+    noteId: string
+    reviewerId: string
+  }
+
+  export type TutorReviewCountOrderByAggregateInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    reviewerId?: SortOrder
+    comment?: SortOrder
+    rating?: SortOrder
+    decision?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TutorReviewAvgOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type TutorReviewMaxOrderByAggregateInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    reviewerId?: SortOrder
+    comment?: SortOrder
+    rating?: SortOrder
+    decision?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TutorReviewMinOrderByAggregateInput = {
+    id?: SortOrder
+    noteId?: SortOrder
+    reviewerId?: SortOrder
+    comment?: SortOrder
+    rating?: SortOrder
+    decision?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TutorReviewSumOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type EnumReviewDecisionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewDecision | EnumReviewDecisionFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewDecisionWithAggregatesFilter<$PrismaModel> | $Enums.ReviewDecision
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReviewDecisionFilter<$PrismaModel>
+    _max?: NestedEnumReviewDecisionFilter<$PrismaModel>
+  }
+
+  export type EnumTagCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagCategory | EnumTagCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagCategoryFilter<$PrismaModel> | $Enums.TagCategory
+  }
+
+  export type TagNameCategoryCompoundUniqueInput = {
+    name: string
+    category: $Enums.TagCategory
+  }
+
+  export type TagCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TagMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TagMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumTagCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagCategory | EnumTagCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagCategoryWithAggregatesFilter<$PrismaModel> | $Enums.TagCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTagCategoryFilter<$PrismaModel>
+    _max?: NestedEnumTagCategoryFilter<$PrismaModel>
+  }
+
+  export type TagScalarRelationFilter = {
+    is?: TagWhereInput
+    isNot?: TagWhereInput
+  }
+
+  export type NoteTagNoteIdTagIdCompoundUniqueInput = {
+    noteId: string
+    tagId: string
+  }
+
+  export type NoteTagCountOrderByAggregateInput = {
+    noteId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type NoteTagMaxOrderByAggregateInput = {
+    noteId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type NoteTagMinOrderByAggregateInput = {
+    noteId?: SortOrder
+    tagId?: SortOrder
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -20448,6 +24853,20 @@ export namespace Prisma {
     connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
   }
 
+  export type TagCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<TagCreateWithoutCreatedByInput, TagUncheckedCreateWithoutCreatedByInput> | TagCreateWithoutCreatedByInput[] | TagUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutCreatedByInput | TagCreateOrConnectWithoutCreatedByInput[]
+    createMany?: TagCreateManyCreatedByInputEnvelope
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+  }
+
+  export type TutorReviewCreateNestedManyWithoutReviewerInput = {
+    create?: XOR<TutorReviewCreateWithoutReviewerInput, TutorReviewUncheckedCreateWithoutReviewerInput> | TutorReviewCreateWithoutReviewerInput[] | TutorReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutReviewerInput | TutorReviewCreateOrConnectWithoutReviewerInput[]
+    createMany?: TutorReviewCreateManyReviewerInputEnvelope
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+  }
+
   export type NoteUncheckedCreateNestedManyWithoutUploaderInput = {
     create?: XOR<NoteCreateWithoutUploaderInput, NoteUncheckedCreateWithoutUploaderInput> | NoteCreateWithoutUploaderInput[] | NoteUncheckedCreateWithoutUploaderInput[]
     connectOrCreate?: NoteCreateOrConnectWithoutUploaderInput | NoteCreateOrConnectWithoutUploaderInput[]
@@ -20516,6 +24935,20 @@ export namespace Prisma {
     connectOrCreate?: NoteCreateOrConnectWithoutVerifiedByInput | NoteCreateOrConnectWithoutVerifiedByInput[]
     createMany?: NoteCreateManyVerifiedByInputEnvelope
     connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+  }
+
+  export type TagUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<TagCreateWithoutCreatedByInput, TagUncheckedCreateWithoutCreatedByInput> | TagCreateWithoutCreatedByInput[] | TagUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutCreatedByInput | TagCreateOrConnectWithoutCreatedByInput[]
+    createMany?: TagCreateManyCreatedByInputEnvelope
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+  }
+
+  export type TutorReviewUncheckedCreateNestedManyWithoutReviewerInput = {
+    create?: XOR<TutorReviewCreateWithoutReviewerInput, TutorReviewUncheckedCreateWithoutReviewerInput> | TutorReviewCreateWithoutReviewerInput[] | TutorReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutReviewerInput | TutorReviewCreateOrConnectWithoutReviewerInput[]
+    createMany?: TutorReviewCreateManyReviewerInputEnvelope
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -20682,6 +25115,34 @@ export namespace Prisma {
     deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
   }
 
+  export type TagUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<TagCreateWithoutCreatedByInput, TagUncheckedCreateWithoutCreatedByInput> | TagCreateWithoutCreatedByInput[] | TagUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutCreatedByInput | TagCreateOrConnectWithoutCreatedByInput[]
+    upsert?: TagUpsertWithWhereUniqueWithoutCreatedByInput | TagUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: TagCreateManyCreatedByInputEnvelope
+    set?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    disconnect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    delete?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    update?: TagUpdateWithWhereUniqueWithoutCreatedByInput | TagUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: TagUpdateManyWithWhereWithoutCreatedByInput | TagUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: TagScalarWhereInput | TagScalarWhereInput[]
+  }
+
+  export type TutorReviewUpdateManyWithoutReviewerNestedInput = {
+    create?: XOR<TutorReviewCreateWithoutReviewerInput, TutorReviewUncheckedCreateWithoutReviewerInput> | TutorReviewCreateWithoutReviewerInput[] | TutorReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutReviewerInput | TutorReviewCreateOrConnectWithoutReviewerInput[]
+    upsert?: TutorReviewUpsertWithWhereUniqueWithoutReviewerInput | TutorReviewUpsertWithWhereUniqueWithoutReviewerInput[]
+    createMany?: TutorReviewCreateManyReviewerInputEnvelope
+    set?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    disconnect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    delete?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    update?: TutorReviewUpdateWithWhereUniqueWithoutReviewerInput | TutorReviewUpdateWithWhereUniqueWithoutReviewerInput[]
+    updateMany?: TutorReviewUpdateManyWithWhereWithoutReviewerInput | TutorReviewUpdateManyWithWhereWithoutReviewerInput[]
+    deleteMany?: TutorReviewScalarWhereInput | TutorReviewScalarWhereInput[]
+  }
+
   export type NoteUncheckedUpdateManyWithoutUploaderNestedInput = {
     create?: XOR<NoteCreateWithoutUploaderInput, NoteUncheckedCreateWithoutUploaderInput> | NoteCreateWithoutUploaderInput[] | NoteUncheckedCreateWithoutUploaderInput[]
     connectOrCreate?: NoteCreateOrConnectWithoutUploaderInput | NoteCreateOrConnectWithoutUploaderInput[]
@@ -20820,6 +25281,34 @@ export namespace Prisma {
     update?: NoteUpdateWithWhereUniqueWithoutVerifiedByInput | NoteUpdateWithWhereUniqueWithoutVerifiedByInput[]
     updateMany?: NoteUpdateManyWithWhereWithoutVerifiedByInput | NoteUpdateManyWithWhereWithoutVerifiedByInput[]
     deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
+  }
+
+  export type TagUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<TagCreateWithoutCreatedByInput, TagUncheckedCreateWithoutCreatedByInput> | TagCreateWithoutCreatedByInput[] | TagUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutCreatedByInput | TagCreateOrConnectWithoutCreatedByInput[]
+    upsert?: TagUpsertWithWhereUniqueWithoutCreatedByInput | TagUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: TagCreateManyCreatedByInputEnvelope
+    set?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    disconnect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    delete?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    update?: TagUpdateWithWhereUniqueWithoutCreatedByInput | TagUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: TagUpdateManyWithWhereWithoutCreatedByInput | TagUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: TagScalarWhereInput | TagScalarWhereInput[]
+  }
+
+  export type TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput = {
+    create?: XOR<TutorReviewCreateWithoutReviewerInput, TutorReviewUncheckedCreateWithoutReviewerInput> | TutorReviewCreateWithoutReviewerInput[] | TutorReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutReviewerInput | TutorReviewCreateOrConnectWithoutReviewerInput[]
+    upsert?: TutorReviewUpsertWithWhereUniqueWithoutReviewerInput | TutorReviewUpsertWithWhereUniqueWithoutReviewerInput[]
+    createMany?: TutorReviewCreateManyReviewerInputEnvelope
+    set?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    disconnect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    delete?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    update?: TutorReviewUpdateWithWhereUniqueWithoutReviewerInput | TutorReviewUpdateWithWhereUniqueWithoutReviewerInput[]
+    updateMany?: TutorReviewUpdateManyWithWhereWithoutReviewerInput | TutorReviewUpdateManyWithWhereWithoutReviewerInput[]
+    deleteMany?: TutorReviewScalarWhereInput | TutorReviewScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutCreatedDepartmentsInput = {
@@ -21199,6 +25688,13 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type TutorReviewCreateNestedManyWithoutNoteInput = {
+    create?: XOR<TutorReviewCreateWithoutNoteInput, TutorReviewUncheckedCreateWithoutNoteInput> | TutorReviewCreateWithoutNoteInput[] | TutorReviewUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutNoteInput | TutorReviewCreateOrConnectWithoutNoteInput[]
+    createMany?: TutorReviewCreateManyNoteInputEnvelope
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+  }
+
   export type RaffleEntryCreateNestedManyWithoutNoteInput = {
     create?: XOR<RaffleEntryCreateWithoutNoteInput, RaffleEntryUncheckedCreateWithoutNoteInput> | RaffleEntryCreateWithoutNoteInput[] | RaffleEntryUncheckedCreateWithoutNoteInput[]
     connectOrCreate?: RaffleEntryCreateOrConnectWithoutNoteInput | RaffleEntryCreateOrConnectWithoutNoteInput[]
@@ -21213,11 +25709,25 @@ export namespace Prisma {
     connect?: AccessCodeNoteWhereUniqueInput | AccessCodeNoteWhereUniqueInput[]
   }
 
+  export type NoteTagCreateNestedManyWithoutNoteInput = {
+    create?: XOR<NoteTagCreateWithoutNoteInput, NoteTagUncheckedCreateWithoutNoteInput> | NoteTagCreateWithoutNoteInput[] | NoteTagUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutNoteInput | NoteTagCreateOrConnectWithoutNoteInput[]
+    createMany?: NoteTagCreateManyNoteInputEnvelope
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedManyWithoutNoteInput = {
     create?: XOR<ReviewCreateWithoutNoteInput, ReviewUncheckedCreateWithoutNoteInput> | ReviewCreateWithoutNoteInput[] | ReviewUncheckedCreateWithoutNoteInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutNoteInput | ReviewCreateOrConnectWithoutNoteInput[]
     createMany?: ReviewCreateManyNoteInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type TutorReviewUncheckedCreateNestedManyWithoutNoteInput = {
+    create?: XOR<TutorReviewCreateWithoutNoteInput, TutorReviewUncheckedCreateWithoutNoteInput> | TutorReviewCreateWithoutNoteInput[] | TutorReviewUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutNoteInput | TutorReviewCreateOrConnectWithoutNoteInput[]
+    createMany?: TutorReviewCreateManyNoteInputEnvelope
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
   }
 
   export type RaffleEntryUncheckedCreateNestedManyWithoutNoteInput = {
@@ -21234,12 +25744,23 @@ export namespace Prisma {
     connect?: AccessCodeNoteWhereUniqueInput | AccessCodeNoteWhereUniqueInput[]
   }
 
+  export type NoteTagUncheckedCreateNestedManyWithoutNoteInput = {
+    create?: XOR<NoteTagCreateWithoutNoteInput, NoteTagUncheckedCreateWithoutNoteInput> | NoteTagCreateWithoutNoteInput[] | NoteTagUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutNoteInput | NoteTagCreateOrConnectWithoutNoteInput[]
+    createMany?: NoteTagCreateManyNoteInputEnvelope
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type EnumNoteStatusFieldUpdateOperationsInput = {
+    set?: $Enums.NoteStatus
   }
 
   export type CourseUpdateOneRequiredWithoutNotesNestedInput = {
@@ -21302,6 +25823,20 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type TutorReviewUpdateManyWithoutNoteNestedInput = {
+    create?: XOR<TutorReviewCreateWithoutNoteInput, TutorReviewUncheckedCreateWithoutNoteInput> | TutorReviewCreateWithoutNoteInput[] | TutorReviewUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutNoteInput | TutorReviewCreateOrConnectWithoutNoteInput[]
+    upsert?: TutorReviewUpsertWithWhereUniqueWithoutNoteInput | TutorReviewUpsertWithWhereUniqueWithoutNoteInput[]
+    createMany?: TutorReviewCreateManyNoteInputEnvelope
+    set?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    disconnect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    delete?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    update?: TutorReviewUpdateWithWhereUniqueWithoutNoteInput | TutorReviewUpdateWithWhereUniqueWithoutNoteInput[]
+    updateMany?: TutorReviewUpdateManyWithWhereWithoutNoteInput | TutorReviewUpdateManyWithWhereWithoutNoteInput[]
+    deleteMany?: TutorReviewScalarWhereInput | TutorReviewScalarWhereInput[]
+  }
+
   export type RaffleEntryUpdateManyWithoutNoteNestedInput = {
     create?: XOR<RaffleEntryCreateWithoutNoteInput, RaffleEntryUncheckedCreateWithoutNoteInput> | RaffleEntryCreateWithoutNoteInput[] | RaffleEntryUncheckedCreateWithoutNoteInput[]
     connectOrCreate?: RaffleEntryCreateOrConnectWithoutNoteInput | RaffleEntryCreateOrConnectWithoutNoteInput[]
@@ -21330,6 +25865,20 @@ export namespace Prisma {
     deleteMany?: AccessCodeNoteScalarWhereInput | AccessCodeNoteScalarWhereInput[]
   }
 
+  export type NoteTagUpdateManyWithoutNoteNestedInput = {
+    create?: XOR<NoteTagCreateWithoutNoteInput, NoteTagUncheckedCreateWithoutNoteInput> | NoteTagCreateWithoutNoteInput[] | NoteTagUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutNoteInput | NoteTagCreateOrConnectWithoutNoteInput[]
+    upsert?: NoteTagUpsertWithWhereUniqueWithoutNoteInput | NoteTagUpsertWithWhereUniqueWithoutNoteInput[]
+    createMany?: NoteTagCreateManyNoteInputEnvelope
+    set?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    disconnect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    delete?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    update?: NoteTagUpdateWithWhereUniqueWithoutNoteInput | NoteTagUpdateWithWhereUniqueWithoutNoteInput[]
+    updateMany?: NoteTagUpdateManyWithWhereWithoutNoteInput | NoteTagUpdateManyWithWhereWithoutNoteInput[]
+    deleteMany?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
+  }
+
   export type ReviewUncheckedUpdateManyWithoutNoteNestedInput = {
     create?: XOR<ReviewCreateWithoutNoteInput, ReviewUncheckedCreateWithoutNoteInput> | ReviewCreateWithoutNoteInput[] | ReviewUncheckedCreateWithoutNoteInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutNoteInput | ReviewCreateOrConnectWithoutNoteInput[]
@@ -21342,6 +25891,20 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutNoteInput | ReviewUpdateWithWhereUniqueWithoutNoteInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutNoteInput | ReviewUpdateManyWithWhereWithoutNoteInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type TutorReviewUncheckedUpdateManyWithoutNoteNestedInput = {
+    create?: XOR<TutorReviewCreateWithoutNoteInput, TutorReviewUncheckedCreateWithoutNoteInput> | TutorReviewCreateWithoutNoteInput[] | TutorReviewUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: TutorReviewCreateOrConnectWithoutNoteInput | TutorReviewCreateOrConnectWithoutNoteInput[]
+    upsert?: TutorReviewUpsertWithWhereUniqueWithoutNoteInput | TutorReviewUpsertWithWhereUniqueWithoutNoteInput[]
+    createMany?: TutorReviewCreateManyNoteInputEnvelope
+    set?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    disconnect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    delete?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    connect?: TutorReviewWhereUniqueInput | TutorReviewWhereUniqueInput[]
+    update?: TutorReviewUpdateWithWhereUniqueWithoutNoteInput | TutorReviewUpdateWithWhereUniqueWithoutNoteInput[]
+    updateMany?: TutorReviewUpdateManyWithWhereWithoutNoteInput | TutorReviewUpdateManyWithWhereWithoutNoteInput[]
+    deleteMany?: TutorReviewScalarWhereInput | TutorReviewScalarWhereInput[]
   }
 
   export type RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput = {
@@ -21370,6 +25933,20 @@ export namespace Prisma {
     update?: AccessCodeNoteUpdateWithWhereUniqueWithoutNoteInput | AccessCodeNoteUpdateWithWhereUniqueWithoutNoteInput[]
     updateMany?: AccessCodeNoteUpdateManyWithWhereWithoutNoteInput | AccessCodeNoteUpdateManyWithWhereWithoutNoteInput[]
     deleteMany?: AccessCodeNoteScalarWhereInput | AccessCodeNoteScalarWhereInput[]
+  }
+
+  export type NoteTagUncheckedUpdateManyWithoutNoteNestedInput = {
+    create?: XOR<NoteTagCreateWithoutNoteInput, NoteTagUncheckedCreateWithoutNoteInput> | NoteTagCreateWithoutNoteInput[] | NoteTagUncheckedCreateWithoutNoteInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutNoteInput | NoteTagCreateOrConnectWithoutNoteInput[]
+    upsert?: NoteTagUpsertWithWhereUniqueWithoutNoteInput | NoteTagUpsertWithWhereUniqueWithoutNoteInput[]
+    createMany?: NoteTagCreateManyNoteInputEnvelope
+    set?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    disconnect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    delete?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    update?: NoteTagUpdateWithWhereUniqueWithoutNoteInput | NoteTagUpdateWithWhereUniqueWithoutNoteInput[]
+    updateMany?: NoteTagUpdateManyWithWhereWithoutNoteInput | NoteTagUpdateManyWithWhereWithoutNoteInput[]
+    deleteMany?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
   }
 
   export type NoteCreateNestedOneWithoutReviewsInput = {
@@ -21566,6 +26143,126 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutUserCoursesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserCoursesInput, UserUpdateWithoutUserCoursesInput>, UserUncheckedUpdateWithoutUserCoursesInput>
+  }
+
+  export type NoteCreateNestedOneWithoutTutorReviewsInput = {
+    create?: XOR<NoteCreateWithoutTutorReviewsInput, NoteUncheckedCreateWithoutTutorReviewsInput>
+    connectOrCreate?: NoteCreateOrConnectWithoutTutorReviewsInput
+    connect?: NoteWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutTutorReviewsInput = {
+    create?: XOR<UserCreateWithoutTutorReviewsInput, UserUncheckedCreateWithoutTutorReviewsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTutorReviewsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumReviewDecisionFieldUpdateOperationsInput = {
+    set?: $Enums.ReviewDecision
+  }
+
+  export type NoteUpdateOneRequiredWithoutTutorReviewsNestedInput = {
+    create?: XOR<NoteCreateWithoutTutorReviewsInput, NoteUncheckedCreateWithoutTutorReviewsInput>
+    connectOrCreate?: NoteCreateOrConnectWithoutTutorReviewsInput
+    upsert?: NoteUpsertWithoutTutorReviewsInput
+    connect?: NoteWhereUniqueInput
+    update?: XOR<XOR<NoteUpdateToOneWithWhereWithoutTutorReviewsInput, NoteUpdateWithoutTutorReviewsInput>, NoteUncheckedUpdateWithoutTutorReviewsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutTutorReviewsNestedInput = {
+    create?: XOR<UserCreateWithoutTutorReviewsInput, UserUncheckedCreateWithoutTutorReviewsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTutorReviewsInput
+    upsert?: UserUpsertWithoutTutorReviewsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTutorReviewsInput, UserUpdateWithoutTutorReviewsInput>, UserUncheckedUpdateWithoutTutorReviewsInput>
+  }
+
+  export type UserCreateNestedOneWithoutCreatedTagsInput = {
+    create?: XOR<UserCreateWithoutCreatedTagsInput, UserUncheckedCreateWithoutCreatedTagsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedTagsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NoteTagCreateNestedManyWithoutTagInput = {
+    create?: XOR<NoteTagCreateWithoutTagInput, NoteTagUncheckedCreateWithoutTagInput> | NoteTagCreateWithoutTagInput[] | NoteTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutTagInput | NoteTagCreateOrConnectWithoutTagInput[]
+    createMany?: NoteTagCreateManyTagInputEnvelope
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+  }
+
+  export type NoteTagUncheckedCreateNestedManyWithoutTagInput = {
+    create?: XOR<NoteTagCreateWithoutTagInput, NoteTagUncheckedCreateWithoutTagInput> | NoteTagCreateWithoutTagInput[] | NoteTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutTagInput | NoteTagCreateOrConnectWithoutTagInput[]
+    createMany?: NoteTagCreateManyTagInputEnvelope
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+  }
+
+  export type EnumTagCategoryFieldUpdateOperationsInput = {
+    set?: $Enums.TagCategory
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedTagsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedTagsInput, UserUncheckedCreateWithoutCreatedTagsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedTagsInput
+    upsert?: UserUpsertWithoutCreatedTagsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedTagsInput, UserUpdateWithoutCreatedTagsInput>, UserUncheckedUpdateWithoutCreatedTagsInput>
+  }
+
+  export type NoteTagUpdateManyWithoutTagNestedInput = {
+    create?: XOR<NoteTagCreateWithoutTagInput, NoteTagUncheckedCreateWithoutTagInput> | NoteTagCreateWithoutTagInput[] | NoteTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutTagInput | NoteTagCreateOrConnectWithoutTagInput[]
+    upsert?: NoteTagUpsertWithWhereUniqueWithoutTagInput | NoteTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: NoteTagCreateManyTagInputEnvelope
+    set?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    disconnect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    delete?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    update?: NoteTagUpdateWithWhereUniqueWithoutTagInput | NoteTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: NoteTagUpdateManyWithWhereWithoutTagInput | NoteTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
+  }
+
+  export type NoteTagUncheckedUpdateManyWithoutTagNestedInput = {
+    create?: XOR<NoteTagCreateWithoutTagInput, NoteTagUncheckedCreateWithoutTagInput> | NoteTagCreateWithoutTagInput[] | NoteTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: NoteTagCreateOrConnectWithoutTagInput | NoteTagCreateOrConnectWithoutTagInput[]
+    upsert?: NoteTagUpsertWithWhereUniqueWithoutTagInput | NoteTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: NoteTagCreateManyTagInputEnvelope
+    set?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    disconnect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    delete?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    connect?: NoteTagWhereUniqueInput | NoteTagWhereUniqueInput[]
+    update?: NoteTagUpdateWithWhereUniqueWithoutTagInput | NoteTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: NoteTagUpdateManyWithWhereWithoutTagInput | NoteTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
+  }
+
+  export type NoteCreateNestedOneWithoutNoteTagsInput = {
+    create?: XOR<NoteCreateWithoutNoteTagsInput, NoteUncheckedCreateWithoutNoteTagsInput>
+    connectOrCreate?: NoteCreateOrConnectWithoutNoteTagsInput
+    connect?: NoteWhereUniqueInput
+  }
+
+  export type TagCreateNestedOneWithoutNoteTagsInput = {
+    create?: XOR<TagCreateWithoutNoteTagsInput, TagUncheckedCreateWithoutNoteTagsInput>
+    connectOrCreate?: TagCreateOrConnectWithoutNoteTagsInput
+    connect?: TagWhereUniqueInput
+  }
+
+  export type NoteUpdateOneRequiredWithoutNoteTagsNestedInput = {
+    create?: XOR<NoteCreateWithoutNoteTagsInput, NoteUncheckedCreateWithoutNoteTagsInput>
+    connectOrCreate?: NoteCreateOrConnectWithoutNoteTagsInput
+    upsert?: NoteUpsertWithoutNoteTagsInput
+    connect?: NoteWhereUniqueInput
+    update?: XOR<XOR<NoteUpdateToOneWithWhereWithoutNoteTagsInput, NoteUpdateWithoutNoteTagsInput>, NoteUncheckedUpdateWithoutNoteTagsInput>
+  }
+
+  export type TagUpdateOneRequiredWithoutNoteTagsNestedInput = {
+    create?: XOR<TagCreateWithoutNoteTagsInput, TagUncheckedCreateWithoutNoteTagsInput>
+    connectOrCreate?: TagCreateOrConnectWithoutNoteTagsInput
+    upsert?: TagUpsertWithoutNoteTagsInput
+    connect?: TagWhereUniqueInput
+    update?: XOR<XOR<TagUpdateToOneWithWhereWithoutNoteTagsInput, TagUpdateWithoutNoteTagsInput>, TagUncheckedUpdateWithoutNoteTagsInput>
   }
 
   export type UserCreateNestedOneWithoutCreatedAccessCodesInput = {
@@ -21829,6 +26526,13 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type NestedEnumNoteStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteStatus | EnumNoteStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteStatusFilter<$PrismaModel> | $Enums.NoteStatus
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -21849,6 +26553,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumNoteStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NoteStatus | EnumNoteStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NoteStatus[] | ListEnumNoteStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumNoteStatusWithAggregatesFilter<$PrismaModel> | $Enums.NoteStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNoteStatusFilter<$PrismaModel>
+    _max?: NestedEnumNoteStatusFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -21872,6 +26586,40 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumReviewDecisionFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewDecision | EnumReviewDecisionFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewDecisionFilter<$PrismaModel> | $Enums.ReviewDecision
+  }
+
+  export type NestedEnumReviewDecisionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewDecision | EnumReviewDecisionFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewDecision[] | ListEnumReviewDecisionFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewDecisionWithAggregatesFilter<$PrismaModel> | $Enums.ReviewDecision
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReviewDecisionFilter<$PrismaModel>
+    _max?: NestedEnumReviewDecisionFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTagCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagCategory | EnumTagCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagCategoryFilter<$PrismaModel> | $Enums.TagCategory
+  }
+
+  export type NestedEnumTagCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagCategory | EnumTagCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagCategory[] | ListEnumTagCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagCategoryWithAggregatesFilter<$PrismaModel> | $Enums.TagCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTagCategoryFilter<$PrismaModel>
+    _max?: NestedEnumTagCategoryFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -21912,13 +26660,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutUploaderInput = {
@@ -21936,9 +26688,13 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutUploaderInput = {
@@ -22180,13 +26936,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutVerifiedByInput = {
@@ -22204,9 +26964,13 @@ export namespace Prisma {
     professorId?: string | null
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutVerifiedByInput = {
@@ -22216,6 +26980,60 @@ export namespace Prisma {
 
   export type NoteCreateManyVerifiedByInputEnvelope = {
     data: NoteCreateManyVerifiedByInput | NoteCreateManyVerifiedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TagCreateWithoutCreatedByInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdAt?: Date | string
+    noteTags?: NoteTagCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdAt?: Date | string
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutTagInput
+  }
+
+  export type TagCreateOrConnectWithoutCreatedByInput = {
+    where: TagWhereUniqueInput
+    create: XOR<TagCreateWithoutCreatedByInput, TagUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type TagCreateManyCreatedByInputEnvelope = {
+    data: TagCreateManyCreatedByInput | TagCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TutorReviewCreateWithoutReviewerInput = {
+    id?: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+    note: NoteCreateNestedOneWithoutTutorReviewsInput
+  }
+
+  export type TutorReviewUncheckedCreateWithoutReviewerInput = {
+    id?: string
+    noteId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+  }
+
+  export type TutorReviewCreateOrConnectWithoutReviewerInput = {
+    where: TutorReviewWhereUniqueInput
+    create: XOR<TutorReviewCreateWithoutReviewerInput, TutorReviewUncheckedCreateWithoutReviewerInput>
+  }
+
+  export type TutorReviewCreateManyReviewerInputEnvelope = {
+    data: TutorReviewCreateManyReviewerInput | TutorReviewCreateManyReviewerInput[]
     skipDuplicates?: boolean
   }
 
@@ -22254,6 +27072,8 @@ export namespace Prisma {
     isVerified?: BoolFilter<"Note"> | boolean
     verifiedAt?: DateTimeNullableFilter<"Note"> | Date | string | null
     verifiedById?: StringNullableFilter<"Note"> | string | null
+    status?: EnumNoteStatusFilter<"Note"> | $Enums.NoteStatus
+    isPublic?: BoolFilter<"Note"> | boolean
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutUserInput = {
@@ -22494,6 +27314,62 @@ export namespace Prisma {
     data: XOR<NoteUpdateManyMutationInput, NoteUncheckedUpdateManyWithoutVerifiedByInput>
   }
 
+  export type TagUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: TagWhereUniqueInput
+    update: XOR<TagUpdateWithoutCreatedByInput, TagUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<TagCreateWithoutCreatedByInput, TagUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type TagUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: TagWhereUniqueInput
+    data: XOR<TagUpdateWithoutCreatedByInput, TagUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type TagUpdateManyWithWhereWithoutCreatedByInput = {
+    where: TagScalarWhereInput
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type TagScalarWhereInput = {
+    AND?: TagScalarWhereInput | TagScalarWhereInput[]
+    OR?: TagScalarWhereInput[]
+    NOT?: TagScalarWhereInput | TagScalarWhereInput[]
+    id?: StringFilter<"Tag"> | string
+    name?: StringFilter<"Tag"> | string
+    category?: EnumTagCategoryFilter<"Tag"> | $Enums.TagCategory
+    createdById?: StringFilter<"Tag"> | string
+    createdAt?: DateTimeFilter<"Tag"> | Date | string
+  }
+
+  export type TutorReviewUpsertWithWhereUniqueWithoutReviewerInput = {
+    where: TutorReviewWhereUniqueInput
+    update: XOR<TutorReviewUpdateWithoutReviewerInput, TutorReviewUncheckedUpdateWithoutReviewerInput>
+    create: XOR<TutorReviewCreateWithoutReviewerInput, TutorReviewUncheckedCreateWithoutReviewerInput>
+  }
+
+  export type TutorReviewUpdateWithWhereUniqueWithoutReviewerInput = {
+    where: TutorReviewWhereUniqueInput
+    data: XOR<TutorReviewUpdateWithoutReviewerInput, TutorReviewUncheckedUpdateWithoutReviewerInput>
+  }
+
+  export type TutorReviewUpdateManyWithWhereWithoutReviewerInput = {
+    where: TutorReviewScalarWhereInput
+    data: XOR<TutorReviewUpdateManyMutationInput, TutorReviewUncheckedUpdateManyWithoutReviewerInput>
+  }
+
+  export type TutorReviewScalarWhereInput = {
+    AND?: TutorReviewScalarWhereInput | TutorReviewScalarWhereInput[]
+    OR?: TutorReviewScalarWhereInput[]
+    NOT?: TutorReviewScalarWhereInput | TutorReviewScalarWhereInput[]
+    id?: StringFilter<"TutorReview"> | string
+    noteId?: StringFilter<"TutorReview"> | string
+    reviewerId?: StringFilter<"TutorReview"> | string
+    comment?: StringFilter<"TutorReview"> | string
+    rating?: IntFilter<"TutorReview"> | number
+    decision?: EnumReviewDecisionFilter<"TutorReview"> | $Enums.ReviewDecision
+    createdAt?: DateTimeFilter<"TutorReview"> | Date | string
+  }
+
   export type UserCreateWithoutCreatedDepartmentsInput = {
     id?: string
     email: string
@@ -22512,6 +27388,8 @@ export namespace Prisma {
     createdSemesters?: SemesterCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedDepartmentsInput = {
@@ -22532,6 +27410,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedDepartmentsInput = {
@@ -22600,6 +27480,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedDepartmentsInput = {
@@ -22620,6 +27502,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type CourseUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -22691,13 +27575,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutCourseInput = {
@@ -22715,9 +27603,13 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutCourseInput = {
@@ -22766,6 +27658,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedCoursesInput = {
@@ -22786,6 +27680,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedCoursesInput = {
@@ -22908,6 +27804,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
@@ -22928,6 +27826,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type CourseCreateWithoutProfessorInput = {
@@ -22973,13 +27873,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutProfessorInput = {
@@ -22997,9 +27901,13 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutProfessorInput = {
@@ -23030,6 +27938,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedProfessorsInput = {
@@ -23050,6 +27960,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedProfessorsInput = {
@@ -23118,6 +28030,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedProfessorsInput = {
@@ -23138,6 +28052,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type NoteCreateWithoutSemesterInput = {
@@ -23151,13 +28067,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutSemesterInput = {
@@ -23175,9 +28095,13 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutSemesterInput = {
@@ -23208,6 +28132,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedSemestersInput = {
@@ -23228,6 +28154,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedSemestersInput = {
@@ -23280,6 +28208,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedSemestersInput = {
@@ -23300,6 +28230,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type CourseCreateWithoutNotesInput = {
@@ -23387,6 +28319,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutNotesInput = {
@@ -23407,6 +28341,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutNotesInput = {
@@ -23432,6 +28368,8 @@ export namespace Prisma {
     createdSemesters?: SemesterCreateNestedManyWithoutCreatedByInput
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutVerifiedNotesInput = {
@@ -23452,6 +28390,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUncheckedCreateNestedManyWithoutCreatedByInput
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutVerifiedNotesInput = {
@@ -23482,6 +28422,34 @@ export namespace Prisma {
 
   export type ReviewCreateManyNoteInputEnvelope = {
     data: ReviewCreateManyNoteInput | ReviewCreateManyNoteInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TutorReviewCreateWithoutNoteInput = {
+    id?: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+    reviewer: UserCreateNestedOneWithoutTutorReviewsInput
+  }
+
+  export type TutorReviewUncheckedCreateWithoutNoteInput = {
+    id?: string
+    reviewerId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
+  }
+
+  export type TutorReviewCreateOrConnectWithoutNoteInput = {
+    where: TutorReviewWhereUniqueInput
+    create: XOR<TutorReviewCreateWithoutNoteInput, TutorReviewUncheckedCreateWithoutNoteInput>
+  }
+
+  export type TutorReviewCreateManyNoteInputEnvelope = {
+    data: TutorReviewCreateManyNoteInput | TutorReviewCreateManyNoteInput[]
     skipDuplicates?: boolean
   }
 
@@ -23528,6 +28496,24 @@ export namespace Prisma {
 
   export type AccessCodeNoteCreateManyNoteInputEnvelope = {
     data: AccessCodeNoteCreateManyNoteInput | AccessCodeNoteCreateManyNoteInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NoteTagCreateWithoutNoteInput = {
+    tag: TagCreateNestedOneWithoutNoteTagsInput
+  }
+
+  export type NoteTagUncheckedCreateWithoutNoteInput = {
+    tagId: string
+  }
+
+  export type NoteTagCreateOrConnectWithoutNoteInput = {
+    where: NoteTagWhereUniqueInput
+    create: XOR<NoteTagCreateWithoutNoteInput, NoteTagUncheckedCreateWithoutNoteInput>
+  }
+
+  export type NoteTagCreateManyNoteInputEnvelope = {
+    data: NoteTagCreateManyNoteInput | NoteTagCreateManyNoteInput[]
     skipDuplicates?: boolean
   }
 
@@ -23645,6 +28631,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotesInput = {
@@ -23665,6 +28653,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUpsertWithoutVerifiedNotesInput = {
@@ -23696,6 +28686,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUpdateManyWithoutCreatedByNestedInput
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVerifiedNotesInput = {
@@ -23716,6 +28708,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUncheckedUpdateManyWithoutCreatedByNestedInput
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutNoteInput = {
@@ -23732,6 +28726,22 @@ export namespace Prisma {
   export type ReviewUpdateManyWithWhereWithoutNoteInput = {
     where: ReviewScalarWhereInput
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutNoteInput>
+  }
+
+  export type TutorReviewUpsertWithWhereUniqueWithoutNoteInput = {
+    where: TutorReviewWhereUniqueInput
+    update: XOR<TutorReviewUpdateWithoutNoteInput, TutorReviewUncheckedUpdateWithoutNoteInput>
+    create: XOR<TutorReviewCreateWithoutNoteInput, TutorReviewUncheckedCreateWithoutNoteInput>
+  }
+
+  export type TutorReviewUpdateWithWhereUniqueWithoutNoteInput = {
+    where: TutorReviewWhereUniqueInput
+    data: XOR<TutorReviewUpdateWithoutNoteInput, TutorReviewUncheckedUpdateWithoutNoteInput>
+  }
+
+  export type TutorReviewUpdateManyWithWhereWithoutNoteInput = {
+    where: TutorReviewScalarWhereInput
+    data: XOR<TutorReviewUpdateManyMutationInput, TutorReviewUncheckedUpdateManyWithoutNoteInput>
   }
 
   export type RaffleEntryUpsertWithWhereUniqueWithoutNoteInput = {
@@ -23775,6 +28785,30 @@ export namespace Prisma {
     noteId?: StringFilter<"AccessCodeNote"> | string
   }
 
+  export type NoteTagUpsertWithWhereUniqueWithoutNoteInput = {
+    where: NoteTagWhereUniqueInput
+    update: XOR<NoteTagUpdateWithoutNoteInput, NoteTagUncheckedUpdateWithoutNoteInput>
+    create: XOR<NoteTagCreateWithoutNoteInput, NoteTagUncheckedCreateWithoutNoteInput>
+  }
+
+  export type NoteTagUpdateWithWhereUniqueWithoutNoteInput = {
+    where: NoteTagWhereUniqueInput
+    data: XOR<NoteTagUpdateWithoutNoteInput, NoteTagUncheckedUpdateWithoutNoteInput>
+  }
+
+  export type NoteTagUpdateManyWithWhereWithoutNoteInput = {
+    where: NoteTagScalarWhereInput
+    data: XOR<NoteTagUpdateManyMutationInput, NoteTagUncheckedUpdateManyWithoutNoteInput>
+  }
+
+  export type NoteTagScalarWhereInput = {
+    AND?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
+    OR?: NoteTagScalarWhereInput[]
+    NOT?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
+    noteId?: StringFilter<"NoteTag"> | string
+    tagId?: StringFilter<"NoteTag"> | string
+  }
+
   export type NoteCreateWithoutReviewsInput = {
     id?: string
     title: string
@@ -23786,13 +28820,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutReviewsInput = {
@@ -23811,8 +28849,12 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutReviewsInput = {
@@ -23838,6 +28880,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -23858,6 +28902,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -23887,13 +28933,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutReviewsInput = {
@@ -23912,8 +28962,12 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -23945,6 +28999,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -23965,6 +29021,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type RafflePrizeCreateWithoutRafflesInput = {
@@ -24171,6 +29229,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutRaffleEntriesInput = {
@@ -24191,6 +29251,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutRaffleEntriesInput = {
@@ -24209,13 +29271,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutRaffleEntriesInput = {
@@ -24234,8 +29300,12 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutRaffleEntriesInput = {
@@ -24303,6 +29373,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRaffleEntriesInput = {
@@ -24323,6 +29395,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type NoteUpsertWithoutRaffleEntriesInput = {
@@ -24347,13 +29421,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutRaffleEntriesInput = {
@@ -24372,8 +29450,12 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type CourseCreateWithoutUserCoursesInput = {
@@ -24421,6 +29503,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutUserCoursesInput = {
@@ -24441,6 +29525,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutUserCoursesInput = {
@@ -24510,6 +29596,8 @@ export namespace Prisma {
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserCoursesInput = {
@@ -24530,6 +29618,522 @@ export namespace Prisma {
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  }
+
+  export type NoteCreateWithoutTutorReviewsInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    filePath: string
+    fileType: string
+    fileUrl: string
+    description?: string | null
+    updatedAt?: Date | string
+    isVerified?: boolean
+    verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
+    course: CourseCreateNestedOneWithoutNotesInput
+    semester?: SemesterCreateNestedOneWithoutNotesInput
+    professor?: ProfessorCreateNestedOneWithoutNotesInput
+    uploader: UserCreateNestedOneWithoutNotesInput
+    verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
+    reviews?: ReviewCreateNestedManyWithoutNoteInput
+    raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
+    accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
+  }
+
+  export type NoteUncheckedCreateWithoutTutorReviewsInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    filePath: string
+    fileType: string
+    fileUrl: string
+    uploaderId: string
+    courseId: string
+    description?: string | null
+    updatedAt?: Date | string
+    semesterId?: string | null
+    professorId?: string | null
+    isVerified?: boolean
+    verifiedAt?: Date | string | null
+    verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
+    reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
+    accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
+  }
+
+  export type NoteCreateOrConnectWithoutTutorReviewsInput = {
+    where: NoteWhereUniqueInput
+    create: XOR<NoteCreateWithoutTutorReviewsInput, NoteUncheckedCreateWithoutTutorReviewsInput>
+  }
+
+  export type UserCreateWithoutTutorReviewsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.Role
+    supabaseId: string
+    kudosPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: NoteCreateNestedManyWithoutUploaderInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    raffleEntries?: RaffleEntryCreateNestedManyWithoutUserInput
+    UserCourses?: UserCoursesCreateNestedManyWithoutUser_rolesInput
+    createdCourses?: CourseCreateNestedManyWithoutCreatedByInput
+    createdProfessors?: ProfessorCreateNestedManyWithoutCreatedByInput
+    createdSemesters?: SemesterCreateNestedManyWithoutCreatedByInput
+    createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
+    createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
+    verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutTutorReviewsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.Role
+    supabaseId: string
+    kudosPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: NoteUncheckedCreateNestedManyWithoutUploaderInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutUserInput
+    UserCourses?: UserCoursesUncheckedCreateNestedManyWithoutUser_rolesInput
+    createdCourses?: CourseUncheckedCreateNestedManyWithoutCreatedByInput
+    createdProfessors?: ProfessorUncheckedCreateNestedManyWithoutCreatedByInput
+    createdSemesters?: SemesterUncheckedCreateNestedManyWithoutCreatedByInput
+    createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
+    createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
+    verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutTutorReviewsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTutorReviewsInput, UserUncheckedCreateWithoutTutorReviewsInput>
+  }
+
+  export type NoteUpsertWithoutTutorReviewsInput = {
+    update: XOR<NoteUpdateWithoutTutorReviewsInput, NoteUncheckedUpdateWithoutTutorReviewsInput>
+    create: XOR<NoteCreateWithoutTutorReviewsInput, NoteUncheckedCreateWithoutTutorReviewsInput>
+    where?: NoteWhereInput
+  }
+
+  export type NoteUpdateToOneWithWhereWithoutTutorReviewsInput = {
+    where?: NoteWhereInput
+    data: XOR<NoteUpdateWithoutTutorReviewsInput, NoteUncheckedUpdateWithoutTutorReviewsInput>
+  }
+
+  export type NoteUpdateWithoutTutorReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    course?: CourseUpdateOneRequiredWithoutNotesNestedInput
+    semester?: SemesterUpdateOneWithoutNotesNestedInput
+    professor?: ProfessorUpdateOneWithoutNotesNestedInput
+    uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
+    verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
+    reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
+    accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
+  }
+
+  export type NoteUncheckedUpdateWithoutTutorReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploaderId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    semesterId?: NullableStringFieldUpdateOperationsInput | string | null
+    professorId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
+    accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
+  }
+
+  export type UserUpsertWithoutTutorReviewsInput = {
+    update: XOR<UserUpdateWithoutTutorReviewsInput, UserUncheckedUpdateWithoutTutorReviewsInput>
+    create: XOR<UserCreateWithoutTutorReviewsInput, UserUncheckedCreateWithoutTutorReviewsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTutorReviewsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTutorReviewsInput, UserUncheckedUpdateWithoutTutorReviewsInput>
+  }
+
+  export type UserUpdateWithoutTutorReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    kudosPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: NoteUpdateManyWithoutUploaderNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    raffleEntries?: RaffleEntryUpdateManyWithoutUserNestedInput
+    UserCourses?: UserCoursesUpdateManyWithoutUser_rolesNestedInput
+    createdCourses?: CourseUpdateManyWithoutCreatedByNestedInput
+    createdProfessors?: ProfessorUpdateManyWithoutCreatedByNestedInput
+    createdSemesters?: SemesterUpdateManyWithoutCreatedByNestedInput
+    createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
+    createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
+    verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTutorReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    kudosPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: NoteUncheckedUpdateManyWithoutUploaderNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutUserNestedInput
+    UserCourses?: UserCoursesUncheckedUpdateManyWithoutUser_rolesNestedInput
+    createdCourses?: CourseUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdProfessors?: ProfessorUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdSemesters?: SemesterUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
+    verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserCreateWithoutCreatedTagsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.Role
+    supabaseId: string
+    kudosPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: NoteCreateNestedManyWithoutUploaderInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    raffleEntries?: RaffleEntryCreateNestedManyWithoutUserInput
+    UserCourses?: UserCoursesCreateNestedManyWithoutUser_rolesInput
+    createdCourses?: CourseCreateNestedManyWithoutCreatedByInput
+    createdProfessors?: ProfessorCreateNestedManyWithoutCreatedByInput
+    createdSemesters?: SemesterCreateNestedManyWithoutCreatedByInput
+    createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
+    createdAccessCodes?: AccessCodeCreateNestedManyWithoutCreatedByInput
+    verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedTagsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.Role
+    supabaseId: string
+    kudosPoints?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: NoteUncheckedCreateNestedManyWithoutUploaderInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutUserInput
+    UserCourses?: UserCoursesUncheckedCreateNestedManyWithoutUser_rolesInput
+    createdCourses?: CourseUncheckedCreateNestedManyWithoutCreatedByInput
+    createdProfessors?: ProfessorUncheckedCreateNestedManyWithoutCreatedByInput
+    createdSemesters?: SemesterUncheckedCreateNestedManyWithoutCreatedByInput
+    createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
+    createdAccessCodes?: AccessCodeUncheckedCreateNestedManyWithoutCreatedByInput
+    verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedTagsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedTagsInput, UserUncheckedCreateWithoutCreatedTagsInput>
+  }
+
+  export type NoteTagCreateWithoutTagInput = {
+    note: NoteCreateNestedOneWithoutNoteTagsInput
+  }
+
+  export type NoteTagUncheckedCreateWithoutTagInput = {
+    noteId: string
+  }
+
+  export type NoteTagCreateOrConnectWithoutTagInput = {
+    where: NoteTagWhereUniqueInput
+    create: XOR<NoteTagCreateWithoutTagInput, NoteTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type NoteTagCreateManyTagInputEnvelope = {
+    data: NoteTagCreateManyTagInput | NoteTagCreateManyTagInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutCreatedTagsInput = {
+    update: XOR<UserUpdateWithoutCreatedTagsInput, UserUncheckedUpdateWithoutCreatedTagsInput>
+    create: XOR<UserCreateWithoutCreatedTagsInput, UserUncheckedCreateWithoutCreatedTagsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedTagsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedTagsInput, UserUncheckedUpdateWithoutCreatedTagsInput>
+  }
+
+  export type UserUpdateWithoutCreatedTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    kudosPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: NoteUpdateManyWithoutUploaderNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    raffleEntries?: RaffleEntryUpdateManyWithoutUserNestedInput
+    UserCourses?: UserCoursesUpdateManyWithoutUser_rolesNestedInput
+    createdCourses?: CourseUpdateManyWithoutCreatedByNestedInput
+    createdProfessors?: ProfessorUpdateManyWithoutCreatedByNestedInput
+    createdSemesters?: SemesterUpdateManyWithoutCreatedByNestedInput
+    createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
+    createdAccessCodes?: AccessCodeUpdateManyWithoutCreatedByNestedInput
+    verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    supabaseId?: StringFieldUpdateOperationsInput | string
+    kudosPoints?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: NoteUncheckedUpdateManyWithoutUploaderNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutUserNestedInput
+    UserCourses?: UserCoursesUncheckedUpdateManyWithoutUser_rolesNestedInput
+    createdCourses?: CourseUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdProfessors?: ProfessorUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdSemesters?: SemesterUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdAccessCodes?: AccessCodeUncheckedUpdateManyWithoutCreatedByNestedInput
+    verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  }
+
+  export type NoteTagUpsertWithWhereUniqueWithoutTagInput = {
+    where: NoteTagWhereUniqueInput
+    update: XOR<NoteTagUpdateWithoutTagInput, NoteTagUncheckedUpdateWithoutTagInput>
+    create: XOR<NoteTagCreateWithoutTagInput, NoteTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type NoteTagUpdateWithWhereUniqueWithoutTagInput = {
+    where: NoteTagWhereUniqueInput
+    data: XOR<NoteTagUpdateWithoutTagInput, NoteTagUncheckedUpdateWithoutTagInput>
+  }
+
+  export type NoteTagUpdateManyWithWhereWithoutTagInput = {
+    where: NoteTagScalarWhereInput
+    data: XOR<NoteTagUpdateManyMutationInput, NoteTagUncheckedUpdateManyWithoutTagInput>
+  }
+
+  export type NoteCreateWithoutNoteTagsInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    filePath: string
+    fileType: string
+    fileUrl: string
+    description?: string | null
+    updatedAt?: Date | string
+    isVerified?: boolean
+    verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
+    course: CourseCreateNestedOneWithoutNotesInput
+    semester?: SemesterCreateNestedOneWithoutNotesInput
+    professor?: ProfessorCreateNestedOneWithoutNotesInput
+    uploader: UserCreateNestedOneWithoutNotesInput
+    verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
+    reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
+    raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
+    accessCodes?: AccessCodeNoteCreateNestedManyWithoutNoteInput
+  }
+
+  export type NoteUncheckedCreateWithoutNoteTagsInput = {
+    id?: string
+    title: string
+    createdAt?: Date | string
+    filePath: string
+    fileType: string
+    fileUrl: string
+    uploaderId: string
+    courseId: string
+    description?: string | null
+    updatedAt?: Date | string
+    semesterId?: string | null
+    professorId?: string | null
+    isVerified?: boolean
+    verifiedAt?: Date | string | null
+    verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
+    reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
+    raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
+    accessCodes?: AccessCodeNoteUncheckedCreateNestedManyWithoutNoteInput
+  }
+
+  export type NoteCreateOrConnectWithoutNoteTagsInput = {
+    where: NoteWhereUniqueInput
+    create: XOR<NoteCreateWithoutNoteTagsInput, NoteUncheckedCreateWithoutNoteTagsInput>
+  }
+
+  export type TagCreateWithoutNoteTagsInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutCreatedTagsInput
+  }
+
+  export type TagUncheckedCreateWithoutNoteTagsInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdById: string
+    createdAt?: Date | string
+  }
+
+  export type TagCreateOrConnectWithoutNoteTagsInput = {
+    where: TagWhereUniqueInput
+    create: XOR<TagCreateWithoutNoteTagsInput, TagUncheckedCreateWithoutNoteTagsInput>
+  }
+
+  export type NoteUpsertWithoutNoteTagsInput = {
+    update: XOR<NoteUpdateWithoutNoteTagsInput, NoteUncheckedUpdateWithoutNoteTagsInput>
+    create: XOR<NoteCreateWithoutNoteTagsInput, NoteUncheckedCreateWithoutNoteTagsInput>
+    where?: NoteWhereInput
+  }
+
+  export type NoteUpdateToOneWithWhereWithoutNoteTagsInput = {
+    where?: NoteWhereInput
+    data: XOR<NoteUpdateWithoutNoteTagsInput, NoteUncheckedUpdateWithoutNoteTagsInput>
+  }
+
+  export type NoteUpdateWithoutNoteTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    course?: CourseUpdateOneRequiredWithoutNotesNestedInput
+    semester?: SemesterUpdateOneWithoutNotesNestedInput
+    professor?: ProfessorUpdateOneWithoutNotesNestedInput
+    uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
+    verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
+    reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
+    raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
+    accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+  }
+
+  export type NoteUncheckedUpdateWithoutNoteTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploaderId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    semesterId?: NullableStringFieldUpdateOperationsInput | string | null
+    professorId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
+    raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
+    accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+  }
+
+  export type TagUpsertWithoutNoteTagsInput = {
+    update: XOR<TagUpdateWithoutNoteTagsInput, TagUncheckedUpdateWithoutNoteTagsInput>
+    create: XOR<TagCreateWithoutNoteTagsInput, TagUncheckedCreateWithoutNoteTagsInput>
+    where?: TagWhereInput
+  }
+
+  export type TagUpdateToOneWithWhereWithoutNoteTagsInput = {
+    where?: TagWhereInput
+    data: XOR<TagUpdateWithoutNoteTagsInput, TagUncheckedUpdateWithoutNoteTagsInput>
+  }
+
+  export type TagUpdateWithoutNoteTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutCreatedTagsNestedInput
+  }
+
+  export type TagUncheckedUpdateWithoutNoteTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutCreatedAccessCodesInput = {
@@ -24550,6 +30154,8 @@ export namespace Prisma {
     createdSemesters?: SemesterCreateNestedManyWithoutCreatedByInput
     createdDepartments?: DepartmentCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutReviewerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedAccessCodesInput = {
@@ -24570,6 +30176,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUncheckedCreateNestedManyWithoutCreatedByInput
     createdDepartments?: DepartmentUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedNotes?: NoteUncheckedCreateNestedManyWithoutVerifiedByInput
+    createdTags?: TagUncheckedCreateNestedManyWithoutCreatedByInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedAccessCodesInput = {
@@ -24626,6 +30234,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUpdateManyWithoutCreatedByNestedInput
     createdDepartments?: DepartmentUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedAccessCodesInput = {
@@ -24646,6 +30256,8 @@ export namespace Prisma {
     createdSemesters?: SemesterUncheckedUpdateManyWithoutCreatedByNestedInput
     createdDepartments?: DepartmentUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedNotes?: NoteUncheckedUpdateManyWithoutVerifiedByNestedInput
+    createdTags?: TagUncheckedUpdateManyWithoutCreatedByNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type AccessCodeNoteUpsertWithWhereUniqueWithoutAccessCodeInput = {
@@ -24710,13 +30322,17 @@ export namespace Prisma {
     updatedAt?: Date | string
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     course: CourseCreateNestedOneWithoutNotesInput
     semester?: SemesterCreateNestedOneWithoutNotesInput
     professor?: ProfessorCreateNestedOneWithoutNotesInput
     uploader: UserCreateNestedOneWithoutNotesInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedNotesInput
     reviews?: ReviewCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
   export type NoteUncheckedCreateWithoutAccessCodesInput = {
@@ -24735,8 +30351,12 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
     reviews?: ReviewUncheckedCreateNestedManyWithoutNoteInput
+    tutorReviews?: TutorReviewUncheckedCreateNestedManyWithoutNoteInput
     raffleEntries?: RaffleEntryUncheckedCreateNestedManyWithoutNoteInput
+    noteTags?: NoteTagUncheckedCreateNestedManyWithoutNoteInput
   }
 
   export type NoteCreateOrConnectWithoutAccessCodesInput = {
@@ -24807,13 +30427,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutAccessCodesInput = {
@@ -24832,8 +30456,12 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteCreateManyUploaderInput = {
@@ -24851,6 +30479,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
   }
 
   export type ReviewCreateManyUserInput = {
@@ -24930,6 +30560,24 @@ export namespace Prisma {
     professorId?: string | null
     isVerified?: boolean
     verifiedAt?: Date | string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
+  }
+
+  export type TagCreateManyCreatedByInput = {
+    id?: string
+    name: string
+    category: $Enums.TagCategory
+    createdAt?: Date | string
+  }
+
+  export type TutorReviewCreateManyReviewerInput = {
+    id?: string
+    noteId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
   }
 
   export type NoteUpdateWithoutUploaderInput = {
@@ -24943,13 +30591,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutUploaderInput = {
@@ -24967,9 +30619,13 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateManyWithoutUploaderInput = {
@@ -24987,6 +30643,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ReviewUpdateWithoutUserInput = {
@@ -25200,13 +30858,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutVerifiedByInput = {
@@ -25224,9 +30886,13 @@ export namespace Prisma {
     professorId?: NullableStringFieldUpdateOperationsInput | string | null
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateManyWithoutVerifiedByInput = {
@@ -25244,6 +30910,58 @@ export namespace Prisma {
     professorId?: NullableStringFieldUpdateOperationsInput | string | null
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type TagUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    noteTags?: NoteTagUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    noteTags?: NoteTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: EnumTagCategoryFieldUpdateOperationsInput | $Enums.TagCategory
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TutorReviewUpdateWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NoteUpdateOneRequiredWithoutTutorReviewsNestedInput
+  }
+
+  export type TutorReviewUncheckedUpdateWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TutorReviewUncheckedUpdateManyWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    noteId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CourseCreateManyDepartmentInput = {
@@ -25301,6 +31019,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
   }
 
   export type UserCoursesCreateManyCourseInput = {
@@ -25318,13 +31038,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutCourseInput = {
@@ -25342,9 +31066,13 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateManyWithoutCourseInput = {
@@ -25362,6 +31090,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserCoursesUpdateWithoutCourseInput = {
@@ -25400,6 +31130,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
   }
 
   export type CourseUpdateWithoutProfessorInput = {
@@ -25444,13 +31176,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     semester?: SemesterUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutProfessorInput = {
@@ -25468,9 +31204,13 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateManyWithoutProfessorInput = {
@@ -25488,6 +31228,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type NoteCreateManySemesterInput = {
@@ -25505,6 +31247,8 @@ export namespace Prisma {
     isVerified?: boolean
     verifiedAt?: Date | string | null
     verifiedById?: string | null
+    status?: $Enums.NoteStatus
+    isPublic?: boolean
   }
 
   export type NoteUpdateWithoutSemesterInput = {
@@ -25518,13 +31262,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     course?: CourseUpdateOneRequiredWithoutNotesNestedInput
     professor?: ProfessorUpdateOneWithoutNotesNestedInput
     uploader?: UserUpdateOneRequiredWithoutNotesNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedNotesNestedInput
     reviews?: ReviewUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutSemesterInput = {
@@ -25542,9 +31290,13 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     reviews?: ReviewUncheckedUpdateManyWithoutNoteNestedInput
+    tutorReviews?: TutorReviewUncheckedUpdateManyWithoutNoteNestedInput
     raffleEntries?: RaffleEntryUncheckedUpdateManyWithoutNoteNestedInput
     accessCodes?: AccessCodeNoteUncheckedUpdateManyWithoutNoteNestedInput
+    noteTags?: NoteTagUncheckedUpdateManyWithoutNoteNestedInput
   }
 
   export type NoteUncheckedUpdateManyWithoutSemesterInput = {
@@ -25562,6 +31314,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ReviewCreateManyNoteInput = {
@@ -25570,6 +31324,15 @@ export namespace Prisma {
     comment?: string | null
     createdAt?: Date | string
     userId: string
+  }
+
+  export type TutorReviewCreateManyNoteInput = {
+    id?: string
+    reviewerId: string
+    comment: string
+    rating: number
+    decision: $Enums.ReviewDecision
+    createdAt?: Date | string
   }
 
   export type RaffleEntryCreateManyNoteInput = {
@@ -25583,6 +31346,10 @@ export namespace Prisma {
   export type AccessCodeNoteCreateManyNoteInput = {
     id?: string
     accessCodeId: string
+  }
+
+  export type NoteTagCreateManyNoteInput = {
+    tagId: string
   }
 
   export type ReviewUpdateWithoutNoteInput = {
@@ -25607,6 +31374,33 @@ export namespace Prisma {
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TutorReviewUpdateWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewer?: UserUpdateOneRequiredWithoutTutorReviewsNestedInput
+  }
+
+  export type TutorReviewUncheckedUpdateWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TutorReviewUncheckedUpdateManyWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    decision?: EnumReviewDecisionFieldUpdateOperationsInput | $Enums.ReviewDecision
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RaffleEntryUpdateWithoutNoteInput = {
@@ -25646,6 +31440,18 @@ export namespace Prisma {
   export type AccessCodeNoteUncheckedUpdateManyWithoutNoteInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessCodeId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type NoteTagUpdateWithoutNoteInput = {
+    tag?: TagUpdateOneRequiredWithoutNoteTagsNestedInput
+  }
+
+  export type NoteTagUncheckedUpdateWithoutNoteInput = {
+    tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type NoteTagUncheckedUpdateManyWithoutNoteInput = {
+    tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type RafflePrizeCreateManyRafflesInput = {
@@ -25722,6 +31528,22 @@ export namespace Prisma {
     noteId?: StringFieldUpdateOperationsInput | string
     isWinner?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoteTagCreateManyTagInput = {
+    noteId: string
+  }
+
+  export type NoteTagUpdateWithoutTagInput = {
+    note?: NoteUpdateOneRequiredWithoutNoteTagsNestedInput
+  }
+
+  export type NoteTagUncheckedUpdateWithoutTagInput = {
+    noteId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type NoteTagUncheckedUpdateManyWithoutTagInput = {
+    noteId?: StringFieldUpdateOperationsInput | string
   }
 
   export type AccessCodeNoteCreateManyAccessCodeInput = {
