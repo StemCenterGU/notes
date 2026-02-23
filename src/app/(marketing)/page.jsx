@@ -1,4 +1,7 @@
 "use client"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useUser } from "@/contexts/AuthContext"
 import { FeaturesSection } from "@/components/features-section"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -10,6 +13,17 @@ import { HowItWorksSection } from "@/components/how-it-works-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 
 export default function Page() {
+  const { user, isLoading } = useUser()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace('/dashboard')
+    }
+  }, [user, isLoading, router])
+
+  if (!isLoading && user) return null
+
   return (
     <div className="min-h-screen bg-background text-foreground relative">
       <div className="aurora-background"></div>

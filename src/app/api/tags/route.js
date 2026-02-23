@@ -2,11 +2,16 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
+import { writeLimiter } from '@/lib/rate-limit'
+import { tagsCache } from '@/lib/cache'
 
 export const dynamic = 'force-dynamic'
 
 // GET /api/tags - List all tags grouped by category (public, no auth needed)
 export async function GET() {
+  const cached = tagsCache.get('grouped')
+  if (cached) return NextResponse.json(cached)
+
   try {
     const tags = await prisma.tag.findMany({
       orderBy: [
@@ -26,6 +31,7 @@ export async function GET() {
       grouped[tag.category].push(tag)
     }
 
+    tagsCache.set('grouped', grouped)
     return NextResponse.json(grouped)
   } catch (error) {
     console.error('Error fetching tags:', error)
@@ -35,6 +41,11 @@ export async function GET() {
 
 // POST /api/tags - Create a tag (LEAD_TUTOR/ADMIN only)
 export async function POST(request) {
+  const { success } = writeLimiter.check(request)
+  if (!success) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+  }
+
   const supabase = await createClient()
   const { data: { user }, error } = await supabase.auth.getUser()
 
@@ -70,6 +81,7 @@ export async function POST(request) {
       },
     })
 
+    tagsCache.invalidate('grouped')
     return NextResponse.json(tag, { status: 201 })
   } catch (error) {
     console.error('Error creating tag:', error)

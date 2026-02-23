@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
+import { departmentsCache, academicsCache } from '@/lib/cache'
 
 // PUT /api/departments/[id] - Update department (LEAD_TUTOR/ADMIN only)
 export async function PUT(request, { params }) {
@@ -37,6 +38,8 @@ export async function PUT(request, { params }) {
       },
     })
 
+    departmentsCache.invalidate('all')
+    academicsCache.invalidate('all')
     return NextResponse.json(department)
   } catch (error) {
     console.error('Error updating department:', error)
@@ -84,6 +87,8 @@ export async function DELETE(request, { params }) {
 
     await prisma.department.delete({ where: { id } })
 
+    departmentsCache.invalidate('all')
+    academicsCache.invalidate('all')
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting department:', error)

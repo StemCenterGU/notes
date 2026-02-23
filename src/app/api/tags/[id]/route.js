@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
+import { tagsCache } from '@/lib/cache'
 
 // PUT /api/tags/[id] - Update a tag (LEAD_TUTOR/ADMIN only)
 export async function PUT(request, { params }) {
@@ -42,6 +43,7 @@ export async function PUT(request, { params }) {
       },
     })
 
+    tagsCache.invalidate('grouped')
     return NextResponse.json(tag)
   } catch (error) {
     console.error('Error updating tag:', error)
@@ -89,6 +91,7 @@ export async function DELETE(request, { params }) {
 
     await prisma.tag.delete({ where: { id } })
 
+    tagsCache.invalidate('grouped')
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting tag:', error)

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
+import { academicsCache } from '@/lib/cache'
 
 // PUT /api/academics/courses/[id] - Update course (LEAD_TUTOR/ADMIN only)
 export async function PUT(request, { params }) {
@@ -39,6 +40,7 @@ export async function PUT(request, { params }) {
       },
     })
 
+    academicsCache.invalidate('all')
     return NextResponse.json(course)
   } catch (error) {
     console.error('Error updating course:', error)
@@ -83,6 +85,7 @@ export async function DELETE(request, { params }) {
 
     await prisma.course.delete({ where: { id } })
 
+    academicsCache.invalidate('all')
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting course:', error)

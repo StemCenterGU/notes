@@ -65,7 +65,7 @@ export default function LeadTutorOverview() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Lead Tutor Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">Management Dashboard</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => {
           const Icon = stat.icon

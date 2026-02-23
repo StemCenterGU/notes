@@ -3,10 +3,16 @@ import { createClient } from '@/lib/supabase/server'
 import { randomUUID } from 'crypto'
 import prisma from '@/lib/prisma'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { writeLimiter } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req) {
+  const { success } = writeLimiter.check(req)
+  if (!success) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+  }
+
   const supabase = await createClient()
   const { data: { user }, error } = await supabase.auth.getUser()
 

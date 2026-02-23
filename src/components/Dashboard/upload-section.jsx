@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { Plus, Upload, Check, ChevronsUpDown } from "lucide-react"
+import { Plus, Upload, Check, ChevronsUpDown, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -40,29 +40,44 @@ function Combobox({
   emptyMessage,
   onAddNew,
   disabled,
+  loading,
+  displayField = "name",
 }) {
   const [open, setOpen] = useState(false)
 
+  const selectedLabel = value
+    ? items.find((item) => item.id === value)?.[displayField]
+    : null
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={false}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
-          disabled={disabled}
+          disabled={disabled || loading}
         >
-          {value
-            ? items.find((item) => item.id === value)?.name
-            : placeholder}
+          {loading ? (
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Loading...
+            </span>
+          ) : (
+            <span className="truncate">{selectedLabel || placeholder}</span>
+          )}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent
+        className="w-[var(--radix-popover-trigger-width)] p-0"
+        onWheel={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
-          <CommandList>
+          <CommandList className="max-h-[200px]">
             <CommandEmpty>
               {onAddNew ? (
                 <Button variant="ghost" size="sm" onClick={() => onAddNew()}>
@@ -79,7 +94,7 @@ function Combobox({
               {items.map((item) => (
                 <CommandItem
                   key={item.id}
-                  value={item.name}
+                  value={item[displayField]}
                   onSelect={() => {
                     onSelect(item.id)
                     setOpen(false)
@@ -91,7 +106,7 @@ function Combobox({
                       value === item.id ? "opacity-100" : "opacity-0",
                     )}
                   />
-                  {item.name}
+                  {item[displayField]}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -117,13 +132,20 @@ export default function UploadSection({ onNoteUploaded }) {
   const [selectedSemester, setSelectedSemester] = useState(null)
   const [tags, setTags] = useState({ RESOURCE_TYPE: [], STUDY_CYCLE: [], GENERAL: [] })
   const [selectedTagIds, setSelectedTagIds] = useState(new Set())
+  const [dataLoaded, setDataLoaded] = useState(false)
 
-  // Filter courses by selected department
+  // Add display labels: "CODE - Name" for departments and courses
+  const departmentItems = useMemo(
+    () => academics.departments.map((d) => ({ ...d, label: `${d.code} - ${d.name}` })),
+    [academics.departments]
+  )
+
+  // Filter courses by selected department, add display labels
   const filteredCourses = useMemo(() => {
     if (!selectedDepartment) return []
-    return academics.courses.filter(
-      (course) => course.departmentId === selectedDepartment
-    )
+    return academics.courses
+      .filter((course) => course.departmentId === selectedDepartment)
+      .map((c) => ({ ...c, label: `${c.code} - ${c.name}` }))
   }, [selectedDepartment, academics.courses])
 
   // When department changes, clear course selection
@@ -132,27 +154,25 @@ export default function UploadSection({ onNoteUploaded }) {
     setSelectedCourse(null)
   }, [])
 
-  // Fetch academic data and tags
+  // Eagerly prefetch academic data and tags on mount (not on dialog open)
   useEffect(() => {
-    if (isOpen) {
-      const fetchAcademics = async () => {
-        const res = await fetch("/api/academics")
-        if (res.ok) {
-          const data = await res.json()
-          setAcademics(data)
-        }
+    if (dataLoaded) return
+    const fetchAcademics = async () => {
+      const res = await fetch("/api/academics")
+      if (res.ok) {
+        const data = await res.json()
+        setAcademics(data)
       }
-      const fetchTags = async () => {
-        const res = await fetch("/api/tags")
-        if (res.ok) {
-          const data = await res.json()
-          setTags(data)
-        }
-      }
-      fetchAcademics()
-      fetchTags()
     }
-  }, [isOpen])
+    const fetchTags = async () => {
+      const res = await fetch("/api/tags")
+      if (res.ok) {
+        const data = await res.json()
+        setTags(data)
+      }
+    }
+    Promise.all([fetchAcademics(), fetchTags()]).then(() => setDataLoaded(true))
+  }, [dataLoaded])
 
   const toggleTag = useCallback((tagId) => {
     setSelectedTagIds((prev) => {
@@ -164,6 +184,11 @@ export default function UploadSection({ onNoteUploaded }) {
       }
       return next
     })
+  }, [])
+
+  const refetchAcademics = useCallback(async () => {
+    const res = await fetch("/api/academics")
+    if (res.ok) setAcademics(await res.json())
   }, [])
 
   const handleAddNew = useCallback(async (type, name) => {
@@ -195,7 +220,6 @@ export default function UploadSection({ onNoteUploaded }) {
         ...prev,
         [`${type}s`]: [...prev[`${type}s`], newItem],
       }))
-      // Automatically select the new item
       if (type === 'professor') setSelectedProfessor(newItem.id);
       if (type === 'semester') setSelectedSemester(newItem.id);
     } else {
@@ -269,12 +293,14 @@ export default function UploadSection({ onNoteUploaded }) {
           <div>
             <Label>Department</Label>
             <Combobox
-              items={academics.departments}
+              items={departmentItems}
               value={selectedDepartment}
               onSelect={handleDepartmentSelect}
               placeholder="Select a department"
               searchPlaceholder="Search departments..."
               emptyMessage="No departments found"
+              displayField="label"
+              loading={!dataLoaded}
             />
           </div>
 
@@ -288,6 +314,8 @@ export default function UploadSection({ onNoteUploaded }) {
               searchPlaceholder="Search courses..."
               emptyMessage="No courses in this department"
               disabled={!selectedDepartment}
+              displayField="label"
+              loading={!dataLoaded}
             />
           </div>
 
@@ -304,6 +332,7 @@ export default function UploadSection({ onNoteUploaded }) {
                 const name = prompt("Enter new professor name:");
                 if (name) handleAddNew('professor', name);
               }}
+              loading={!dataLoaded}
             />
           </div>
 
@@ -320,6 +349,7 @@ export default function UploadSection({ onNoteUploaded }) {
                 const name = prompt("Enter new semester (e.g., Spring 2025):");
                 if (name) handleAddNew('semester', name);
               }}
+              loading={!dataLoaded}
             />
           </div>
 

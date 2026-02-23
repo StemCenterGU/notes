@@ -9,7 +9,7 @@ const appNavItems = [
   { href: "/explore", label: "Explore", roles: ["TUTOR", "LEAD_TUTOR", "PROFESSOR", "ADMIN"] },
   { href: "/access", label: "Enter Access Code", roles: ["STUDENT"] },
   { href: "/tutor/generate-code", label: "Generate Code", roles: ["TUTOR", "LEAD_TUTOR", "PROFESSOR", "ADMIN"] },
-  { href: "/lead-tutor", label: "Lead Tutor", roles: ["LEAD_TUTOR", "ADMIN"] },
+  { href: "/lead-tutor", label: "Manage", roles: ["LEAD_TUTOR", "ADMIN"] },
   { href: "/admin", label: "Admin", roles: ["ADMIN"] },
   { href: "/raffles", label: "Raffles", roles: null },
 ]
