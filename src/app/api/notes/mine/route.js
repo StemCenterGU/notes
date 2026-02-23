@@ -34,6 +34,11 @@ export async function GET(req) {
         reviews: {
           select: { rating: true },
         },
+        noteTags: {
+          include: {
+            tag: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',

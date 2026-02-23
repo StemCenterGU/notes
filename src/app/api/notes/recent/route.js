@@ -18,6 +18,11 @@ export async function GET() {
         semester: {
           select: { name: true, year: true },
         },
+        noteTags: {
+          include: {
+            tag: true,
+          },
+        },
       },
     })
     return NextResponse.json({ notes: recentNotes })

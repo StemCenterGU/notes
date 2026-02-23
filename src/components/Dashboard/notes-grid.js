@@ -2,6 +2,7 @@
 import { FileText, Eye, Star, Trash2, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import VerifiedBadge from "@/components/VerifiedBadge"
@@ -75,6 +76,19 @@ export default function NotesGrid({ notes, showUploader = false, currentUserId, 
                     <p className="text-xs text-muted-foreground/80 mt-1">
                         By: {note.uploader.name}
                     </p>
+                )}
+                {note.noteTags && note.noteTags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {note.noteTags.map((nt) => (
+                      <Badge
+                        key={nt.tag.id}
+                        variant="secondary"
+                        className="text-[10px] px-1.5 py-0"
+                      >
+                        {nt.tag.name}
+                      </Badge>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>

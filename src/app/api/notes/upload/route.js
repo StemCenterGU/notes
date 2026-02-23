@@ -30,6 +30,7 @@ export async function POST(req) {
   const semesterId = formData.get('semesterId')
   const professorId = formData.get('professorId')
   const file = formData.get('file')
+  const tagIdsRaw = formData.get('tagIds')
 
   if (!file || !title || !courseId || !semesterId) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -83,10 +84,21 @@ export async function POST(req) {
 
   const fileUrl = publicUrlData.publicUrl
 
-  // 3. Create the Note record and award Kudos points in a transaction
+  // Parse tag IDs if provided
+  let tagIds = []
+  if (tagIdsRaw) {
+    try {
+      tagIds = JSON.parse(tagIdsRaw)
+      if (!Array.isArray(tagIds)) tagIds = []
+    } catch {
+      tagIds = []
+    }
+  }
+
+  // 3. Create the Note record, NoteTag records, and award Kudos points in a transaction
   try {
-    const [newNote, updatedUser] = await prisma.$transaction([
-      prisma.note.create({
+    const result = await prisma.$transaction(async (tx) => {
+      const newNote = await tx.note.create({
         data: {
           title,
           description,
@@ -98,18 +110,32 @@ export async function POST(req) {
           semesterId: semesterId,
           ...(professorId ? { professorId } : {}),
         },
-      }),
-      prisma.user.update({
+      })
+
+      // Create NoteTag records if tags were selected
+      if (tagIds.length > 0) {
+        await tx.noteTag.createMany({
+          data: tagIds.map((tagId) => ({
+            noteId: newNote.id,
+            tagId,
+          })),
+          skipDuplicates: true,
+        })
+      }
+
+      await tx.user.update({
         where: { id: dbUser.id },
         data: {
           kudosPoints: {
             increment: 10,
           },
         },
-      }),
-    ])
+      })
 
-    return NextResponse.json({ note: newNote }, { status: 201 })
+      return newNote
+    })
+
+    return NextResponse.json({ note: result }, { status: 201 })
   } catch (error) {
     console.error('[DB Insert Error]', error)
     // Cleanup the uploaded file if the DB insert fails

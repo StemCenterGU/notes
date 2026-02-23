@@ -26,6 +26,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 // Reusable Combobox Component
@@ -113,6 +115,8 @@ export default function UploadSection({ onNoteUploaded }) {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedProfessor, setSelectedProfessor] = useState(null)
   const [selectedSemester, setSelectedSemester] = useState(null)
+  const [tags, setTags] = useState({ RESOURCE_TYPE: [], STUDY_CYCLE: [], GENERAL: [] })
+  const [selectedTagIds, setSelectedTagIds] = useState(new Set())
 
   // Filter courses by selected department
   const filteredCourses = useMemo(() => {
@@ -128,7 +132,7 @@ export default function UploadSection({ onNoteUploaded }) {
     setSelectedCourse(null)
   }, [])
 
-  // Fetch academic data
+  // Fetch academic data and tags
   useEffect(() => {
     if (isOpen) {
       const fetchAcademics = async () => {
@@ -138,9 +142,29 @@ export default function UploadSection({ onNoteUploaded }) {
           setAcademics(data)
         }
       }
+      const fetchTags = async () => {
+        const res = await fetch("/api/tags")
+        if (res.ok) {
+          const data = await res.json()
+          setTags(data)
+        }
+      }
       fetchAcademics()
+      fetchTags()
     }
   }, [isOpen])
+
+  const toggleTag = useCallback((tagId) => {
+    setSelectedTagIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(tagId)) {
+        next.delete(tagId)
+      } else {
+        next.add(tagId)
+      }
+      return next
+    })
+  }, [])
 
   const handleAddNew = useCallback(async (type, name) => {
     const endpoint = "/api/academics/create"
@@ -190,6 +214,9 @@ export default function UploadSection({ onNoteUploaded }) {
     formData.append("courseId", selectedCourse)
     if (selectedProfessor) formData.append("professorId", selectedProfessor)
     formData.append("semesterId", selectedSemester)
+    if (selectedTagIds.size > 0) {
+      formData.append("tagIds", JSON.stringify([...selectedTagIds]))
+    }
 
     const res = await fetch("/api/notes/upload", {
       method: "POST",
@@ -205,6 +232,7 @@ export default function UploadSection({ onNoteUploaded }) {
       setSelectedCourse(null)
       setSelectedProfessor(null)
       setSelectedSemester(null)
+      setSelectedTagIds(new Set())
     } else {
       const { error } = await res.json();
       alert(`Upload failed: ${error}`);
@@ -294,6 +322,88 @@ export default function UploadSection({ onNoteUploaded }) {
               }}
             />
           </div>
+
+          {/* Tag Selection */}
+          {(tags.RESOURCE_TYPE.length > 0 || tags.STUDY_CYCLE.length > 0 || tags.GENERAL.length > 0) && (
+            <div className="space-y-3">
+              <Label>Tags (Optional)</Label>
+              {tags.RESOURCE_TYPE.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1.5">Resource Type</p>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.RESOURCE_TYPE.map((tag) => (
+                      <label
+                        key={tag.id}
+                        className={cn(
+                          "flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs cursor-pointer transition-colors",
+                          selectedTagIds.has(tag.id)
+                            ? "bg-primary/10 border-primary text-primary"
+                            : "bg-background border-border text-muted-foreground hover:bg-muted"
+                        )}
+                      >
+                        <Checkbox
+                          checked={selectedTagIds.has(tag.id)}
+                          onCheckedChange={() => toggleTag(tag.id)}
+                          className="h-3 w-3"
+                        />
+                        {tag.name}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {tags.STUDY_CYCLE.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1.5">Study Cycle</p>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.STUDY_CYCLE.map((tag) => (
+                      <label
+                        key={tag.id}
+                        className={cn(
+                          "flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs cursor-pointer transition-colors",
+                          selectedTagIds.has(tag.id)
+                            ? "bg-primary/10 border-primary text-primary"
+                            : "bg-background border-border text-muted-foreground hover:bg-muted"
+                        )}
+                      >
+                        <Checkbox
+                          checked={selectedTagIds.has(tag.id)}
+                          onCheckedChange={() => toggleTag(tag.id)}
+                          className="h-3 w-3"
+                        />
+                        {tag.name}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {tags.GENERAL.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1.5">General</p>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.GENERAL.map((tag) => (
+                      <label
+                        key={tag.id}
+                        className={cn(
+                          "flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs cursor-pointer transition-colors",
+                          selectedTagIds.has(tag.id)
+                            ? "bg-primary/10 border-primary text-primary"
+                            : "bg-background border-border text-muted-foreground hover:bg-muted"
+                        )}
+                      >
+                        <Checkbox
+                          checked={selectedTagIds.has(tag.id)}
+                          onCheckedChange={() => toggleTag(tag.id)}
+                          className="h-3 w-3"
+                        />
+                        {tag.name}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div>
             <Label htmlFor="description">Description (Optional)</Label>

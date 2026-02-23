@@ -28,6 +28,11 @@ export async function GET(req, { params }) {
         verifiedBy: {
           select: { name: true, email: true },
         },
+        noteTags: {
+          include: {
+            tag: true,
+          },
+        },
       },
     })
 
@@ -139,6 +144,7 @@ export async function DELETE(req, { params }) {
 
     // Start a transaction to delete the note and its related data
     await prisma.$transaction([
+      prisma.noteTag.deleteMany({ where: { noteId } }),
       prisma.review.deleteMany({ where: { noteId } }),
       prisma.raffleEntry.deleteMany({ where: { noteId } }),
       prisma.note.delete({ where: { id: noteId } }),
