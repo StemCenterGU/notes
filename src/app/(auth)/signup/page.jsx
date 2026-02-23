@@ -4,6 +4,11 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { Loader2, MailCheck } from 'lucide-react'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -54,83 +59,101 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="max-w-md w-full mx-4 p-8 bg-card border border-border rounded-lg text-center">
-          <h1 className="text-2xl font-bold mb-4">Check your email</h1>
-          <p className="text-muted-foreground">
-            We have sent a confirmation link to <strong>{email}</strong>.
-            Please check your email and click the link to verify your account.
+      <Card className="max-w-md w-full mx-4 shadow-lg text-center">
+        <CardHeader className="pb-2">
+          <div className="flex justify-center mb-3">
+            <div className="rounded-full bg-primary/10 p-3 w-fit">
+              <MailCheck className="h-6 w-6 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl">Check your email</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground text-sm">
+            We&apos;ve sent a confirmation link to{' '}
+            <strong className="text-foreground">{email}</strong>.
+            Please check your inbox and click the link to verify your account.
           </p>
-          <Link href="/login" className="mt-4 inline-block text-primary hover:underline">
+          <Link href="/login" className="inline-block text-primary hover:underline text-sm font-medium transition-colors duration-150">
             Back to login
           </Link>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="max-w-md w-full mx-4 p-8 bg-card border border-border rounded-lg">
-        <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
-
+    <Card className="max-w-md w-full mx-4 shadow-lg">
+      <CardHeader className="text-center pb-2">
+        <CardTitle className="text-2xl">Create Account</CardTitle>
+        <CardDescription>Sign up to start sharing and discovering notes</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-5 pt-4">
         {error && (
-          <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
+          <div className="p-3 bg-destructive/10 text-destructive rounded-md text-sm border border-destructive/20">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSignup} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">Full Name</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="name">Full Name</Label>
+            <Input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder="Jane Smith"
+              className="transition-colors duration-150"
               required
-              className="w-full px-3 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="transition-colors duration-150"
               required
-              className="w-full px-3 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="password">Password</Label>
+            <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="transition-colors duration-150"
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
-            <p className="text-xs text-muted-foreground mt-1">Minimum 6 characters</p>
+            <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full h-11 transition-all duration-200"
+            disabled={loading}
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? 'Creating account...' : 'Create Account'}
           </Button>
         </form>
 
-        <div className="my-6 flex items-center">
-          <div className="flex-1 border-t border-border"></div>
-          <span className="px-4 text-sm text-muted-foreground">or</span>
-          <div className="flex-1 border-t border-border"></div>
+        <div className="flex items-center gap-4">
+          <Separator className="flex-1" />
+          <span className="text-sm text-muted-foreground">or</span>
+          <Separator className="flex-1" />
         </div>
 
         <Button
           type="button"
           variant="outline"
-          className="w-full"
+          className="w-full h-11 transition-all duration-200"
           onClick={handleGoogleSignup}
           disabled={loading}
         >
@@ -143,13 +166,13 @@ export default function SignupPage() {
           Continue with Google
         </Button>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link href="/login" className="text-primary hover:underline">
+          <Link href="/login" className="text-primary hover:underline font-medium transition-colors duration-150">
             Sign in
           </Link>
         </p>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

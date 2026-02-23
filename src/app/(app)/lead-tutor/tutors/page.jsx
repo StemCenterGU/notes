@@ -1,8 +1,10 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Loader2, Users, ShieldCheck } from "lucide-react"
+import { Users, ShieldCheck } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -36,28 +38,61 @@ export default function TutorsActivityPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
+      <Card>
+        <CardHeader>
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead className="text-center">Reviews</TableHead>
+                <TableHead>Last Review</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-44" /></TableCell>
+                  <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                  <TableCell className="text-center"><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Tutor Activity</h1>
-        <Badge variant="secondary" className="text-sm">
-          {tutors.length} tutor{tutors.length !== 1 ? "s" : ""}
-        </Badge>
-      </div>
-
-      {tutors.length === 0 ? (
-        <div className="text-center py-12">
-          <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">No tutors found.</p>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Tutor Activity</CardTitle>
+            <CardDescription>
+              {tutors.length} tutor{tutors.length !== 1 ? "s" : ""}
+            </CardDescription>
+          </div>
         </div>
-      ) : (
-        <div className="border rounded-lg overflow-hidden">
+      </CardHeader>
+
+      <CardContent className="p-0">
+        {tutors.length === 0 ? (
+          <div className="text-center py-12">
+            <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">No tutors found.</p>
+          </div>
+        ) : (
           <Table>
             <TableHeader>
               <TableRow>
@@ -101,8 +136,8 @@ export default function TutorsActivityPage() {
               ))}
             </TableBody>
           </Table>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }

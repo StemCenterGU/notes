@@ -26,6 +26,18 @@ const features = [
   },
 ]
 
+const containerVariants = {
+  offscreen: {
+    opacity: 0,
+  },
+  onscreen: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+}
+
 const cardVariants = {
   offscreen: {
     y: 100,
@@ -47,10 +59,10 @@ export function FeaturesSection() {
     <section id="features" className="py-24 px-4">
       <div className="container mx-auto">
         <motion.div
+          variants={containerVariants}
           initial="offscreen"
           whileInView="onscreen"
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ staggerChildren: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {features.map((feature, index) => (

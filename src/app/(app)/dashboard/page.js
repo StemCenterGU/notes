@@ -6,21 +6,42 @@ import UploadSection from "@/components/Dashboard/upload-section"
 import EditNoteModal from "@/components/Dashboard/EditNoteModal"
 import RaffleHighlightCard from "@/components/Dashboard/RaffleHighlightCard"
 import Link from "next/link"
-import { Award } from "lucide-react"
+import { Award, FileText, Lock, Loader2, Trash2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 const NotesGridSkeleton = () => (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4">
-        {[...Array(4)].map((_, i) => (
-            <div key={i} className="space-y-3">
-                <Skeleton className="h-32 w-full rounded-xl" />
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-4/5" />
-                    <Skeleton className="h-4 w-3/5" />
-                </div>
+  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4">
+    {[...Array(8)].map((_, i) => (
+      <Card key={i} className="overflow-hidden">
+        <CardHeader className="pb-3">
+          <div className="flex items-start gap-3">
+            <Skeleton className="h-10 w-10 rounded-lg shrink-0" />
+            <div className="space-y-2 flex-1">
+              <Skeleton className="h-4 w-4/5" />
+              <Skeleton className="h-3 w-3/5" />
             </div>
-        ))}
-    </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pb-3">
+          <div className="space-y-2">
+            <Skeleton className="h-3 w-full" />
+            <Skeleton className="h-3 w-2/3" />
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
 )
 
 export default function Dashboard() {
@@ -29,6 +50,9 @@ export default function Dashboard() {
   const [editingNote, setEditingNote] = useState(null)
   const [academics, setAcademics] = useState({ courses: [], semesters: [] })
   const [loading, setLoading] = useState(true)
+  const [pendingDeleteId, setPendingDeleteId] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState(null)
 
   const fetchAcademics = useCallback(async () => {
     const res = await fetch("/api/academics")
@@ -73,103 +97,148 @@ export default function Dashboard() {
     setUser(prev => prev ? { ...prev, kudosPoints: prev.kudosPoints + 10 } : null)
   }, [fetchNotes])
 
-  const handleDeleteNote = async (noteId) => {
-    if (confirm("Are you sure you want to delete this note? This action cannot be undone.")) {
-        const res = await fetch(`/api/notes/${noteId}`, { method: 'DELETE' });
-        if (res.ok) {
-            fetchNotes();
-        } else {
-            alert("Failed to delete the note.");
-        }
+  const handleDeleteNote = (noteId) => {
+    setPendingDeleteId(noteId)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteId) return
+    setIsDeleting(true)
+    setDeleteError(null)
+    const res = await fetch(`/api/notes/${pendingDeleteId}`, { method: 'DELETE' })
+    setIsDeleting(false)
+    if (res.ok) {
+      fetchNotes()
+      setPendingDeleteId(null)
+    } else {
+      setPendingDeleteId(null)
+      setDeleteError("Failed to delete the note. Please try again.")
     }
+  }
+
+  const handleCancelDelete = () => {
+    setPendingDeleteId(null)
   }
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Your Study Notes Dashboard</h1>
-          {user && (
-            <div className="flex items-center gap-2 mt-4 md:mt-0">
-                <Award className="text-secondary" />
-                <span className="font-medium">
-                    {user.kudosPoints} Kudos Points
-                </span>
+
+        {/* Welcome banner */}
+        <Card className="mb-8 overflow-hidden border-border/50">
+          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                  Welcome back{user?.name ? `, ${user.name}` : ""}
+                </h1>
+                <p className="text-muted-foreground mt-1 text-sm">
+                  Manage your notes, track uploads, and earn rewards for contributing.
+                </p>
+              </div>
+              {user && (
+                <Badge
+                  variant="secondary"
+                  className="self-start md:self-auto flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium"
+                >
+                  <Award className="h-4 w-4 text-amber-500" />
+                  {user.kudosPoints} Kudos Points
+                </Badge>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        </Card>
 
         <Tabs defaultValue="my-notes" className="w-full">
           <TabsList className="mb-6">
-            <TabsTrigger value="my-notes">My Notes</TabsTrigger>
+            <TabsTrigger value="my-notes" className="flex items-center gap-2">
+              My Notes
+              {!loading && notes.length > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="ml-1 h-5 min-w-5 px-1.5 text-xs font-semibold leading-none"
+                >
+                  {notes.length}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="upload">Upload Notes</TabsTrigger>
           </TabsList>
 
           <TabsContent value="my-notes">
+            {deleteError && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive mb-4">
+                {deleteError}
+              </div>
+            )}
             {loading ? (
-                <NotesGridSkeleton />
+              <NotesGridSkeleton />
             ) : (
-                <NotesGrid
-                  notes={notes}
-                  currentUserId={user?.id}
-                  onEdit={setEditingNote}
-                  onDelete={handleDeleteNote}
-                />
+              <NotesGrid
+                notes={notes}
+                currentUserId={user?.id}
+                onEdit={setEditingNote}
+                onDelete={handleDeleteNote}
+              />
             )}
           </TabsContent>
 
           <TabsContent value="upload">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Upload CTA — full width at the top */}
+            <div className="mb-6">
               <UploadSection onNoteUploaded={handleNoteUploaded} />
+            </div>
+
+            {/* Supporting cards in a 3-column grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <RaffleHighlightCard />
-              <div className="bg-card border border-border rounded-lg p-6">
-                <div className="flex items-center gap-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <line x1="16" y1="13" x2="8" y2="13"></line>
-                      <line x1="16" y1="17" x2="8" y2="17"></line>
-                      <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium">STEM Tutoring Resources</h3>
-                    <p className="text-sm text-muted-foreground">Access study materials</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <p className="text-sm text-muted-foreground">Browse resources from tutors and other students</p>
-                </div>
-                <Link href="/explore" passHref>
-                  <button className="w-full mt-4 py-2 border border-border rounded-md text-primary hover:bg-primary/10 transition-colors">
-                    Browse Resources
-                  </button>
-                </Link>
-              </div>
-              {user?.role === 'STUDENT' && (
-                <div className="bg-card border border-border rounded-lg p-6">
+
+              {/* STEM Tutoring Resources card */}
+              <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
+                <CardHeader className="pb-2">
                   <div className="flex items-center gap-3">
-                    <div className="bg-secondary/10 p-2 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                      </svg>
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <FileText className="text-primary w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Enter Access Code</h3>
-                      <p className="text-sm text-muted-foreground">View notes with code</p>
+                      <CardTitle className="text-base font-medium">STEM Tutoring Resources</CardTitle>
+                      <CardDescription>Access study materials</CardDescription>
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <p className="text-sm text-muted-foreground">Got a code from your tutor? Enter it here to access secure notes.</p>
-                  </div>
-                  <Link href="/access" passHref>
-                    <button className="w-full mt-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors font-medium">
-                      Enter Code
-                    </button>
-                  </Link>
-                </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Browse resources from tutors and other students
+                  </p>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/explore">Browse Resources</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Enter Access Code card — students only */}
+              {user?.role === 'STUDENT' && (
+                <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-secondary/10 p-2 rounded-full">
+                        <Lock className="text-secondary w-6 h-6" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base font-medium">Enter Access Code</CardTitle>
+                        <CardDescription>View notes with code</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Got a code from your tutor? Enter it here to access secure notes.
+                    </p>
+                    <Button asChild className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                      <Link href="/access">Enter Code</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
               )}
             </div>
           </TabsContent>
@@ -178,13 +247,39 @@ export default function Dashboard() {
 
       {editingNote && (
         <EditNoteModal
-            note={editingNote}
-            academics={academics}
-            isOpen={!!editingNote}
-            onClose={() => setEditingNote(null)}
-            onNoteUpdated={fetchNotes}
+          note={editingNote}
+          academics={academics}
+          isOpen={!!editingNote}
+          onClose={() => setEditingNote(null)}
+          onNoteUpdated={fetchNotes}
         />
       )}
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={!!pendingDeleteId} onOpenChange={(open) => { if (!open) handleCancelDelete() }}>
+        <DialogContent>
+          <DialogHeader>
+            <div className="flex flex-col items-center gap-3 mb-1">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+                <Trash2 className="h-6 w-6 text-destructive" />
+              </div>
+            </div>
+            <DialogTitle className="text-center">Delete Note</DialogTitle>
+            <DialogDescription className="text-center text-sm text-muted-foreground">
+              Are you sure you want to delete this note? This action is permanent and cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-2">
+            <Button variant="outline" onClick={handleCancelDelete} disabled={isDeleting}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmDelete} disabled={isDeleting}>
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

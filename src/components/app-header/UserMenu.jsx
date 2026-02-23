@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LogOut, User } from "lucide-react"
+import { LogOut } from "lucide-react"
 
 export function UserMenu({ user, className }) {
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User"

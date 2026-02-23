@@ -9,15 +9,16 @@ import {
   Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog"
 import {
   Select,
@@ -42,6 +43,7 @@ const CATEGORY_DESCRIPTIONS = {
 export default function TagsManagementPage() {
   const [tags, setTags] = useState({ RESOURCE_TYPE: [], STUDY_CYCLE: [], GENERAL: [] })
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   // Tag dialog state
   const [tagDialogOpen, setTagDialogOpen] = useState(false)
@@ -51,6 +53,7 @@ export default function TagsManagementPage() {
 
   // Delete confirmation state
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleteError, setDeleteError] = useState(null)
 
   const fetchTags = useCallback(async () => {
     setLoading(true)
@@ -60,8 +63,8 @@ export default function TagsManagementPage() {
         const data = await res.json()
         setTags(data)
       }
-    } catch (error) {
-      console.error("Failed to fetch tags:", error)
+    } catch (err) {
+      console.error("Failed to fetch tags:", err)
     }
     setLoading(false)
   }, [])
@@ -73,18 +76,21 @@ export default function TagsManagementPage() {
   const openNewTagDialog = (category) => {
     setEditingTag(null)
     setTagForm({ name: "", category: category || "RESOURCE_TYPE" })
+    setError(null)
     setTagDialogOpen(true)
   }
 
   const openEditTagDialog = (tag) => {
     setEditingTag(tag)
     setTagForm({ name: tag.name, category: tag.category })
+    setError(null)
     setTagDialogOpen(true)
   }
 
   const saveTag = async () => {
     if (!tagForm.name.trim()) return
     setTagSaving(true)
+    setError(null)
 
     try {
       const url = editingTag
@@ -103,16 +109,17 @@ export default function TagsManagementPage() {
         fetchTags()
       } else {
         const data = await res.json()
-        alert(data.error || "Failed to save tag")
+        setError(data.error || "Failed to save tag")
       }
     } catch {
-      alert("Failed to save tag")
+      setError("Failed to save tag")
     }
     setTagSaving(false)
   }
 
   const confirmDelete = async () => {
     if (!deleteTarget) return
+    setDeleteError(null)
 
     try {
       const res = await fetch(`/api/tags/${deleteTarget.id}`, { method: "DELETE" })
@@ -122,17 +129,45 @@ export default function TagsManagementPage() {
         fetchTags()
       } else {
         const data = await res.json()
-        alert(data.error || "Failed to delete tag")
+        setDeleteError(data.error || "Failed to delete tag")
       }
     } catch {
-      alert("Failed to delete tag")
+      setDeleteError("Failed to delete tag")
     }
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-48" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <Skeleton className="h-9 w-28" />
+        </div>
+        <div className="space-y-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-4 w-72" />
+                  </div>
+                  <Skeleton className="h-8 w-16" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {Array.from({ length: 2 }).map((_, j) => (
+                    <Skeleton key={j} className="h-12 w-full" />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     )
   }
@@ -142,7 +177,12 @@ export default function TagsManagementPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Tag Management</h1>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Tag Management</h1>
+          <p className="text-muted-foreground mt-1">
+            Organize and manage tags that students use to categorize their uploads.
+          </p>
+        </div>
         <Button onClick={() => openNewTagDialog()}>
           <Plus className="mr-2 h-4 w-4" />
           Add Tag
@@ -173,9 +213,9 @@ export default function TagsManagementPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg">{label}</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <CardDescription className="mt-1">
                       {CATEGORY_DESCRIPTIONS[category]}
-                    </p>
+                    </CardDescription>
                   </div>
                   <Button
                     variant="ghost"
@@ -197,7 +237,7 @@ export default function TagsManagementPage() {
                     {tags[category].map((tag) => (
                       <div
                         key={tag.id}
-                        className="flex items-center justify-between rounded-md border px-4 py-3"
+                        className="flex items-center justify-between rounded-md border px-4 py-3 hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           <Tags className="h-4 w-4 text-muted-foreground" />
@@ -241,8 +281,18 @@ export default function TagsManagementPage() {
             <DialogTitle>
               {editingTag ? "Edit Tag" : "Add Tag"}
             </DialogTitle>
+            <DialogDescription>
+              {editingTag
+                ? "Update the tag name or category below."
+                : "Create a new tag to help students categorize their notes."}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {error && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
             <div>
               <Label htmlFor="tag-name">Tag Name</Label>
               <Input
@@ -286,7 +336,8 @@ export default function TagsManagementPage() {
                 onClick={saveTag}
                 disabled={tagSaving || !tagForm.name.trim()}
               >
-                {tagSaving ? "Saving..." : editingTag ? "Update" : "Create"}
+                {tagSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {editingTag ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -296,12 +347,25 @@ export default function TagsManagementPage() {
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={!!deleteTarget}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null)
+            setDeleteError(null)
+          }
+        }}
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Delete Tag</DialogTitle>
+            <DialogDescription>
+              This action is permanent and cannot be undone.
+            </DialogDescription>
           </DialogHeader>
+          {deleteError && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {deleteError}
+            </div>
+          )}
           <p className="text-sm text-muted-foreground">
             Are you sure you want to delete{" "}
             <span className="font-semibold text-foreground">

@@ -1,8 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Phone, Mail, MapPin, Clock } from "lucide-react"
+import { Phone, Mail, MapPin, Clock, CheckCircle2 } from "lucide-react"
 import Image from "next/image"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -12,6 +16,7 @@ export function ContactSection() {
     phone: "",
     message: "",
   })
+  const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -21,7 +26,7 @@ export function ContactSection() {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log("Form submitted:", formData)
-    alert("Message sent successfully!")
+    setSubmitted(true)
     setFormData({
       firstName: "",
       lastName: "",
@@ -64,67 +69,109 @@ export function ContactSection() {
         {/* Contact Form */}
         <div className="bg-white/10 p-8 rounded-lg shadow-lg">
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="First Name"
-                className="w-full p-3 border-none rounded bg-[#333] text-white outline-none focus:shadow-[0_0_8px_rgba(255,126,95,0.8)]"
-                required
-              />
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Last Name"
-                className="w-full p-3 border-none rounded bg-[#333] text-white outline-none focus:shadow-[0_0_8px_rgba(255,126,95,0.8)]"
-                required
-              />
+            {submitted && (
+              <div className="mb-6 flex items-center gap-3 rounded-lg border border-emerald-400/40 bg-emerald-500/20 px-4 py-3 text-sm font-medium text-white shadow-sm">
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-300" />
+                <span>Your message has been sent successfully. We will get back to you soon!</span>
+              </div>
+            )}
+
+            <div className="space-y-5">
+              {/* First + Last Name row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="firstName" className="text-white">
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="First Name"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-white/40 focus-visible:border-white/50 transition-colors duration-150"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="lastName" className="text-white">
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-white/40 focus-visible:border-white/50 transition-colors duration-150"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-white">
+                  E-mail
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your@email.com"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-white/40 focus-visible:border-white/50 transition-colors duration-150"
+                  required
+                />
+              </div>
+
+              {/* Phone */}
+              <div className="space-y-1.5">
+                <Label htmlFor="phone" className="text-white">
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="(000) 000-0000"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-white/40 focus-visible:border-white/50 transition-colors duration-150"
+                  required
+                />
+              </div>
+
+              {/* Message */}
+              <div className="space-y-1.5">
+                <Label htmlFor="message" className="text-white">
+                  Message
+                </Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={5}
+                  placeholder="How can we help you?"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-white/40 focus-visible:border-white/50 transition-colors duration-150 resize-none"
+                  required
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-[#f7d354] to-[#f7971e] border-none text-white text-base font-semibold h-11 hover:opacity-90 hover:scale-[1.01] transition-all duration-200"
+              >
+                Send Message
+              </Button>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="E-mail"
-                className="w-full p-3 border-none rounded bg-[#333] text-white outline-none focus:shadow-[0_0_8px_rgba(255,126,95,0.8)]"
-                required
-              />
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Phone"
-                className="w-full p-3 border-none rounded bg-[#333] text-white outline-none focus:shadow-[0_0_8px_rgba(255,126,95,0.8)]"
-                required
-              />
-            </div>
-
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows={5}
-              placeholder="Message"
-              className="w-full p-3 border-none rounded bg-[#333] text-white outline-none focus:shadow-[0_0_8px_rgba(255,126,95,0.8)] resize-none mb-4"
-              required
-            ></textarea>
-
-            <button
-              type="submit"
-              className="w-full p-3 bg-gradient-to-r from-[#f7d354] to-[#f7971e] border-none rounded text-white text-xl cursor-pointer hover:bg-[#feb47b] transition-colors"
-            >
-              Send Message
-            </button>
           </form>
 
-          <div className="grid place-items-center mt-5 p-4 bg-gradient-to-r from-[#a81515] to-[#e63946] rounded-lg shadow-md overflow-hidden">
+          <div className="grid place-items-center mt-6 p-4 bg-gradient-to-r from-[#a81515] to-[#e63946] rounded-lg shadow-md overflow-hidden">
             <Image
               src="/images/contact.png"
               alt="Contact Us"

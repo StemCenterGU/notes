@@ -16,7 +16,7 @@ export default function RecentNoteCard({ note }) {
     <Card className="flex flex-col justify-between">
       <CardHeader>
         <div className="flex items-start gap-4">
-            <FileText className="h-6 w-6 text-gray-400 mt-1" />
+            <FileText className="h-6 w-6 text-muted-foreground mt-1" />
             <div>
                 <CardTitle className="text-lg">{note.title}</CardTitle>
                 {(note.status || note.isPublic) && (
@@ -34,8 +34,8 @@ export default function RecentNoteCard({ note }) {
                     )}
                   </div>
                 )}
-                <p className="text-sm text-gray-500">{note.course.name}</p>
-                <p className="text-xs text-gray-400">{note.semester.name} {note.semester.year}</p>
+                <p className="text-sm text-muted-foreground">{note.course.name}</p>
+                <p className="text-xs text-muted-foreground">{note.semester.name} {note.semester.year}</p>
                 {note.noteTags && note.noteTags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-1">
                     {note.noteTags.map((nt) => (

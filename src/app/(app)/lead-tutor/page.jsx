@@ -1,8 +1,22 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { FileText, Users, Eye, Clock, Loader2 } from "lucide-react"
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { FileText, Users, Eye, Clock } from "lucide-react"
+
+const StatCardSkeleton = () => (
+  <Card className="relative overflow-hidden">
+    <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <Skeleton className="h-4 w-28" />
+      <Skeleton className="h-8 w-8 rounded-lg" />
+    </CardHeader>
+    <CardContent>
+      <Skeleton className="h-9 w-16 mb-1" />
+      <Skeleton className="h-3 w-32" />
+    </CardContent>
+  </Card>
+)
 
 export default function LeadTutorOverview() {
   const [stats, setStats] = useState(null)
@@ -65,33 +79,36 @@ export default function LeadTutorOverview() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Management Dashboard</h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight">Management Dashboard</h1>
+        <p className="text-muted-foreground mt-1">
+          Overview of notes, tutors, and review activity.
+        </p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {stat.title}
-                </CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {loading ? (
-                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                  ) : (
-                    stat.value
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {stat.description}
-                </p>
-              </CardContent>
-            </Card>
-          )
-        })}
+        {loading
+          ? [...Array(4)].map((_, i) => <StatCardSkeleton key={i} />)
+          : statCards.map((stat) => {
+              const Icon = stat.icon
+              return (
+                <Card key={stat.title} className="relative overflow-hidden">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {stat.title}
+                    </CardTitle>
+                    <div className="rounded-lg bg-primary/10 p-2">
+                      <Icon className="h-4 w-4 text-primary" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold tracking-tight">{stat.value}</div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {stat.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              )
+            })}
       </div>
     </div>
   )

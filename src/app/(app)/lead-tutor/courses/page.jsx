@@ -12,15 +12,17 @@ import {
   Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog"
 import {
   Select,
@@ -41,6 +43,7 @@ export default function CoursesManagementPage() {
   const [editingDept, setEditingDept] = useState(null)
   const [deptForm, setDeptForm] = useState({ name: "", code: "" })
   const [deptSaving, setDeptSaving] = useState(false)
+  const [deptError, setDeptError] = useState(null)
 
   // Course dialog state
   const [courseDialogOpen, setCourseDialogOpen] = useState(false)
@@ -52,9 +55,11 @@ export default function CoursesManagementPage() {
     professorId: "",
   })
   const [courseSaving, setCourseSaving] = useState(false)
+  const [courseError, setCourseError] = useState(null)
 
   // Delete confirmation state
   const [deleteTarget, setDeleteTarget] = useState(null) // { type: 'department'|'course', id, name }
+  const [deleteError, setDeleteError] = useState(null)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -99,18 +104,21 @@ export default function CoursesManagementPage() {
   const openNewDeptDialog = () => {
     setEditingDept(null)
     setDeptForm({ name: "", code: "" })
+    setDeptError(null)
     setDeptDialogOpen(true)
   }
 
   const openEditDeptDialog = (dept) => {
     setEditingDept(dept)
     setDeptForm({ name: dept.name, code: dept.code })
+    setDeptError(null)
     setDeptDialogOpen(true)
   }
 
   const saveDepartment = async () => {
     if (!deptForm.name.trim() || !deptForm.code.trim()) return
     setDeptSaving(true)
+    setDeptError(null)
 
     try {
       const url = editingDept
@@ -129,10 +137,10 @@ export default function CoursesManagementPage() {
         fetchData()
       } else {
         const data = await res.json()
-        alert(data.error || "Failed to save department")
+        setDeptError(data.error || "Failed to save department")
       }
     } catch {
-      alert("Failed to save department")
+      setDeptError("Failed to save department")
     }
     setDeptSaving(false)
   }
@@ -141,6 +149,7 @@ export default function CoursesManagementPage() {
   const openNewCourseDialog = (departmentId) => {
     setEditingCourse(null)
     setCourseForm({ name: "", code: "", departmentId, professorId: "" })
+    setCourseError(null)
     setCourseDialogOpen(true)
   }
 
@@ -152,12 +161,14 @@ export default function CoursesManagementPage() {
       departmentId: departmentId || "",
       professorId: course.professorId || "",
     })
+    setCourseError(null)
     setCourseDialogOpen(true)
   }
 
   const saveCourse = async () => {
     if (!courseForm.name.trim() || !courseForm.code.trim() || !courseForm.departmentId) return
     setCourseSaving(true)
+    setCourseError(null)
 
     try {
       if (editingCourse) {
@@ -173,7 +184,7 @@ export default function CoursesManagementPage() {
           fetchData()
         } else {
           const data = await res.json()
-          alert(data.error || "Failed to update course")
+          setCourseError(data.error || "Failed to update course")
         }
       } else {
         // Create new course
@@ -196,11 +207,11 @@ export default function CoursesManagementPage() {
           fetchData()
         } else {
           const data = await res.json()
-          alert(data.error || "Failed to create course")
+          setCourseError(data.error || "Failed to create course")
         }
       }
     } catch {
-      alert("Failed to save course")
+      setCourseError("Failed to save course")
     }
     setCourseSaving(false)
   }
@@ -208,6 +219,7 @@ export default function CoursesManagementPage() {
   // Delete handler
   const confirmDelete = async () => {
     if (!deleteTarget) return
+    setDeleteError(null)
 
     try {
       const url =
@@ -222,17 +234,50 @@ export default function CoursesManagementPage() {
         fetchData()
       } else {
         const data = await res.json()
-        alert(data.error || `Failed to delete ${deleteTarget.type}`)
+        setDeleteError(data.error || `Failed to delete ${deleteTarget.type}`)
       }
     } catch {
-      alert(`Failed to delete ${deleteTarget.type}`)
+      setDeleteError(`Failed to delete ${deleteTarget.type}`)
     }
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-44" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <Skeleton className="h-9 w-36" />
+        </div>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-5" />
+                    <Skeleton className="h-5 w-48" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Skeleton className="h-8 w-20" />
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {Array.from({ length: 2 }).map((_, j) => (
+                    <Skeleton key={j} className="h-12 w-full" />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     )
   }
@@ -240,7 +285,12 @@ export default function CoursesManagementPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Course Catalog</h1>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Course Catalog</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage departments and their associated courses.
+          </p>
+        </div>
         <Button onClick={openNewDeptDialog}>
           <Plus className="mr-2 h-4 w-4" />
           Add Department
@@ -272,13 +322,14 @@ export default function CoursesManagementPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <button
+                      type="button"
                       onClick={() => toggleDept(dept.id)}
-                      className="flex items-center gap-2 text-left"
+                      className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity"
                     >
                       {isExpanded ? (
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                        <ChevronDown className="h-5 w-5 text-muted-foreground shrink-0" />
                       ) : (
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
                       )}
                       <CardTitle className="text-lg">
                         {dept.name}
@@ -286,7 +337,7 @@ export default function CoursesManagementPage() {
                           {dept.code}
                         </Badge>
                       </CardTitle>
-                      <span className="text-sm text-muted-foreground ml-2">
+                      <span className="text-sm text-muted-foreground ml-1">
                         {dept.courses?.length || 0} course
                         {dept.courses?.length !== 1 ? "s" : ""}
                       </span>
@@ -326,18 +377,18 @@ export default function CoursesManagementPage() {
                 {isExpanded && (
                   <CardContent>
                     {!dept.courses || dept.courses.length === 0 ? (
-                      <p className="text-sm text-muted-foreground py-2">
+                      <p className="text-sm text-muted-foreground py-2 pl-7">
                         No courses in this department yet.
                       </p>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="space-y-2 pl-7 border-l-2 border-muted ml-2">
                         {dept.courses.map((course) => (
                           <div
                             key={course.id}
-                            className="flex items-center justify-between rounded-md border px-4 py-3"
+                            className="flex items-center justify-between rounded-md border px-4 py-3 hover:bg-muted/50 transition-colors"
                           >
                             <div className="flex items-center gap-3">
-                              <BookOpen className="h-4 w-4 text-muted-foreground" />
+                              <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
                               <div>
                                 <span className="font-medium">
                                   {course.name}
@@ -398,8 +449,18 @@ export default function CoursesManagementPage() {
             <DialogTitle>
               {editingDept ? "Edit Department" : "Add Department"}
             </DialogTitle>
+            <DialogDescription>
+              {editingDept
+                ? "Update the department name or code below."
+                : "Create a new department to group related courses."}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {deptError && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {deptError}
+              </div>
+            )}
             <div>
               <Label htmlFor="dept-name">Department Name</Label>
               <Input
@@ -436,7 +497,8 @@ export default function CoursesManagementPage() {
                   deptSaving || !deptForm.name.trim() || !deptForm.code.trim()
                 }
               >
-                {deptSaving ? "Saving..." : editingDept ? "Update" : "Create"}
+                {deptSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {editingDept ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -450,8 +512,18 @@ export default function CoursesManagementPage() {
             <DialogTitle>
               {editingCourse ? "Edit Course" : "Add Course"}
             </DialogTitle>
+            <DialogDescription>
+              {editingCourse
+                ? "Update the course details below."
+                : "Add a new course to the selected department."}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {courseError && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {courseError}
+              </div>
+            )}
             <div>
               <Label htmlFor="course-name">Course Name</Label>
               <Input
@@ -535,11 +607,8 @@ export default function CoursesManagementPage() {
                   !courseForm.departmentId
                 }
               >
-                {courseSaving
-                  ? "Saving..."
-                  : editingCourse
-                    ? "Update"
-                    : "Create"}
+                {courseSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {editingCourse ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -549,14 +618,27 @@ export default function CoursesManagementPage() {
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={!!deleteTarget}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null)
+            setDeleteError(null)
+          }
+        }}
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
               Delete {deleteTarget?.type === "department" ? "Department" : "Course"}
             </DialogTitle>
+            <DialogDescription>
+              This action is permanent and cannot be undone.
+            </DialogDescription>
           </DialogHeader>
+          {deleteError && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {deleteError}
+            </div>
+          )}
           <p className="text-sm text-muted-foreground">
             Are you sure you want to delete{" "}
             <span className="font-semibold text-foreground">

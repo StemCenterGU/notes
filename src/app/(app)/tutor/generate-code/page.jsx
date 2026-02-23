@@ -4,11 +4,14 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Copy, Clock, FileText, Check, Loader2 } from 'lucide-react'
+import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Copy, Clock, FileText, Check, Loader2, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function GenerateCodePage() {
   const { user, isLoading: authLoading } = useUser()
@@ -115,141 +118,205 @@ export default function GenerateCodePage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-2xl mx-auto">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-7 w-52" />
+              <Skeleton className="h-4 w-80 mt-1" />
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Skeleton className="h-5 w-32 mb-3" />
+                <Card className="border-dashed">
+                  <CardContent className="p-3 space-y-3">
+                    <Skeleton className="h-10 w-full" />
+                    {[...Array(3)].map((_, i) => (
+                      <Skeleton key={i} className="h-14 w-full rounded-md" />
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+              <Skeleton className="h-px w-full" />
+              <div>
+                <Skeleton className="h-5 w-36 mb-3" />
+                <div className="flex gap-2 mb-3">
+                  <Skeleton className="h-10 w-32" />
+                  <Skeleton className="h-10 w-32" />
+                </div>
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <Skeleton className="h-px w-full" />
+              <Skeleton className="h-11 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  if (generatedCode) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-md mx-auto space-y-4">
+          <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20">
+            <CardContent className="pt-6 text-center">
+              <div className="rounded-full bg-emerald-100 dark:bg-emerald-900/30 p-3 w-fit mx-auto mb-4">
+                <Check className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <p className="text-sm text-muted-foreground">Access Code Generated</p>
+              <p className="text-4xl font-mono font-bold tracking-wider my-4">{generatedCode.code}</p>
+
+              <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-6">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  <span>Expires {new Date(generatedCode.expiresAt).toLocaleString()}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <FileText className="h-4 w-4" />
+                  <span>{generatedCode.noteCount} note(s)</span>
+                </div>
+              </div>
+
+              <Button onClick={copyCode} className="w-full transition-all duration-200">
+                {copied ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Code
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              className="flex-1 transition-colors duration-200"
+              onClick={() => setGeneratedCode(null)}
+            >
+              Generate Another
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 transition-colors duration-200"
+              asChild
+            >
+              <Link href="/tutor/codes">Manage Codes</Link>
+            </Button>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Generate Access Code</h1>
-          <Button variant="outline" onClick={() => router.push('/tutor/codes')}>
-            View My Codes
-          </Button>
-        </div>
-
-        {generatedCode ? (
-          <Card className="border-green-500">
-            <CardHeader>
-              <CardTitle className="text-green-600">Code Generated!</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-2">Share this code with the student:</p>
-                <div className="flex items-center justify-center gap-4">
-                  <span className="text-6xl font-mono font-bold tracking-widest">
-                    {generatedCode.code}
-                  </span>
-                  <Button size="icon" variant="outline" onClick={copyCode}>
-                    {copied ? <Check className="h-5 w-5 text-green-600" /> : <Copy className="h-5 w-5" />}
-                  </Button>
-                </div>
+      <div className="max-w-2xl mx-auto">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Generate Access Code</CardTitle>
+                <CardDescription>Create a temporary code for students to access specific notes</CardDescription>
               </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/tutor/codes">
+                  <ArrowLeft className="mr-1.5 h-4 w-4" />
+                  My Codes
+                </Link>
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Step 1: Select Notes */}
+            <div>
+              <h3 className="font-medium mb-3">1. Select Notes</h3>
+              <Card className="border-dashed">
+                <CardContent className="p-3 space-y-3">
+                  <Input
+                    placeholder="Search notes..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span>Expires: {new Date(generatedCode.expiresAt).toLocaleString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-muted-foreground" />
-                  <span>{generatedCode.noteCount} note(s) included</span>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <Button onClick={() => setGeneratedCode(null)} className="flex-1">
-                  Generate Another
-                </Button>
-                <Button variant="outline" onClick={() => router.push('/tutor/codes')} className="flex-1">
-                  Manage Codes
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <>
-            {/* Note Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Select Notes</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input
-                  placeholder="Search notes..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-
-                <div className="max-h-64 overflow-y-auto space-y-2 border rounded-md p-2">
-                  {filteredNotes.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-4">No notes found</p>
-                  ) : (
-                    filteredNotes.map(note => (
-                      <div
-                        key={note.id}
-                        className={`flex items-center gap-3 p-3 rounded-md cursor-pointer transition-colors ${
-                          selectedNotes.includes(note.id)
-                            ? 'bg-primary/10 border border-primary'
-                            : 'hover:bg-muted'
-                        }`}
-                        onClick={() => toggleNote(note.id)}
-                      >
-                        <Checkbox
-                          checked={selectedNotes.includes(note.id)}
-                          onChange={() => {}}
-                        />
-                        <div className="flex-1">
-                          <p className="font-medium">{note.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {note.course?.name} • {note.fileType?.toUpperCase()}
-                          </p>
+                  <div className="max-h-60 overflow-y-auto space-y-1 pr-1">
+                    {filteredNotes.length === 0 ? (
+                      <p className="text-center text-muted-foreground py-6 text-sm">No notes found</p>
+                    ) : (
+                      filteredNotes.map(note => (
+                        <div
+                          key={note.id}
+                          className={`flex items-center gap-3 p-3 rounded-md cursor-pointer transition-colors duration-150 ${
+                            selectedNotes.includes(note.id)
+                              ? 'bg-primary/10 border border-primary'
+                              : 'hover:bg-muted border border-transparent'
+                          }`}
+                          onClick={() => toggleNote(note.id)}
+                        >
+                          <Checkbox
+                            checked={selectedNotes.includes(note.id)}
+                            onChange={() => {}}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">{note.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {note.course?.name} {note.fileType ? `• ${note.fileType.toUpperCase()}` : ''}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))
-                  )}
-                </div>
+                      ))
+                    )}
+                  </div>
 
-                <p className="text-sm text-muted-foreground">
-                  {selectedNotes.length} note(s) selected
-                </p>
-              </CardContent>
-            </Card>
+                  <p className="text-xs text-muted-foreground pt-1">
+                    {selectedNotes.length} note(s) selected
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
 
-            {/* Time Settings */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Access Duration</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-4">
+            <Separator />
+
+            {/* Step 2: Set Duration */}
+            <div>
+              <h3 className="font-medium mb-3">2. Access Duration</h3>
+              <div className="space-y-4">
+                <div className="flex gap-3">
                   <Button
                     variant={durationType === 'duration' ? 'default' : 'outline'}
+                    size="sm"
                     onClick={() => setDurationType('duration')}
+                    className="transition-colors duration-150"
                   >
                     Set Duration
                   </Button>
                   <Button
                     variant={durationType === 'endTime' ? 'default' : 'outline'}
+                    size="sm"
                     onClick={() => setDurationType('endTime')}
+                    className="transition-colors duration-150"
                   >
                     Set End Time
                   </Button>
                 </div>
 
                 {durationType === 'duration' ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label>Duration (minutes)</Label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {[15, 30, 60, 120].map(mins => (
                         <Button
                           key={mins}
                           variant={duration === mins ? 'default' : 'outline'}
                           size="sm"
                           onClick={() => setDuration(mins)}
+                          className="transition-colors duration-150"
                         >
                           {mins} min
                         </Button>
@@ -275,11 +342,13 @@ export default function GenerateCodePage() {
                     />
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+
+            <Separator />
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md text-sm">
                 {error}
               </div>
             )}
@@ -287,7 +356,7 @@ export default function GenerateCodePage() {
             <Button
               onClick={handleGenerate}
               disabled={isGenerating || selectedNotes.length === 0}
-              className="w-full"
+              className="w-full h-11 transition-all duration-200"
               size="lg"
             >
               {isGenerating ? (
@@ -299,8 +368,8 @@ export default function GenerateCodePage() {
                 'Generate Access Code'
               )}
             </Button>
-          </>
-        )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
