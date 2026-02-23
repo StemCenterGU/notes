@@ -1,5 +1,4 @@
 "use client"
-// deploy pipeline test
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useUser } from "@/contexts/AuthContext"
