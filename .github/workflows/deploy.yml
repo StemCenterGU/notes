@@ -1,0 +1,13 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Deploy application
+        run: /home/patel292/notes/deploy.sh
