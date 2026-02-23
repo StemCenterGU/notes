@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { TUTOR_LEVEL_ROLES } from '@/lib/roles'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,13 +22,25 @@ export async function GET(req) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Security Check: Only allow certain roles to explore
-    if (!['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)) {
+    const isTutorLevel = TUTOR_LEVEL_ROLES.includes(dbUser.role)
+    const isStudent = dbUser.role === 'STUDENT'
+
+    // Students can now access explore but only see public+approved notes
+    if (!isTutorLevel && !isStudent) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    // Build where clause based on role
+    const whereClause = {}
+    if (isStudent) {
+      // Students only see public + approved notes
+      whereClause.isPublic = true
+      whereClause.status = 'APPROVED'
     }
 
     // Single query with reviews included - no N+1
     const notes = await prisma.note.findMany({
+      where: whereClause,
       include: {
         course: {
           include: {
@@ -42,6 +55,11 @@ export async function GET(req) {
         },
         reviews: {
           select: { rating: true },
+        },
+        noteTags: {
+          include: {
+            tag: true,
+          },
         },
       },
       orderBy: {
@@ -63,7 +81,7 @@ export async function GET(req) {
     const [courses, professors, semesters] = await prisma.$transaction([
       prisma.course.findMany({ distinct: ['name'] }),
       prisma.professor.findMany({ distinct: ['name'] }),
-      prisma.semester.findMany({ 
+      prisma.semester.findMany({
         distinct: ['name', 'year'],
         orderBy: [
           { year: 'desc' },  // Latest year first

@@ -27,7 +27,7 @@ export default function ViewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 select-none">
+    <div className="min-h-screen bg-muted/50 flex items-center justify-center p-4 select-none">
       <iframe
         src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
         className="w-full h-screen border-0"

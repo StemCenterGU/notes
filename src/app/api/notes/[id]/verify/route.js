@@ -17,6 +17,7 @@ export async function POST(req, { params }) {
     where: { supabaseId: user.id },
   })
 
+  // LEAD_TUTOR intentionally excluded -- verification requires professor authority
   if (!dbUser || !['PROFESSOR', 'ADMIN'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Only professors and admins can verify notes' }, { status: 403 })
   }
@@ -79,6 +80,7 @@ export async function DELETE(req, { params }) {
     where: { supabaseId: user.id },
   })
 
+  // LEAD_TUTOR intentionally excluded -- verification requires professor authority
   if (!dbUser || !['PROFESSOR', 'ADMIN'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Only professors and admins can unverify notes' }, { status: 403 })
   }

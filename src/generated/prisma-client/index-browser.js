@@ -131,11 +131,20 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CourseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   code: 'code',
   professorId: 'professorId',
+  departmentId: 'departmentId',
   createdAt: 'createdAt',
   createdById: 'createdById'
 };
@@ -166,9 +175,12 @@ exports.Prisma.NoteScalarFieldEnum = {
   description: 'description',
   updatedAt: 'updatedAt',
   semesterId: 'semesterId',
+  professorId: 'professorId',
   isVerified: 'isVerified',
   verifiedAt: 'verifiedAt',
-  verifiedById: 'verifiedById'
+  verifiedById: 'verifiedById',
+  status: 'status',
+  isPublic: 'isPublic'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -213,6 +225,29 @@ exports.Prisma.RaffleEntryScalarFieldEnum = {
 exports.Prisma.UserCoursesScalarFieldEnum = {
   A: 'A',
   B: 'B'
+};
+
+exports.Prisma.TutorReviewScalarFieldEnum = {
+  id: 'id',
+  noteId: 'noteId',
+  reviewerId: 'reviewerId',
+  comment: 'comment',
+  rating: 'rating',
+  decision: 'decision',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NoteTagScalarFieldEnum = {
+  noteId: 'noteId',
+  tagId: 'tagId'
 };
 
 exports.Prisma.AccessCodeScalarFieldEnum = {
@@ -265,11 +300,31 @@ exports.Role = exports.$Enums.Role = {
   STUDENT: 'STUDENT',
   PROFESSOR: 'PROFESSOR',
   ADMIN: 'ADMIN',
-  TUTOR: 'TUTOR'
+  TUTOR: 'TUTOR',
+  LEAD_TUTOR: 'LEAD_TUTOR'
+};
+
+exports.NoteStatus = exports.$Enums.NoteStatus = {
+  UNREVIEWED: 'UNREVIEWED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.ReviewDecision = exports.$Enums.ReviewDecision = {
+  APPROVE: 'APPROVE',
+  REJECT: 'REJECT',
+  COMMENT_ONLY: 'COMMENT_ONLY'
+};
+
+exports.TagCategory = exports.$Enums.TagCategory = {
+  RESOURCE_TYPE: 'RESOURCE_TYPE',
+  STUDY_CYCLE: 'STUDY_CYCLE',
+  GENERAL: 'GENERAL'
 };
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Department: 'Department',
   Course: 'Course',
   Professor: 'Professor',
   Semester: 'Semester',
@@ -279,6 +334,9 @@ exports.Prisma.ModelName = {
   RafflePrize: 'RafflePrize',
   RaffleEntry: 'RaffleEntry',
   UserCourses: 'UserCourses',
+  TutorReview: 'TutorReview',
+  Tag: 'Tag',
+  NoteTag: 'NoteTag',
   AccessCode: 'AccessCode',
   AccessCodeNote: 'AccessCodeNote'
 };

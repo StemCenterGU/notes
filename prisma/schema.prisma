@@ -22,26 +22,43 @@ model User {
   reviews            Review[]
   raffleEntries      RaffleEntry[]
   UserCourses        UserCourses[]
-  createdCourses     Course[]      @relation("CreatedCourses")
-  createdProfessors  Professor[]   @relation("CreatedProfessors")
-  createdSemesters   Semester[]    @relation("CreatedSemesters")
-  createdAccessCodes AccessCode[]  @relation("CreatedAccessCodes")
-  verifiedNotes      Note[]        @relation("VerifiedNotes")
+  createdCourses      Course[]      @relation("CreatedCourses")
+  createdProfessors   Professor[]   @relation("CreatedProfessors")
+  createdSemesters    Semester[]    @relation("CreatedSemesters")
+  createdDepartments  Department[]  @relation("CreatedDepartments")
+  createdAccessCodes  AccessCode[]  @relation("CreatedAccessCodes")
+  verifiedNotes       Note[]        @relation("VerifiedNotes")
+  createdTags         Tag[]         @relation("CreatedTags")
+  tutorReviews        TutorReview[] @relation("TutorReviews")
 
   @@map("user_roles")
 }
 
-model Course {
-  id          String        @id @default(cuid())
+model Department {
+  id          String   @id @default(cuid())
   name        String
-  code        String
-  professorId String?
-  createdAt   DateTime      @default(now())
-  professor   Professor?    @relation(fields: [professorId], references: [id])
-  notes       Note[]
-  UserCourses UserCourses[]
+  code        String   @unique
   createdById String
-  createdBy   User          @relation("CreatedCourses", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  createdBy   User     @relation("CreatedDepartments", fields: [createdById], references: [id])
+  courses     Course[]
+}
+
+model Course {
+  id           String        @id @default(cuid())
+  name         String
+  code         String
+  professorId  String?
+  departmentId String?
+  createdAt    DateTime      @default(now())
+  professor    Professor?    @relation(fields: [professorId], references: [id])
+  department   Department?   @relation(fields: [departmentId], references: [id])
+  notes        Note[]
+  UserCourses  UserCourses[]
+  createdById  String
+  createdBy    User          @relation("CreatedCourses", fields: [createdById], references: [id])
+
+  @@index([departmentId])
 }
 
 model Professor {
@@ -49,6 +66,7 @@ model Professor {
   name        String
   email       String?
   courses     Course[]
+  notes       Note[]
   createdById String
   createdBy   User     @relation("CreatedProfessors", fields: [createdById], references: [id])
 }
@@ -74,21 +92,29 @@ model Note {
   description   String?
   updatedAt     DateTime         @updatedAt
   semesterId    String?
+  professorId   String?
   isVerified    Boolean          @default(false)
   verifiedAt    DateTime?
   verifiedById  String?
+  status        NoteStatus       @default(UNREVIEWED)
+  isPublic      Boolean          @default(false)
   course        Course           @relation(fields: [courseId], references: [id])
   semester      Semester?        @relation(fields: [semesterId], references: [id])
+  professor     Professor?       @relation(fields: [professorId], references: [id])
   uploader      User             @relation(fields: [uploaderId], references: [id])
   verifiedBy    User?            @relation("VerifiedNotes", fields: [verifiedById], references: [id])
   reviews       Review[]
+  tutorReviews  TutorReview[]
   raffleEntries RaffleEntry[]
   accessCodes   AccessCodeNote[]
+  noteTags      NoteTag[]
 
   @@index([uploaderId])
   @@index([courseId])
   @@index([semesterId])
+  @@index([professorId])
   @@index([verifiedById])
+  @@index([status])
 }
 
 model Review {
@@ -165,6 +191,64 @@ enum Role {
   PROFESSOR
   ADMIN
   TUTOR
+  LEAD_TUTOR
+}
+
+enum TagCategory {
+  RESOURCE_TYPE
+  STUDY_CYCLE
+  GENERAL
+}
+
+enum NoteStatus {
+  UNREVIEWED
+  APPROVED
+  REJECTED
+}
+
+enum ReviewDecision {
+  APPROVE
+  REJECT
+  COMMENT_ONLY
+}
+
+model TutorReview {
+  id         String         @id @default(cuid())
+  noteId     String
+  reviewerId String
+  comment    String
+  rating     Int            // 1-5 quality score
+  decision   ReviewDecision
+  createdAt  DateTime       @default(now())
+  note       Note           @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  reviewer   User           @relation("TutorReviews", fields: [reviewerId], references: [id])
+
+  @@unique([noteId, reviewerId])
+  @@index([noteId])
+  @@index([reviewerId])
+}
+
+model Tag {
+  id          String      @id @default(cuid())
+  name        String
+  category    TagCategory
+  createdById String
+  createdAt   DateTime    @default(now())
+  createdBy   User        @relation("CreatedTags", fields: [createdById], references: [id])
+  noteTags    NoteTag[]
+
+  @@unique([name, category])
+}
+
+model NoteTag {
+  noteId String
+  tagId  String
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index([noteId])
+  @@index([tagId])
 }
 
 // Secure Temporary Access System

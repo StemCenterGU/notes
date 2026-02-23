@@ -5,6 +5,11 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -48,54 +53,63 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="max-w-md w-full mx-4 p-8 bg-card border border-border rounded-lg">
-        <h1 className="text-2xl font-bold text-center mb-6">Login to GUNotes</h1>
-
+    <Card className="max-w-md w-full mx-4 shadow-lg">
+      <CardHeader className="text-center pb-2">
+        <CardTitle className="text-2xl">Login to GUNotes</CardTitle>
+        <CardDescription>Enter your credentials to access your account</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-5 pt-4">
         {error && (
-          <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
+          <div className="p-3 bg-destructive/10 text-destructive rounded-md text-sm border border-destructive/20">
             {error}
           </div>
         )}
 
         <form onSubmit={handleEmailLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="transition-colors duration-150"
               required
-              className="w-full px-3 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="password">Password</Label>
+            <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="transition-colors duration-150"
               required
-              className="w-full px-3 py-2 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full h-11 transition-all duration-200"
+            disabled={loading}
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
 
-        <div className="my-6 flex items-center">
-          <div className="flex-1 border-t border-border"></div>
-          <span className="px-4 text-sm text-muted-foreground">or</span>
-          <div className="flex-1 border-t border-border"></div>
+        <div className="flex items-center gap-4">
+          <Separator className="flex-1" />
+          <span className="text-sm text-muted-foreground">or</span>
+          <Separator className="flex-1" />
         </div>
 
         <Button
           type="button"
           variant="outline"
-          className="w-full"
+          className="w-full h-11 transition-all duration-200"
           onClick={handleGoogleLogin}
           disabled={loading}
         >
@@ -108,13 +122,13 @@ export default function LoginPage() {
           Continue with Google
         </Button>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-primary hover:underline">
+          <Link href="/signup" className="text-primary hover:underline font-medium transition-colors duration-150">
             Sign up
           </Link>
         </p>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

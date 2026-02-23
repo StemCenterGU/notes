@@ -28,6 +28,11 @@ export async function GET(req, { params }) {
         verifiedBy: {
           select: { name: true, email: true },
         },
+        noteTags: {
+          include: {
+            tag: true,
+          },
+        },
       },
     })
 
@@ -35,10 +40,11 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 })
     }
 
-    // SECURITY CHECK: User must be the uploader or a privileged user
+    // SECURITY CHECK: User must be the uploader, a privileged user, or viewing a public+approved note
     const isOwner = note.uploaderId === dbUser.id
-    const isPrivileged = ['TUTOR', 'ADMIN', 'PROFESSOR'].includes(dbUser.role)
-    if (!isOwner && !isPrivileged) {
+    const isPrivileged = ['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)
+    const isPublicApproved = note.isPublic && note.status === 'APPROVED'
+    if (!isOwner && !isPrivileged && !isPublicApproved) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -139,6 +145,7 @@ export async function DELETE(req, { params }) {
 
     // Start a transaction to delete the note and its related data
     await prisma.$transaction([
+      prisma.noteTag.deleteMany({ where: { noteId } }),
       prisma.review.deleteMany({ where: { noteId } }),
       prisma.raffleEntry.deleteMany({ where: { noteId } }),
       prisma.note.delete({ where: { id: noteId } }),
