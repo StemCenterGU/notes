@@ -59,12 +59,7 @@ export default function ExplorePage() {
   const [verifiedOnly, setVerifiedOnly] = useState(false)
   const router = useRouter()
 
-  // Redirect students away
-  useEffect(() => {
-    if (!authLoading && role === 'STUDENT') {
-      router.replace('/dashboard')
-    }
-  }, [role, authLoading, router])
+  const isStudent = role === 'STUDENT'
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,7 +160,9 @@ export default function ExplorePage() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold">Explore Notes</h1>
           <p className="text-muted-foreground mt-2">
-            Find the study materials you need from our community.
+            {isStudent
+              ? "Browse approved public notes from our community."
+              : "Find the study materials you need from our community."}
           </p>
         </div>
         {renderContent()}
