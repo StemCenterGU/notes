@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { Plus, Upload, Check, ChevronsUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -35,8 +35,9 @@ function Combobox({
   onSelect,
   placeholder,
   searchPlaceholder,
-  emptyPlaceholder,
+  emptyMessage,
   onAddNew,
+  disabled,
 }) {
   const [open, setOpen] = useState(false)
 
@@ -48,6 +49,7 @@ function Combobox({
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
+          disabled={disabled}
         >
           {value
             ? items.find((item) => item.id === value)?.name
@@ -60,10 +62,16 @@ function Combobox({
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
             <CommandEmpty>
-              <Button variant="ghost" size="sm" onClick={() => onAddNew()}>
-                <Plus className="mr-2 h-4 w-4" />
-                {emptyPlaceholder}
-              </Button>
+              {onAddNew ? (
+                <Button variant="ghost" size="sm" onClick={() => onAddNew()}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  {emptyMessage}
+                </Button>
+              ) : (
+                <span className="text-sm text-muted-foreground">
+                  {emptyMessage}
+                </span>
+              )}
             </CommandEmpty>
             <CommandGroup>
               {items.map((item) => (
@@ -96,13 +104,29 @@ export default function UploadSection({ onNoteUploaded }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [academics, setAcademics] = useState({
+    departments: [],
     courses: [],
     professors: [],
     semesters: [],
   })
+  const [selectedDepartment, setSelectedDepartment] = useState(null)
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedProfessor, setSelectedProfessor] = useState(null)
   const [selectedSemester, setSelectedSemester] = useState(null)
+
+  // Filter courses by selected department
+  const filteredCourses = useMemo(() => {
+    if (!selectedDepartment) return []
+    return academics.courses.filter(
+      (course) => course.departmentId === selectedDepartment
+    )
+  }, [selectedDepartment, academics.courses])
+
+  // When department changes, clear course selection
+  const handleDepartmentSelect = useCallback((deptId) => {
+    setSelectedDepartment(deptId)
+    setSelectedCourse(null)
+  }, [])
 
   // Fetch academic data
   useEffect(() => {
@@ -134,12 +158,6 @@ export default function UploadSection({ onNoteUploaded }) {
     } else {
         data = { name };
     }
-    
-    if(type === 'course') {
-        const code = prompt(`Enter a course code for ${name}:`);
-        if(!code) return;
-        data.code = code;
-    }
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -154,7 +172,6 @@ export default function UploadSection({ onNoteUploaded }) {
         [`${type}s`]: [...prev[`${type}s`], newItem],
       }))
       // Automatically select the new item
-      if (type === 'course') setSelectedCourse(newItem.id);
       if (type === 'professor') setSelectedProfessor(newItem.id);
       if (type === 'semester') setSelectedSemester(newItem.id);
     } else {
@@ -171,7 +188,7 @@ export default function UploadSection({ onNoteUploaded }) {
 
     // Append selected IDs
     formData.append("courseId", selectedCourse)
-    formData.append("professorId", selectedProfessor)
+    if (selectedProfessor) formData.append("professorId", selectedProfessor)
     formData.append("semesterId", selectedSemester)
 
     const res = await fetch("/api/notes/upload", {
@@ -184,6 +201,10 @@ export default function UploadSection({ onNoteUploaded }) {
       onNoteUploaded(data.note)
       setIsOpen(false)
       form.reset()
+      setSelectedDepartment(null)
+      setSelectedCourse(null)
+      setSelectedProfessor(null)
+      setSelectedSemester(null)
     } else {
       const { error } = await res.json();
       alert(`Upload failed: ${error}`);
@@ -216,32 +237,41 @@ export default function UploadSection({ onNoteUploaded }) {
               required
             />
           </div>
-          
+
           <div>
-            <Label>Course</Label>
+            <Label>Department</Label>
             <Combobox
-              items={academics.courses}
-              value={selectedCourse}
-              onSelect={setSelectedCourse}
-              placeholder="Select a course"
-              searchPlaceholder="Search courses..."
-              emptyPlaceholder="Add a new course"
-              onAddNew={() => {
-                const name = prompt("Enter new course name:");
-                if (name) handleAddNew('course', name);
-              }}
+              items={academics.departments}
+              value={selectedDepartment}
+              onSelect={handleDepartmentSelect}
+              placeholder="Select a department"
+              searchPlaceholder="Search departments..."
+              emptyMessage="No departments found"
             />
           </div>
 
           <div>
-            <Label>Professor</Label>
+            <Label>Course</Label>
+            <Combobox
+              items={filteredCourses}
+              value={selectedCourse}
+              onSelect={setSelectedCourse}
+              placeholder={selectedDepartment ? "Select a course" : "Select a department first"}
+              searchPlaceholder="Search courses..."
+              emptyMessage="No courses in this department"
+              disabled={!selectedDepartment}
+            />
+          </div>
+
+          <div>
+            <Label>Professor (Optional)</Label>
             <Combobox
               items={academics.professors}
               value={selectedProfessor}
               onSelect={setSelectedProfessor}
               placeholder="Select a professor"
               searchPlaceholder="Search professors..."
-              emptyPlaceholder="Add a new professor"
+              emptyMessage="Add a new professor"
               onAddNew={() => {
                 const name = prompt("Enter new professor name:");
                 if (name) handleAddNew('professor', name);
@@ -257,7 +287,7 @@ export default function UploadSection({ onNoteUploaded }) {
               onSelect={setSelectedSemester}
               placeholder="Select a semester"
               searchPlaceholder="Search semesters..."
-              emptyPlaceholder="Add a new semester"
+              emptyMessage="Add a new semester"
               onAddNew={() => {
                 const name = prompt("Enter new semester (e.g., Spring 2025):");
                 if (name) handleAddNew('semester', name);

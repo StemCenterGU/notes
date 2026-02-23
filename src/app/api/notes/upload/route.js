@@ -28,6 +28,7 @@ export async function POST(req) {
   const description = formData.get('description')
   const courseId = formData.get('courseId')
   const semesterId = formData.get('semesterId')
+  const professorId = formData.get('professorId')
   const file = formData.get('file')
 
   if (!file || !title || !courseId || !semesterId) {
@@ -95,6 +96,7 @@ export async function POST(req) {
           uploaderId: dbUser.id,
           courseId: courseId,
           semesterId: semesterId,
+          ...(professorId ? { professorId } : {}),
         },
       }),
       prisma.user.update({

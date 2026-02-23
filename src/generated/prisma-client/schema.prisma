@@ -25,23 +25,38 @@ model User {
   createdCourses     Course[]      @relation("CreatedCourses")
   createdProfessors  Professor[]   @relation("CreatedProfessors")
   createdSemesters   Semester[]    @relation("CreatedSemesters")
+  createdDepartments Department[]  @relation("CreatedDepartments")
   createdAccessCodes AccessCode[]  @relation("CreatedAccessCodes")
   verifiedNotes      Note[]        @relation("VerifiedNotes")
 
   @@map("user_roles")
 }
 
-model Course {
-  id          String        @id @default(cuid())
+model Department {
+  id          String   @id @default(cuid())
   name        String
-  code        String
-  professorId String?
-  createdAt   DateTime      @default(now())
-  professor   Professor?    @relation(fields: [professorId], references: [id])
-  notes       Note[]
-  UserCourses UserCourses[]
+  code        String   @unique
   createdById String
-  createdBy   User          @relation("CreatedCourses", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  createdBy   User     @relation("CreatedDepartments", fields: [createdById], references: [id])
+  courses     Course[]
+}
+
+model Course {
+  id           String        @id @default(cuid())
+  name         String
+  code         String
+  professorId  String?
+  departmentId String?
+  createdAt    DateTime      @default(now())
+  professor    Professor?    @relation(fields: [professorId], references: [id])
+  department   Department?   @relation(fields: [departmentId], references: [id])
+  notes        Note[]
+  UserCourses  UserCourses[]
+  createdById  String
+  createdBy    User          @relation("CreatedCourses", fields: [createdById], references: [id])
+
+  @@index([departmentId])
 }
 
 model Professor {
@@ -49,6 +64,7 @@ model Professor {
   name        String
   email       String?
   courses     Course[]
+  notes       Note[]
   createdById String
   createdBy   User     @relation("CreatedProfessors", fields: [createdById], references: [id])
 }
@@ -74,11 +90,13 @@ model Note {
   description   String?
   updatedAt     DateTime         @updatedAt
   semesterId    String?
+  professorId   String?
   isVerified    Boolean          @default(false)
   verifiedAt    DateTime?
   verifiedById  String?
   course        Course           @relation(fields: [courseId], references: [id])
   semester      Semester?        @relation(fields: [semesterId], references: [id])
+  professor     Professor?       @relation(fields: [professorId], references: [id])
   uploader      User             @relation(fields: [uploaderId], references: [id])
   verifiedBy    User?            @relation("VerifiedNotes", fields: [verifiedById], references: [id])
   reviews       Review[]
@@ -88,6 +106,7 @@ model Note {
   @@index([uploaderId])
   @@index([courseId])
   @@index([semesterId])
+  @@index([professorId])
   @@index([verifiedById])
 }
 

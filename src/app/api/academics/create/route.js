@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { SUPERVISOR_ROLES } from '@/lib/roles'
 
 export async function POST(request) {
   const supabase = await createClient()
@@ -19,7 +20,7 @@ export async function POST(request) {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { supabaseId: user.id },
-      select: { id: true },
+      select: { id: true, role: true },
     })
 
     if (!dbUser) {
@@ -31,6 +32,19 @@ export async function POST(request) {
 
     switch (type) {
       case 'course':
+        // Course creation restricted to LEAD_TUTOR and ADMIN
+        if (!SUPERVISOR_ROLES.includes(dbUser.role)) {
+          return NextResponse.json(
+            { error: 'Only Lead Tutors and Admins can create courses' },
+            { status: 403 }
+          )
+        }
+        if (!createData.departmentId) {
+          return NextResponse.json(
+            { error: 'Department is required when creating a course' },
+            { status: 400 }
+          )
+        }
         result = await prisma.course.create({ data: createData })
         break
       case 'professor':

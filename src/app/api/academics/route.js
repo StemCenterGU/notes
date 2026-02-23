@@ -5,8 +5,19 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const [courses, professors, semesters] = await prisma.$transaction([
-      prisma.course.findMany(),
+    const [departments, courses, professors, semesters] = await prisma.$transaction([
+      prisma.department.findMany({
+        orderBy: { name: 'asc' },
+      }),
+      prisma.course.findMany({
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          departmentId: true,
+          professorId: true,
+        },
+      }),
       prisma.professor.findMany(),
       prisma.semester.findMany({
         orderBy: [
@@ -23,6 +34,7 @@ export async function GET() {
     }))
 
     return NextResponse.json({
+      departments,
       courses,
       professors,
       semesters: formattedSemesters,

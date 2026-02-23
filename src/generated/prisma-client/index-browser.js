@@ -131,11 +131,20 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CourseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   code: 'code',
   professorId: 'professorId',
+  departmentId: 'departmentId',
   createdAt: 'createdAt',
   createdById: 'createdById'
 };
@@ -166,6 +175,7 @@ exports.Prisma.NoteScalarFieldEnum = {
   description: 'description',
   updatedAt: 'updatedAt',
   semesterId: 'semesterId',
+  professorId: 'professorId',
   isVerified: 'isVerified',
   verifiedAt: 'verifiedAt',
   verifiedById: 'verifiedById'
@@ -271,6 +281,7 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Department: 'Department',
   Course: 'Course',
   Professor: 'Professor',
   Semester: 'Semester',
