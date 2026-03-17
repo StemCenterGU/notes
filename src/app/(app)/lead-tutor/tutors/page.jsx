@@ -108,7 +108,7 @@ export default function TutorsActivityPage() {
                 <TableRow key={tutor.id}>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
-                      {tutor.role === "LEAD_TUTOR" && (
+                      {(tutor.role === "LEAD_TUTOR" || tutor.role === "STEMPASS_TUTOR") && (
                         <ShieldCheck className="h-4 w-4 text-primary" />
                       )}
                       {tutor.name || "Unnamed"}
@@ -119,9 +119,9 @@ export default function TutorsActivityPage() {
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={tutor.role === "LEAD_TUTOR" ? "default" : "secondary"}
+                      variant={tutor.role === "LEAD_TUTOR" || tutor.role === "STEMPASS_TUTOR" ? "default" : "secondary"}
                     >
-                      {tutor.role === "LEAD_TUTOR" ? "Lead Tutor" : "Tutor"}
+                      {tutor.role === "LEAD_TUTOR" ? "Lead Tutor" : tutor.role === "STEMPASS_TUTOR" ? "STEM Pass Tutor" : "Tutor"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center">

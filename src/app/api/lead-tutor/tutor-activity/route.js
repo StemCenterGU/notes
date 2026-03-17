@@ -23,7 +23,7 @@ export async function GET() {
     // Fetch all tutors and lead tutors
     const tutors = await prisma.user.findMany({
       where: {
-        role: { in: ['TUTOR', 'LEAD_TUTOR'] },
+        role: { in: ['TUTOR', 'LEAD_TUTOR', 'STEMPASS_TUTOR'] },
       },
       select: {
         id: true,

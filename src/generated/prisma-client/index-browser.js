@@ -301,7 +301,8 @@ exports.Role = exports.$Enums.Role = {
   PROFESSOR: 'PROFESSOR',
   ADMIN: 'ADMIN',
   TUTOR: 'TUTOR',
-  LEAD_TUTOR: 'LEAD_TUTOR'
+  LEAD_TUTOR: 'LEAD_TUTOR',
+  STEMPASS_TUTOR: 'STEMPASS_TUTOR'
 };
 
 exports.NoteStatus = exports.$Enums.NoteStatus = {

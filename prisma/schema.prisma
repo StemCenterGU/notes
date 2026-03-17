@@ -192,6 +192,7 @@ enum Role {
   ADMIN
   TUTOR
   LEAD_TUTOR
+  STEMPASS_TUTOR
 }
 
 enum TagCategory {

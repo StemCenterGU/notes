@@ -21,7 +21,7 @@ export default function LeadTutorLayout({ children }) {
   const pathname = usePathname()
 
   useEffect(() => {
-    if (!isLoading && (!user || !['LEAD_TUTOR', 'ADMIN'].includes(role))) {
+    if (!isLoading && (!user || !['LEAD_TUTOR', 'STEMPASS_TUTOR', 'ADMIN'].includes(role))) {
       router.push('/dashboard')
     }
   }, [user, role, isLoading, router])
@@ -34,7 +34,7 @@ export default function LeadTutorLayout({ children }) {
     )
   }
 
-  if (!['LEAD_TUTOR', 'ADMIN'].includes(role)) {
+  if (!['LEAD_TUTOR', 'STEMPASS_TUTOR', 'ADMIN'].includes(role)) {
     return null
   }
 

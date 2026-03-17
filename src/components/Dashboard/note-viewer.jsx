@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx'
 
 export default function NoteViewer({ filePath: fileUrl, onClose, allowDownload = true }) {
   const { role } = useUser()
-  const isPrivileged = ['ADMIN', 'LEAD_TUTOR'].includes(role)
+  const isPrivileged = ['ADMIN', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(role)
   // Allow download if explicitly allowed (for own notes) or if privileged
   const canDownload = allowDownload || isPrivileged
   const [wordHtml, setWordHtml] = useState(null)

@@ -42,7 +42,7 @@ export async function GET(req, { params }) {
 
     // SECURITY CHECK: User must be the uploader, a privileged user, or viewing a public+approved note
     const isOwner = note.uploaderId === dbUser.id
-    const isPrivileged = ['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR'].includes(dbUser.role)
+    const isPrivileged = ['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(dbUser.role)
     const isPublicApproved = note.isPublic && note.status === 'APPROVED'
     if (!isOwner && !isPrivileged && !isPublicApproved) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })

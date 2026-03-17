@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils"
 
 const appNavItems = [
   { href: "/dashboard", label: "Dashboard", roles: null },
-  { href: "/explore", label: "Explore", roles: ["TUTOR", "LEAD_TUTOR", "PROFESSOR", "ADMIN"] },
+  { href: "/explore", label: "Explore", roles: ["TUTOR", "LEAD_TUTOR", "STEMPASS_TUTOR", "PROFESSOR", "ADMIN"] },
   { href: "/access", label: "Enter Access Code", roles: ["STUDENT"] },
-  { href: "/tutor/generate-code", label: "Generate Code", roles: ["TUTOR", "LEAD_TUTOR", "PROFESSOR", "ADMIN"] },
-  { href: "/lead-tutor", label: "Manage", roles: ["LEAD_TUTOR", "ADMIN"] },
+  { href: "/tutor/generate-code", label: "Generate Code", roles: ["TUTOR", "LEAD_TUTOR", "STEMPASS_TUTOR", "PROFESSOR", "ADMIN"] },
+  { href: "/lead-tutor", label: "Manage", roles: ["LEAD_TUTOR", "STEMPASS_TUTOR", "ADMIN"] },
   { href: "/admin", label: "Admin", roles: ["ADMIN"] },
   { href: "/raffles", label: "Raffles", roles: null },
 ]

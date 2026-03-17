@@ -27,7 +27,7 @@ import {
 import { useUser } from "@/contexts/AuthContext"
 import VerifiedBadge from "@/components/VerifiedBadge"
 
-const TUTOR_LEVEL_ROLES = ["TUTOR", "LEAD_TUTOR", "PROFESSOR", "ADMIN"]
+const TUTOR_LEVEL_ROLES = ["TUTOR", "LEAD_TUTOR", "STEMPASS_TUTOR", "PROFESSOR", "ADMIN"]
 
 const statusConfig = {
   UNREVIEWED: {
