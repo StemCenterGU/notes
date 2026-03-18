@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
 import NoteViewer from "@/components/Dashboard/note-viewer"
 import { Button } from "@/components/ui/button"
@@ -124,8 +124,8 @@ export default function ViewNotePage() {
   const { role, user } = useUser()
 
   const canVerify = ["PROFESSOR", "ADMIN"].includes(role)
-  const isTutorLevel = TUTOR_LEVEL_ROLES.includes(role)
-  const isSupervisor = SUPERVISOR_ROLES.includes(role)
+  const isTutorLevel = useMemo(() => TUTOR_LEVEL_ROLES.includes(role), [role])
+  const isSupervisor = useMemo(() => SUPERVISOR_ROLES.includes(role), [role])
   const canDownload = note?.canDownload ?? false
 
   const fetchNoteAndReviews = useCallback(async () => {
