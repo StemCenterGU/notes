@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
-import NoteViewer from "@/components/Dashboard/note-viewer"
+import InlineNoteViewer from "@/components/Dashboard/inline-note-viewer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
@@ -386,12 +386,11 @@ export default function ViewNotePage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Note viewer */}
-          <div className="lg:col-span-2 h-[80vh]">
-            <NoteViewer
+          <div className="h-[70vh] lg:h-[85vh]">
+            <InlineNoteViewer
               filePath={note.fileUrl}
-              onClose={() => router.back()}
               allowDownload={canDownload}
             />
           </div>
