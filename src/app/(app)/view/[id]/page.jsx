@@ -16,6 +16,14 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
   Star,
   CheckCircle,
   XCircle,
@@ -23,9 +31,12 @@ import {
   Globe,
   Loader2,
   FileQuestion,
+  Tags,
 } from "lucide-react"
 import { useUser } from "@/contexts/AuthContext"
 import VerifiedBadge from "@/components/VerifiedBadge"
+import TagSelector from "@/components/TagSelector"
+import { SUPERVISOR_ROLES } from "@/lib/roles"
 
 const TUTOR_LEVEL_ROLES = ["TUTOR", "LEAD_TUTOR", "STEMPASS_TUTOR", "PROFESSOR", "ADMIN"]
 
@@ -100,6 +111,13 @@ export default function ViewNotePage() {
   const [trSubmitting, setTrSubmitting] = useState(false)
   const [trError, setTrError] = useState("")
 
+  // Tag editing state
+  const [tagEditDialogOpen, setTagEditDialogOpen] = useState(false)
+  const [allTags, setAllTags] = useState({ RESOURCE_TYPE: [], STUDY_CYCLE: [], GENERAL: [] })
+  const [selectedTagIds, setSelectedTagIds] = useState(new Set())
+  const [savingTags, setSavingTags] = useState(false)
+  const [tagEditError, setTagEditError] = useState("")
+
   const params = useParams()
   const router = useRouter()
   const { id } = params
@@ -107,6 +125,7 @@ export default function ViewNotePage() {
 
   const canVerify = ["PROFESSOR", "ADMIN"].includes(role)
   const isTutorLevel = TUTOR_LEVEL_ROLES.includes(role)
+  const isSupervisor = SUPERVISOR_ROLES.includes(role)
   const canDownload = note?.canDownload ?? false
 
   const fetchNoteAndReviews = useCallback(async () => {
@@ -220,6 +239,65 @@ export default function ViewNotePage() {
       }
     } finally {
       setVerifying(false)
+    }
+  }
+
+  // Fetch all tags when component mounts (for supervisors)
+  useEffect(() => {
+    if (isSupervisor) {
+      const fetchTags = async () => {
+        const res = await fetch('/api/tags')
+        if (res.ok) {
+          const data = await res.json()
+          setAllTags(data)
+        }
+      }
+      fetchTags()
+    }
+  }, [isSupervisor])
+
+  // Update selectedTagIds when note changes
+  useEffect(() => {
+    if (note?.noteTags) {
+      const tagIds = new Set(note.noteTags.map(nt => nt.tag.id))
+      setSelectedTagIds(tagIds)
+    }
+  }, [note])
+
+  const toggleTag = (tagId) => {
+    setSelectedTagIds(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(tagId)) {
+        newSet.delete(tagId)
+      } else {
+        newSet.add(tagId)
+      }
+      return newSet
+    })
+  }
+
+  const handleSaveTags = async () => {
+    setSavingTags(true)
+    setTagEditError("")
+
+    try {
+      const res = await fetch(`/api/notes/${id}/tags`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tagIds: Array.from(selectedTagIds) })
+      })
+
+      if (res.ok) {
+        await fetchNoteAndReviews() // Refresh note data
+        setTagEditDialogOpen(false)
+      } else {
+        const { error } = await res.json()
+        setTagEditError(error || 'Failed to update tags')
+      }
+    } catch (error) {
+      setTagEditError('Failed to update tags')
+    } finally {
+      setSavingTags(false)
     }
   }
 
@@ -362,19 +440,32 @@ export default function ViewNotePage() {
                 </div>
 
                 {/* Tags */}
-                {note.noteTags && note.noteTags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {note.noteTags.map((nt) => (
-                      <Badge
-                        key={nt.tag.id}
-                        variant="secondary"
-                        className="text-xs"
-                      >
-                        {nt.tag.name}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                <div>
+                  {note.noteTags && note.noteTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {note.noteTags.map((nt) => (
+                        <Badge
+                          key={nt.tag.id}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {nt.tag.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  {isSupervisor && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setTagEditDialogOpen(true)}
+                      className="w-full"
+                    >
+                      <Tags className="w-4 h-4 mr-2" />
+                      {note.noteTags && note.noteTags.length > 0 ? 'Edit Tags' : 'Add Tags'}
+                    </Button>
+                  )}
+                </div>
 
                 <Separator />
 
@@ -632,6 +723,44 @@ export default function ViewNotePage() {
           </div>
         </div>
       </div>
+
+      {/* Tag Edit Dialog */}
+      <Dialog open={tagEditDialogOpen} onOpenChange={setTagEditDialogOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Note Tags</DialogTitle>
+            <DialogDescription>
+              Select tags to categorize this note. Changes will be saved when you click Save.
+            </DialogDescription>
+          </DialogHeader>
+
+          <TagSelector
+            tags={allTags}
+            selectedTagIds={selectedTagIds}
+            onTagToggle={toggleTag}
+          />
+
+          {tagEditError && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {tagEditError}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setTagEditDialogOpen(false)}
+              disabled={savingTags}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSaveTags} disabled={savingTags}>
+              {savingTags && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Save Tags
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

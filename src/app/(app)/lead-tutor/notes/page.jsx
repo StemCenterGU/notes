@@ -1,12 +1,21 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { FileText, Search } from "lucide-react"
+import { FileText, Search, Tags, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import {
   Select,
   SelectContent,
@@ -23,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Link from "next/link"
+import TagSelector from "@/components/TagSelector"
 
 const statusConfig = {
   UNREVIEWED: { label: "Unreviewed", className: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800" },
@@ -37,6 +47,14 @@ export default function NotesManagementPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [updatingId, setUpdatingId] = useState(null)
+
+  // Tag editing state
+  const [tagEditDialogOpen, setTagEditDialogOpen] = useState(false)
+  const [allTags, setAllTags] = useState({ RESOURCE_TYPE: [], STUDY_CYCLE: [], GENERAL: [] })
+  const [selectedTagIds, setSelectedTagIds] = useState(new Set())
+  const [editingNoteId, setEditingNoteId] = useState(null)
+  const [savingTags, setSavingTags] = useState(false)
+  const [tagEditError, setTagEditError] = useState("")
 
   const fetchNotes = useCallback(async () => {
     setLoading(true)
@@ -106,6 +124,70 @@ export default function NotesManagementPage() {
     setUpdatingId(null)
   }
 
+  // Fetch all tags on component mount
+  useEffect(() => {
+    const fetchTags = async () => {
+      const res = await fetch('/api/tags')
+      if (res.ok) {
+        const data = await res.json()
+        setAllTags(data)
+      }
+    }
+    fetchTags()
+  }, [])
+
+  const handleEditTags = (note) => {
+    setEditingNoteId(note.id)
+    const tagIds = new Set(note.noteTags?.map(nt => nt.tag.id) || [])
+    setSelectedTagIds(tagIds)
+    setTagEditError("")
+    setTagEditDialogOpen(true)
+  }
+
+  const toggleTag = (tagId) => {
+    setSelectedTagIds(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(tagId)) {
+        newSet.delete(tagId)
+      } else {
+        newSet.add(tagId)
+      }
+      return newSet
+    })
+  }
+
+  const handleSaveTags = async () => {
+    if (!editingNoteId) return
+
+    setSavingTags(true)
+    setTagEditError("")
+
+    try {
+      const res = await fetch(`/api/notes/${editingNoteId}/tags`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tagIds: Array.from(selectedTagIds) })
+      })
+
+      if (res.ok) {
+        const { note: updatedNote } = await res.json()
+        // Update the note in the list
+        setNotes(prev =>
+          prev.map(n => n.id === editingNoteId ? updatedNote : n)
+        )
+        setTagEditDialogOpen(false)
+        setEditingNoteId(null)
+      } else {
+        const { error } = await res.json()
+        setTagEditError(error || 'Failed to update tags')
+      }
+    } catch (error) {
+      setTagEditError('Failed to update tags')
+    } finally {
+      setSavingTags(false)
+    }
+  }
+
   const filteredNotes = notes.filter((note) => {
     const matchesSearch =
       !searchQuery ||
@@ -137,6 +219,7 @@ export default function NotesManagementPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>Uploader</TableHead>
                 <TableHead>Course</TableHead>
+                <TableHead>Tags</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Public</TableHead>
                 <TableHead>Date</TableHead>
@@ -149,6 +232,7 @@ export default function NotesManagementPage() {
                   <TableCell><Skeleton className="h-4 w-36" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-28" /></TableCell>
+                  <TableCell><Skeleton className="h-5 w-32" /></TableCell>
                   <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                   <TableCell><Skeleton className="h-5 w-10" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-20" /></TableCell>
@@ -219,6 +303,7 @@ export default function NotesManagementPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>Uploader</TableHead>
                 <TableHead>Course</TableHead>
+                <TableHead>Tags</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Public</TableHead>
                 <TableHead>Date</TableHead>
@@ -244,6 +329,39 @@ export default function NotesManagementPage() {
                     {note.course?.code && (
                       <span className="text-xs ml-1">({note.course.code})</span>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-1.5">
+                      {note.noteTags && note.noteTags.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {note.noteTags.slice(0, 2).map((nt) => (
+                            <Badge
+                              key={nt.tag.id}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {nt.tag.name}
+                            </Badge>
+                          ))}
+                          {note.noteTags.length > 2 && (
+                            <Badge variant="secondary" className="text-xs">
+                              +{note.noteTags.length - 2}
+                            </Badge>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">No tags</span>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditTags(note)}
+                        className="h-7 px-2 text-xs w-fit"
+                      >
+                        <Tags className="w-3 h-3 mr-1" />
+                        Edit
+                      </Button>
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Badge
@@ -293,6 +411,44 @@ export default function NotesManagementPage() {
           </Table>
         )}
       </CardContent>
+
+      {/* Tag Edit Dialog */}
+      <Dialog open={tagEditDialogOpen} onOpenChange={setTagEditDialogOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Note Tags</DialogTitle>
+            <DialogDescription>
+              Select tags to categorize this note. Changes will be saved when you click Save.
+            </DialogDescription>
+          </DialogHeader>
+
+          <TagSelector
+            tags={allTags}
+            selectedTagIds={selectedTagIds}
+            onTagToggle={toggleTag}
+          />
+
+          {tagEditError && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {tagEditError}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setTagEditDialogOpen(false)}
+              disabled={savingTags}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSaveTags} disabled={savingTags}>
+              {savingTags && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Save Tags
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }

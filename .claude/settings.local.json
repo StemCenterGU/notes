@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run build:*)",
-      "Bash(npm run vercel-build:*)"
+      "Bash(npm run vercel-build:*)",
+      "Bash(wc:*)"
     ]
   }
 }

@@ -28,6 +28,11 @@ export async function GET() {
         course: {
           select: { name: true, code: true },
         },
+        noteTags: {
+          include: {
+            tag: true,
+          },
+        },
       },
       orderBy: { createdAt: 'desc' },
     })
