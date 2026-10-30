@@ -27,9 +27,9 @@ export function UserMenu({ user, className }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={className}>
-        <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-transparent hover:ring-primary/20 transition-all">
+        <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-transparent transition-all hover:ring-border">
           <AvatarImage src={userAvatar} alt={userName} />
-          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+          <AvatarFallback className="bg-muted text-xs font-medium text-muted-foreground">
             {userName.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>

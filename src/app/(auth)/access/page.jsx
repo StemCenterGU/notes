@@ -126,7 +126,7 @@ function AccessCodeContent() {
             Enter the 6-digit code provided by your tutor to view the notes
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-0 pb-0">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex justify-center gap-2">
               {code.map((digit, index) => (

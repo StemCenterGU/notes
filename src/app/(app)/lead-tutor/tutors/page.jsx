@@ -38,14 +38,14 @@ export default function TutorsActivityPage() {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="border-0 bg-transparent p-0 shadow-none">
+        <CardHeader className="px-0 pt-0">
           <div className="space-y-2">
             <Skeleton className="h-6 w-40" />
             <Skeleton className="h-4 w-24" />
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="px-0 pb-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -74,8 +74,8 @@ export default function TutorsActivityPage() {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-0 bg-transparent p-0 shadow-none">
+      <CardHeader className="px-0 pt-0">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Tutor Activity</CardTitle>
@@ -86,7 +86,7 @@ export default function TutorsActivityPage() {
         </div>
       </CardHeader>
 
-      <CardContent className="p-0">
+      <CardContent className="px-0 pb-0">
         {tutors.length === 0 ? (
           <div className="text-center py-12">
             <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />

@@ -1,12 +1,5 @@
-import { AppHeader } from "@/components/app-header"
+import { AppShell } from "@/components/app-shell/AppShell"
 
 export default function AppLayout({ children }) {
-  return (
-    <>
-      <AppHeader variant="app" />
-      <main className="min-h-[calc(100vh-4rem)]">
-        {children}
-      </main>
-    </>
-  )
+  return <AppShell>{children}</AppShell>
 }

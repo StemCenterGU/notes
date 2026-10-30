@@ -43,9 +43,9 @@ export default function RaffleDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 space-y-8">
+        <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10 space-y-8">
           {/* Title card skeleton */}
-          <Card>
+          <Card className="border-0 bg-transparent p-0 shadow-none">
             <CardHeader className="space-y-3">
               <Skeleton className="h-9 w-2/3" />
               <Skeleton className="h-5 w-1/2" />
@@ -59,7 +59,7 @@ export default function RaffleDetailPage() {
               {[1, 2, 3].map((n) => (
                 <Card key={n}>
                   <Skeleton className="h-48 w-full rounded-t-xl rounded-b-none" />
-                  <CardHeader>
+                  <CardHeader className="px-0 pt-0">
                     <Skeleton className="h-6 w-3/4" />
                   </CardHeader>
                   <CardContent className="space-y-2">
@@ -97,11 +97,11 @@ export default function RaffleDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10 space-y-8">
 
         {/* Title section */}
-        <Card>
-          <CardHeader>
+        <Card className="border-0 bg-transparent p-0 shadow-none">
+          <CardHeader className="px-0 pt-0">
             <CardTitle className="text-3xl font-bold">{raffle.title}</CardTitle>
             {raffle.description && (
               <CardDescription className="text-base mt-1">
@@ -133,7 +133,7 @@ export default function RaffleDetailPage() {
                     />
                   </div>
                 )}
-                <CardHeader>
+                <CardHeader className="px-0 pt-0">
                   <CardTitle className="text-base">{prize.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-1">
@@ -151,8 +151,8 @@ export default function RaffleDetailPage() {
 
         {/* Winners */}
         {winners.length > 0 && (
-          <Card>
-            <CardHeader>
+          <Card className="border-0 bg-transparent p-0 shadow-none">
+            <CardHeader className="px-0 pt-0">
               <div className="flex items-center gap-2">
                 <Trophy className="h-5 w-5 text-primary" />
                 <CardTitle className="text-lg">Winners</CardTitle>
@@ -161,7 +161,7 @@ export default function RaffleDetailPage() {
                 {winners.length} winner{winners.length !== 1 ? "s" : ""} selected
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-0 pb-0">
               <Table>
                 <TableHeader>
                   <TableRow>

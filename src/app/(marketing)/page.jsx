@@ -25,28 +25,36 @@ export default function Page() {
   if (!isLoading && user) return null
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      <div className="aurora-background"></div>
-
+    <div className="relative min-h-screen bg-background text-foreground">
       <main className="relative z-10">
-        {/* Hero Section */}
-        <section className="h-screen flex items-center justify-center">
-          <div className="container mx-auto px-4 text-center">
+        {/* Hero */}
+        <section className="flex min-h-[78vh] items-center">
+          <div className="mx-auto w-full max-w-4xl px-6 lg:px-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <h1 className="text-5xl md:text-8xl font-extrabold tracking-tighter">
-                Where Knowledge Connects
-              </h1>
-              <p className="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground">
-                A project by the Gannon University STEM Center. Share your insights, discover new perspectives, and elevate your learning experience.
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Gannon University STEM Center
               </p>
-              <div className="mt-10">
-                <Link href="/signup" passHref>
-                  <Button size="lg" className="bg-primary text-primary-foreground font-bold text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-transform shadow-[0_0_30px_rgba(168,21,21,0.6)]">
-                    Join the Collective <ArrowRight className="ml-2 h-5 w-5" />
+              <h1 className="font-display mt-4 max-w-3xl text-[44px] leading-[1.03] md:text-[68px]">
+                The notes your class already wrote.
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+                Share what you took down, find what you missed, and get it checked by a
+                tutor before you study from it.
+              </p>
+              <div className="mt-9 flex flex-wrap items-center gap-3">
+                <Link href="/signup">
+                  <Button size="lg" className="h-11 px-6">
+                    Create an account
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="lg" variant="outline" className="h-11 px-6">
+                    Sign in
                   </Button>
                 </Link>
               </div>
@@ -59,17 +67,17 @@ export default function Page() {
         <FeaturesSection />
         <TestimonialsSection />
 
-        {/* Final CTA Section */}
-        <section className="py-32">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold">Ready to Begin?</h2>
-            <p className="mt-4 max-w-xl mx-auto text-muted-foreground">
-              Create an account in seconds and unlock a universe of shared knowledge.
+        {/* Final CTA */}
+        <section className="border-t border-border py-24">
+          <div className="mx-auto w-full max-w-4xl px-6 lg:px-10">
+            <h2 className="font-display text-[32px] md:text-[40px]">Start with one note.</h2>
+            <p className="mt-3 max-w-md text-muted-foreground">
+              Upload something from this week and you are in the raffle.
             </p>
-            <div className="mt-8">
-              <Link href="/signup" passHref>
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-transform shadow-[0_0_30px_rgba(234,179,8,0.4)]">
-                  Sign Up for Free
+            <div className="mt-7">
+              <Link href="/signup">
+                <Button size="lg" className="h-11 px-6">
+                  Create an account
                 </Button>
               </Link>
             </div>

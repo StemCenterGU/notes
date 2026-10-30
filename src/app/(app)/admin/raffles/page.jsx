@@ -118,12 +118,12 @@ export default function AdminRafflesPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 space-y-6">
+      <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10 space-y-6">
 
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Manage Raffles</h1>
+            <h1 className="font-display text-[28px]">Manage Raffles</h1>
             <p className="text-muted-foreground mt-1">
               Create, edit, and draw winners for raffles.
             </p>
@@ -153,8 +153,8 @@ export default function AdminRafflesPage() {
         )}
 
         {/* Raffles table wrapped in a Card */}
-        <Card>
-          <CardHeader>
+        <Card className="border-0 bg-transparent p-0 shadow-none">
+          <CardHeader className="px-0 pt-0">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">All Raffles</CardTitle>
               {!loading && (
@@ -164,7 +164,7 @@ export default function AdminRafflesPage() {
               )}
             </div>
           </CardHeader>
-          <CardContent className="p-0">
+          <CardContent className="px-0 pb-0">
             {loading ? (
               <div className="space-y-3 p-6">
                 {/* Skeleton header row */}
@@ -259,7 +259,7 @@ export default function AdminRafflesPage() {
                               )}
                             </Button>
                             <Button
-                              variant="destructive"
+                              variant="outline" className="text-destructive hover:bg-destructive/10"
                               size="sm"
                               onClick={() => openDeleteDialog(raffle)}
                               disabled={!!rowLoading}
@@ -305,7 +305,7 @@ export default function AdminRafflesPage() {
             <Button variant="outline" onClick={closeDialog}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleConfirmAction}>
+            <Button variant="outline" className="text-destructive hover:bg-destructive/10" onClick={handleConfirmAction}>
               {confirmDialog.type === "draw" ? "Draw Winners" : "Delete"}
             </Button>
           </DialogFooter>

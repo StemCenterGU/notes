@@ -118,10 +118,10 @@ export default function GenerateCodePage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10">
         <div className="max-w-2xl mx-auto">
-          <Card>
-            <CardHeader>
+          <Card className="border-0 bg-transparent p-0 shadow-none">
+            <CardHeader className="px-0 pt-0">
               <Skeleton className="h-7 w-52" />
               <Skeleton className="h-4 w-80 mt-1" />
             </CardHeader>
@@ -157,12 +157,12 @@ export default function GenerateCodePage() {
 
   if (generatedCode) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10">
         <div className="max-w-md mx-auto space-y-4">
           <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20">
             <CardContent className="pt-6 text-center">
               <div className="rounded-full bg-emerald-100 dark:bg-emerald-900/30 p-3 w-fit mx-auto mb-4">
-                <Check className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                <Check className="h-6 w-6 text-success" />
               </div>
               <p className="text-sm text-muted-foreground">Access Code Generated</p>
               <p className="text-4xl font-mono font-bold tracking-wider my-4">{generatedCode.code}</p>
@@ -216,10 +216,10 @@ export default function GenerateCodePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10">
       <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
+        <Card className="border-0 bg-transparent p-0 shadow-none">
+          <CardHeader className="px-0 pt-0">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Generate Access Code</CardTitle>
