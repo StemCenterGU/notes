@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 
 // GET /api/raffles/[id]
 export async function GET(req, { params }) {
   const { id } = await params
   try {
     const raffle = await prisma.raffle.findUnique({
+      relationLoadStrategy: 'join',
       where: { id },
       include: {
         raffle_prizes: true,
@@ -31,14 +32,12 @@ export async function GET(req, { params }) {
 
 // PUT /api/raffles/[id]
 export async function PUT(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -66,14 +65,12 @@ export async function PUT(req, { params }) {
 
 // DELETE /api/raffles/[id]
 export async function DELETE(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (dbUser?.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

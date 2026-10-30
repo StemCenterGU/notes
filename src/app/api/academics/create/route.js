@@ -1,20 +1,23 @@
-import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
+import { cacheDelete } from '@/lib/ttl-cache'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
 import { writeLimiter } from '@/lib/rate-limit'
 import { academicsCache } from '@/lib/cache'
 
 export async function POST(request) {
+  // Catalogue changed: drop the cached explore filter options.
+  cacheDelete('explore:filters')
+
   const { success } = writeLimiter.check(request)
   if (!success) {
     return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
   }
 
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -25,11 +28,7 @@ export async function POST(request) {
   }
 
   try {
-    const dbUser = await prisma.user.findUnique({
-      where: { supabaseId: user.id },
-      select: { id: true, role: true },
-    })
-
+  
     if (!dbUser) {
       return NextResponse.json({ error: 'User not found in database' }, { status: 404 })
     }

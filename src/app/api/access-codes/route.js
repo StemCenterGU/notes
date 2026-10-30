@@ -1,27 +1,29 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import { randomInt } from 'crypto'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
 // Generate a 6-digit code
+// Crockford-style base32 minus I, L, O, U: no character pairs that get
+// misread aloud or mistyped. 32^6 = 1.07 billion codes vs 900,000 for
+// 6 digits, which matters because codes are guessable in bulk.
+const CODE_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
+
 function generateCode() {
-  return String(randomInt(100000, 999999))
+  let out = ''
+  for (let i = 0; i < 6; i++) out += CODE_ALPHABET[randomInt(0, CODE_ALPHABET.length)]
+  return out
 }
 
 // POST /api/access-codes - Generate new access code (Tutor/Admin/Professor only)
 export async function POST(req) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-  })
 
   if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden - Tutors only' }, { status: 403 })
@@ -112,16 +114,11 @@ export async function POST(req) {
 
 // GET /api/access-codes - List all codes created by the current tutor
 export async function GET(req) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-  })
 
   if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -129,6 +126,7 @@ export async function GET(req) {
 
   try {
     const codes = await prisma.accessCode.findMany({
+      relationLoadStrategy: 'join',
       where: { createdById: dbUser.id },
       include: {
         notes: {

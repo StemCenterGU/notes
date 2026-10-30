@@ -1,22 +1,17 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
 
 export const dynamic = 'force-dynamic'
 
 // GET /api/notes/[id]/tags - Fetch current tags for a note
 export async function GET(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id }
-  })
 
   if (!dbUser || !SUPERVISOR_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -36,6 +31,7 @@ export async function GET(req, { params }) {
 
     // Fetch note tags with tag details
     const noteTags = await prisma.noteTag.findMany({
+      relationLoadStrategy: 'join',
       where: { noteId },
       include: {
         tag: true
@@ -51,16 +47,11 @@ export async function GET(req, { params }) {
 
 // PUT /api/notes/[id]/tags - Update tags on a note
 export async function PUT(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id }
-  })
 
   if (!dbUser || !SUPERVISOR_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -119,6 +110,7 @@ export async function PUT(req, { params }) {
 
     // Fetch updated note with tags
     const updatedNote = await prisma.note.findUnique({
+      relationLoadStrategy: 'join',
       where: { id: noteId },
       include: {
         noteTags: {
