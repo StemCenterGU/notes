@@ -1,6 +1,9 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma-client"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma-client"
+  // relationJoins lets a query with nested relations run as ONE statement
+  // using LATERAL joins instead of one round-trip per relation.
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -115,6 +118,12 @@ model Note {
   @@index([professorId])
   @@index([verifiedById])
   @@index([status])
+  // Keyset pagination orders by createdAt desc, id desc.
+  @@index([createdAt, id])
+  // The student-facing explore feed: public + approved, newest first.
+  @@index([isPublic, status, createdAt])
+  // Review queue filtered by status, newest first.
+  @@index([status, createdAt])
 }
 
 model Review {

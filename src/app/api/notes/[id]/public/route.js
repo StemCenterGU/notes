@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
 
 // PUT /api/notes/[id]/public - Toggle isPublic (LEAD_TUTOR/ADMIN only)
 export async function PUT(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser || !SUPERVISOR_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

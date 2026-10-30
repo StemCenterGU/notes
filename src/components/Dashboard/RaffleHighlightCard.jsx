@@ -1,108 +1,78 @@
 "use client"
-import { useState, useEffect } from "react"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
-import { Award } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default function RaffleHighlightCard() {
-  const [activeRaffle, setActiveRaffle] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchActiveRaffle = async () => {
-      try {
-        const res = await fetch("/api/raffles?status=active")
-        const data = await res.json()
-        if (data.raffles && data.raffles.length > 0) {
-          setActiveRaffle(data.raffles[0])
-        }
-      } catch (error) {
-        console.error("Failed to fetch active raffle", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchActiveRaffle()
-  }, [])
+/**
+ * Compact active-raffle summary for the dashboard rail.
+ * Sized to sit beside the notes list, so it stays a single quiet block.
+ *
+ * `raffle` is always supplied by the parent: undefined while it loads, null
+ * when there is none. The card used to fall back to fetching /api/raffles for
+ * itself, but `undefined` on the first render looks identical to "no prop",
+ * so it fired that request on every dashboard load for data /api/bootstrap
+ * was already returning.
+ */
+export default function RaffleHighlightCard({ raffle }) {
+  const loading = raffle === undefined
+  const activeRaffle = raffle
 
   if (loading) {
     return (
-      <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-            <div className="flex flex-col gap-2 flex-1">
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-3 w-3/4" />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pb-3">
-          <Skeleton className="h-3 w-full mb-1.5" />
-          <Skeleton className="h-3 w-2/3" />
-        </CardContent>
-        <CardFooter className="pt-0">
-          <Skeleton className="h-9 w-full" />
-        </CardFooter>
-      </Card>
+      <div>
+        <Skeleton className="h-4 w-2/3" />
+        <Skeleton className="mt-2.5 h-3 w-full" />
+        <Skeleton className="mt-1.5 h-3 w-1/2" />
+      </div>
     )
   }
 
   if (!activeRaffle) {
     return (
-      <Card className="transition-all hover:shadow-md hover:-translate-y-0.5 bg-secondary/10 border-border">
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/20 shrink-0">
-              <Award className="h-5 w-5 text-secondary" />
-            </div>
-            <div>
-              <CardTitle className="text-base font-medium">No Active Raffles</CardTitle>
-              <CardDescription>Check back later for new events!</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardFooter className="pt-0">
-          <Button asChild className="w-full" variant="outline">
-            <Link href="/raffles">View Past Raffles</Link>
-          </Button>
-        </CardFooter>
-      </Card>
+      <div>
+        <p className="text-sm text-muted-foreground">No raffle running right now.</p>
+        <Link href="/raffles" className="mt-1 inline-block text-sm text-muted-foreground hover:text-foreground">
+          See past raffles
+        </Link>
+      </div>
     )
   }
 
+  const prizes = activeRaffle.raffle_prizes ?? []
+  const entries = activeRaffle._count?.entries ?? 0
+  const endsAt = activeRaffle.end_time || activeRaffle.endTime
+
   return (
-    <Card className="transition-all hover:shadow-md hover:-translate-y-0.5 bg-secondary/10 border-border">
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/20 shrink-0">
-            <Award className="h-5 w-5 text-secondary" />
-          </div>
-          <div>
-            <CardTitle className="text-base font-medium">{activeRaffle.title}</CardTitle>
-            <CardDescription>A new raffle is underway!</CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="pb-3">
-        <p className="text-sm text-muted-foreground">
-          Prizes include: {activeRaffle.raffle_prizes.slice(0, 2).map(p => p.name).join(', ')}...
-        </p>
-      </CardContent>
-      <CardFooter className="pt-0">
-        <Button asChild className="w-full">
-          <Link href="/raffles">View All Raffles & Prizes</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+    <Link href="/raffles" className="group block">
+      <p className="text-sm font-medium leading-snug text-foreground group-hover:underline">
+        {activeRaffle.title}
+      </p>
+      <p className="tabular mt-1 text-[13px] text-muted-foreground">
+        {entries} {entries === 1 ? "entry" : "entries"}
+        {endsAt &&
+          ` · ends ${new Date(endsAt).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          })}`}
+      </p>
+
+      {prizes.length > 0 && (
+        <ul className="mt-2.5 space-y-0.5">
+          {prizes.slice(0, 2).map((prize) => (
+            <li key={prize.id} className="truncate text-[13px] text-muted-foreground">
+              {prize.name}
+            </li>
+          ))}
+          {prizes.length > 2 && (
+            <li className="text-[13px] text-muted-foreground/70">+{prizes.length - 2} more</li>
+          )}
+        </ul>
+      )}
+
+      <span className="mt-2.5 inline-flex items-center gap-1 text-[13px] text-muted-foreground group-hover:text-foreground">
+        View raffle
+        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+      </span>
+    </Link>
   )
 }

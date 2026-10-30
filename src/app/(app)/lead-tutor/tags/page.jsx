@@ -148,8 +148,8 @@ export default function TagsManagementPage() {
         </div>
         <div className="space-y-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader className="pb-3">
+            <Card key={i} className="border-0 bg-transparent p-0 shadow-none">
+              <CardHeader className="px-0 pb-2 pt-0">
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
                     <Skeleton className="h-5 w-32" />
@@ -158,7 +158,7 @@ export default function TagsManagementPage() {
                   <Skeleton className="h-8 w-16" />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-0 pb-0">
                 <div className="space-y-2">
                   {Array.from({ length: 2 }).map((_, j) => (
                     <Skeleton key={j} className="h-12 w-full" />
@@ -178,7 +178,7 @@ export default function TagsManagementPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Tag Management</h1>
+          <h1 className="font-display text-[28px]">Tag Management</h1>
           <p className="text-muted-foreground mt-1">
             Organize and manage tags that students use to categorize their uploads.
           </p>
@@ -190,7 +190,7 @@ export default function TagsManagementPage() {
       </div>
 
       {totalTags === 0 ? (
-        <Card>
+        <Card className="border-0 bg-transparent p-0 shadow-none">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Tags className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground text-lg font-medium">
@@ -208,11 +208,11 @@ export default function TagsManagementPage() {
       ) : (
         <div className="space-y-6">
           {Object.entries(CATEGORY_LABELS).map(([category, label]) => (
-            <Card key={category}>
-              <CardHeader className="pb-3">
+            <Card key={category} className="border-0 bg-transparent p-0 shadow-none">
+              <CardHeader className="px-0 pb-2 pt-0">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-lg">{label}</CardTitle>
+                    <CardTitle className="text-[13px] font-medium">{label}</CardTitle>
                     <CardDescription className="mt-1">
                       {CATEGORY_DESCRIPTIONS[category]}
                     </CardDescription>
@@ -227,7 +227,7 @@ export default function TagsManagementPage() {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-0 pb-0">
                 {tags[category].length === 0 ? (
                   <p className="text-sm text-muted-foreground py-2">
                     No tags in this category yet.
@@ -261,7 +261,7 @@ export default function TagsManagementPage() {
                               })
                             }
                           >
-                            <Trash2 className="h-4 w-4 text-destructive" />
+                            <Trash2 className="h-4 w-4 text-muted-foreground" />
                           </Button>
                         </div>
                       </div>

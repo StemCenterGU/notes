@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
+import { rateLimit, clientKey } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +10,15 @@ const JWT_SECRET = process.env.SUPABASE_SERVICE_ROLE_KEY // Use existing secret
 
 // POST /api/access-codes/validate - Validate and activate a code
 export async function POST(req) {
+  // A 6-character code is guessable in bulk without a brake on attempts.
+  const limiter = rateLimit(clientKey(req, 'accesscode'), { limit: 10, windowMs: 60_000 })
+  if (!limiter.allowed) {
+    return NextResponse.json(
+      { error: 'Too many attempts. Try again shortly.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(limiter.retryAfterMs / 1000)) } }
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user }, error } = await supabase.auth.getUser()
 
@@ -20,13 +30,16 @@ export async function POST(req) {
     const body = await req.json()
     const { code } = body
 
-    if (!code || code.length !== 6) {
+    // Accept both the legacy numeric codes and the wider alphabet.
+    const normalised = typeof code === 'string' ? code.trim().toUpperCase() : ''
+    if (!/^[0-9A-HJKMNP-TV-Z]{6}$/.test(normalised)) {
       return NextResponse.json({ error: 'Invalid code format' }, { status: 400 })
     }
 
     // Find the access code
     const accessCode = await prisma.accessCode.findUnique({
-      where: { code },
+      relationLoadStrategy: 'join',
+      where: { code: normalised },
       include: {
         notes: {
           include: {

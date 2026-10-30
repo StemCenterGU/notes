@@ -1,7 +1,3 @@
 export default function AuthLayout({ children }) {
-  return (
-    <main className="min-h-screen flex items-center justify-center bg-background">
-      {children}
-    </main>
-  )
+  return <main className="min-h-screen bg-background">{children}</main>
 }

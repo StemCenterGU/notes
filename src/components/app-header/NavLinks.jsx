@@ -14,11 +14,13 @@ const appNavItems = [
   { href: "/raffles", label: "Raffles", roles: null },
 ]
 
+// The signed-out page is short enough that two anchors cover it. "Features"
+// and "Testimonials" pointed at sections that no longer exist -- the
+// testimonials in particular were invented students with invented quotes.
 const marketingNavItems = [
-  { href: "/#features", label: "Features" },
-  { href: "/#how-it-works", label: "How It Works" },
-  { href: "/#testimonials", label: "Testimonials" },
-  { href: "https://www.gannon.edu/about-gannon/", label: "About Us", external: true },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/about-us", label: "About" },
+  { href: "https://www.gannon.edu/academics/centers-of-excellence/stem-center/", label: "STEM Center", external: true },
 ]
 
 export function NavLinks({ variant = "app", role, className }) {

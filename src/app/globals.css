@@ -2,59 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------------------
+   GUNotes design tokens — "academic workspace"
+   Warm paper surfaces, a single deep-maroon accent, and a genuinely warm dark
+   mode (neutral greys shifted toward brown, never blue).
+   --------------------------------------------------------------------------- */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Surfaces */
+    --background: 38 30% 98%;
+    --foreground: 20 14% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 20 14% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 20 14% 11%;
 
-    --primary: 340 82% 52%;
-    --primary-foreground: 0 0% 100%;
+    /* The one accent, used in exactly one place per screen. Low saturation
+       on purpose — high-sat maroon vibrates against warm paper. */
+    --primary: 350 38% 32%;
+    --primary-foreground: 38 30% 98%;
 
-    --secondary: 45 93% 47%;
-    --secondary-foreground: 240 10% 3.9%;
+    --secondary: 36 24% 94%;
+    --secondary-foreground: 20 14% 20%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 36 20% 95%;
+    --muted-foreground: 25 8% 42%;
 
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 36 24% 93%;
+    --accent-foreground: 20 14% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 340 82% 52%;
+    /* Status — notes move through UNREVIEWED → APPROVED/REJECTED */
+    --success: 152 46% 27%;
+    --success-foreground: 150 40% 97%;
+    --warning: 32 82% 38%;
+    --warning-foreground: 40 60% 97%;
 
-    --radius: 0.75rem;
+    /* Chrome */
+    --border: 30 12% 88%;
+    --input: 30 12% 85%;
+    --ring: 350 38% 32%;
+
+    /* Sidebar sits a half-step back from the content surface */
+    --sidebar: 36 26% 96%;
+    --sidebar-foreground: 20 14% 20%;
+    --sidebar-muted: 25 8% 45%;
+    --sidebar-border: 30 12% 89%;
+    --sidebar-accent: 36 24% 91%;
+
+    --chart-1: 350 38% 38%;
+    --chart-2: 152 42% 34%;
+    --chart-3: 32 78% 45%;
+    --chart-4: 215 35% 42%;
+    --chart-5: 280 30% 45%;
+
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 340 82% 60%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 45 93% 55%;
-    --secondary-foreground: 224 71.4% 4.1%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 340 82% 60%;
+    --background: 24 10% 8%;
+    --foreground: 36 18% 93%;
+
+    --card: 24 9% 11%;
+    --card-foreground: 36 18% 93%;
+
+    --popover: 24 9% 12%;
+    --popover-foreground: 36 18% 93%;
+
+    /* Deepened and desaturated. Raising lightness on a maroon walks it
+       straight into hot pink, so hold the value down and drain the chroma. */
+    --primary: 350 30% 46%;
+    --primary-foreground: 38 30% 97%;
+
+    --secondary: 24 7% 16%;
+    --secondary-foreground: 36 18% 90%;
+
+    --muted: 24 7% 15%;
+    --muted-foreground: 30 8% 62%;
+
+    --accent: 24 7% 18%;
+    --accent-foreground: 36 18% 93%;
+
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 40% 48%;
+    --success-foreground: 150 30% 10%;
+    --warning: 32 72% 54%;
+    --warning-foreground: 36 40% 10%;
+
+    --border: 24 7% 19%;
+    --input: 24 7% 22%;
+    --ring: 350 30% 46%;
+
+    --sidebar: 24 9% 10%;
+    --sidebar-foreground: 36 18% 88%;
+    --sidebar-muted: 30 8% 58%;
+    --sidebar-border: 24 7% 17%;
+    --sidebar-accent: 24 7% 16%;
+
+    --chart-1: 350 30% 52%;
+    --chart-2: 152 40% 50%;
+    --chart-3: 32 72% 56%;
+    --chart-4: 215 45% 60%;
+    --chart-5: 280 40% 62%;
   }
 }
 
@@ -62,40 +118,24 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Tabular figures everywhere a number is compared against another number. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-/* Aurora Background Effect */
-.aurora-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -1;
-}
-
-.aurora-background::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150%;
-  height: 150%;
-  background-image: radial-gradient(circle, rgba(168, 21, 21, 0.2) 0%, rgba(77, 9, 9, 0) 60%);
-  animation: aurora-pulse 15s infinite;
-}
-
-@keyframes aurora-pulse {
-  0%, 100% {
-    opacity: 0.2;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: translate(-50%, -50%) scale(1.2);
+@layer utilities {
+  /* Display type. One sans, worked hard: tight optical tracking and a
+     leading that does not balloon at large sizes. No second typeface. */
+  .font-display {
+    font-weight: 560;
+    letter-spacing: -0.028em;
+    line-height: 1.05;
   }
 }

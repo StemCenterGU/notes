@@ -1,21 +1,20 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
+import { cacheDelete } from '@/lib/ttl-cache'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
 import { departmentsCache, academicsCache } from '@/lib/cache'
 
 // PUT /api/departments/[id] - Update department (LEAD_TUTOR/ADMIN only)
 export async function PUT(request, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  // Catalogue changed: drop the cached explore filter options.
+  cacheDelete('explore:filters')
 
-  if (error || !user) {
+  const { authUser, dbUser } = await getAuthedUser()
+
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-  })
 
   if (!dbUser || !SUPERVISOR_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden - Lead Tutors and Admins only' }, { status: 403 })
@@ -55,16 +54,14 @@ export async function PUT(request, { params }) {
 
 // DELETE /api/departments/[id] - Delete department (LEAD_TUTOR/ADMIN only)
 export async function DELETE(request, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  // Catalogue changed: drop the cached explore filter options.
+  cacheDelete('explore:filters')
 
-  if (error || !user) {
+  const { authUser, dbUser } = await getAuthedUser()
+
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-  })
 
   if (!dbUser || !SUPERVISOR_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden - Lead Tutors and Admins only' }, { status: 403 })

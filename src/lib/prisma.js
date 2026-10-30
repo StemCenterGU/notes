@@ -5,7 +5,12 @@ import { PrismaClient } from '../generated/prisma-client'
 
 const prismaClientSingleton = () => {
   const databaseUrl = new URL(process.env.DATABASE_URL);
-  databaseUrl.searchParams.set("pgbouncer", "true");
+  // pgbouncer=true disables prepared statements. That is required in the
+  // pooler's TRANSACTION mode (:6543) but costs a re-plan on every query, so
+  // only apply it when we are actually talking to that port.
+  if (databaseUrl.port === "6543") {
+    databaseUrl.searchParams.set("pgbouncer", "true");
+  }
   databaseUrl.searchParams.set("connect_timeout", "15");
 
   return new PrismaClient({

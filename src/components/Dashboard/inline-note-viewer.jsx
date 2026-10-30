@@ -5,7 +5,23 @@ import { useUser } from "@/contexts/AuthContext"
 import mammoth from 'mammoth'
 import * as XLSX from 'xlsx'
 
-export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = true }) {
+/** Extension from the note's recorded type, falling back to the URL path. */
+function extensionOf(url, fileType) {
+  if (fileType) return String(fileType).replace(/^\./, '').toLowerCase()
+  try {
+    return new URL(url).pathname.split('.').pop().toLowerCase()
+  } catch {
+    return String(url).split('?')[0].split('.').pop().toLowerCase()
+  }
+}
+
+/**
+ * `fileType` is the extension recorded on the note at upload time. Prefer it
+ * over parsing the URL: file URLs are now short-lived signed URLs whose query
+ * string is a JWT, and JWTs contain dots -- so splitting the URL on "." yields
+ * a chunk of the token instead of the extension.
+ */
+export default function InlineNoteViewer({ filePath: fileUrl, fileType, allowDownload = true }) {
   const { role } = useUser()
   const isPrivileged = ['ADMIN', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(role)
   // Allow download if explicitly allowed (for own notes) or if privileged
@@ -28,7 +44,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
   useEffect(() => {
     if (!fileUrl) return
 
-    const fileExtension = fileUrl.split(".").pop().toLowerCase()
+    const fileExtension = extensionOf(fileUrl, fileType)
 
     // Fetch and convert Word documents
     if (fileExtension === 'docx' || fileExtension === 'doc') {
@@ -85,31 +101,35 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
         })
         .catch(err => console.error('Error creating blob URL:', err))
     }
-  }, [fileUrl])
+  }, [fileUrl, fileType])
 
   if (!fileUrl) {
     return null
   }
 
-  const fileExtension = fileUrl.split(".").pop().toLowerCase()
+  const fileExtension = extensionOf(fileUrl, fileType)
 
   const renderContent = () => {
     // PDFs
     if (fileExtension === "pdf") {
+      // Without these the built-in viewer opens with the thumbnail rail
+      // expanded and the page fit to height — which renders the document at
+      // ~54% inside an already-narrow column. FitH fills the width instead.
+      const viewerParams = "#view=FitH&navpanes=0&pagemode=none"
       return (
-        <div className="w-full h-full relative">
+        <div className="relative h-full w-full">
           <embed
-            src={fileUrl}
+            src={`${fileUrl}${viewerParams}`}
             type="application/pdf"
-            className="w-full h-full rounded-lg"
+            className="h-full w-full rounded-md"
           />
           {canDownload && (
             <a
               href={fileUrl}
               download
-              className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg text-sm"
+              className="absolute bottom-4 right-4 z-10 inline-flex items-center gap-1.5 rounded-md border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur transition-colors hover:bg-accent"
             >
-              <Download className="w-4 h-4" />
+              <Download className="h-3.5 w-3.5" />
               Download
             </a>
           )}
@@ -130,7 +150,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
             <a
               href={fileUrl}
               download
-              className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg text-sm"
+              className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-md border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur transition-colors hover:bg-accent"
             >
               <Download className="w-4 h-4" />
               Download
@@ -164,7 +184,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
               <a
                 href={fileUrl}
                 download
-                className="mt-6 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
               >
                 <Download className="w-5 h-5" />
                 Download File
@@ -181,7 +201,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
               <a
                 href={fileUrl}
                 download
-                className="sticky top-4 float-right z-10 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg text-sm mb-4"
+                className="sticky top-4 float-right z-10 inline-flex items-center gap-2 rounded-md border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur transition-colors hover:bg-accent mb-4"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -219,7 +239,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
               <a
                 href={fileUrl}
                 download
-                className="sticky top-4 float-right z-10 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg text-sm mb-4"
+                className="sticky top-4 float-right z-10 inline-flex items-center gap-2 rounded-md border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur transition-colors hover:bg-accent mb-4"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -247,7 +267,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
               <a
                 href={fileUrl}
                 download
-                className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -272,7 +292,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
               <a
                 href={fileUrl}
                 download
-                className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -308,7 +328,7 @@ export default function InlineNoteViewer({ filePath: fileUrl, allowDownload = tr
           download
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+          className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
         >
           <Download className="w-5 h-5" />
           Download File

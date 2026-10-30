@@ -36,8 +36,8 @@ import {
 import Link from 'next/link'
 
 const CodesTableSkeleton = () => (
-  <Card>
-    <CardHeader>
+  <Card className="border-0 bg-transparent p-0 shadow-none">
+    <CardHeader className="px-0 pt-0">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <Skeleton className="h-6 w-32" />
@@ -46,7 +46,7 @@ const CodesTableSkeleton = () => (
         <Skeleton className="h-10 w-40" />
       </div>
     </CardHeader>
-    <CardContent className="p-0">
+    <CardContent className="px-0 pb-0">
       <div className="px-4 pb-4 space-y-3 pt-2">
         {[...Array(4)].map((_, i) => (
           <div key={i} className="flex items-center gap-4">
@@ -154,7 +154,7 @@ export default function ManageCodesPage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10">
         <div className="max-w-6xl mx-auto">
           <CodesTableSkeleton />
         </div>
@@ -163,15 +163,15 @@ export default function ManageCodesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="mx-auto max-w-5xl px-6 py-9 lg:px-10">
+      <div className="space-y-6">
         {codes.length === 0 ? (
-          <Card>
-            <CardHeader>
+          <Card className="border-0 bg-transparent p-0 shadow-none">
+            <CardHeader className="px-0 pt-0">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Access Codes</CardTitle>
-                  <CardDescription>Manage temporary note access for students</CardDescription>
+                  <h1 className="font-display text-[28px]">Access codes</h1>
+                  <p className="mt-1.5 text-sm text-muted-foreground">Temporary, device-locked access to specific notes.</p>
                 </div>
                 <Button asChild>
                   <Link href="/tutor/generate-code">
@@ -182,7 +182,7 @@ export default function ManageCodesPage() {
               </div>
             </CardHeader>
             <CardContent className="py-12 text-center">
-              <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              
               <h3 className="text-lg font-medium mb-2">No codes yet</h3>
               <p className="text-muted-foreground mb-4">
                 Generate your first access code to share notes with students
@@ -193,12 +193,12 @@ export default function ManageCodesPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card>
-            <CardHeader>
+          <Card className="border-0 bg-transparent p-0 shadow-none">
+            <CardHeader className="px-0 pt-0">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Access Codes</CardTitle>
-                  <CardDescription>Manage temporary note access for students</CardDescription>
+                  <h1 className="font-display text-[28px]">Access codes</h1>
+                  <p className="mt-1.5 text-sm text-muted-foreground">Temporary, device-locked access to specific notes.</p>
                 </div>
                 <Button asChild>
                   <Link href="/tutor/generate-code">
@@ -208,7 +208,7 @@ export default function ManageCodesPage() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="px-0 pb-0">
               <Table>
                 <TableHeader>
                   <TableRow>

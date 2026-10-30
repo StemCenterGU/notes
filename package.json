@@ -3,14 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.mjs"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "vercel-build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "node tests/e2e-test.mjs",
+    "test:flow": "node tests/lifecycle-test.mjs",
+    "test:files": "node tests/filetype-test.mjs",
+    "bench": "node tests/bench.mjs",
+    "test:all": "node tests/e2e-test.mjs && node tests/lifecycle-test.mjs && node tests/filetype-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

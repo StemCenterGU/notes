@@ -254,7 +254,7 @@ export default function CoursesManagementPage() {
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <Card key={i}>
-              <CardHeader className="pb-3">
+              <CardHeader className="px-0 pb-2 pt-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-5 w-5" />
@@ -268,7 +268,7 @@ export default function CoursesManagementPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-0 pb-0">
                 <div className="space-y-2">
                   {Array.from({ length: 2 }).map((_, j) => (
                     <Skeleton key={j} className="h-12 w-full" />
@@ -286,7 +286,7 @@ export default function CoursesManagementPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Course Catalog</h1>
+          <h1 className="font-display text-[28px]">Course Catalog</h1>
           <p className="text-muted-foreground mt-1">
             Manage departments and their associated courses.
           </p>
@@ -298,7 +298,7 @@ export default function CoursesManagementPage() {
       </div>
 
       {departments.length === 0 ? (
-        <Card>
+        <Card className="border-0 bg-transparent p-0 shadow-none">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Building2 className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground text-lg font-medium">
@@ -314,12 +314,12 @@ export default function CoursesManagementPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div>
           {departments.map((dept) => {
             const isExpanded = expandedDepts.has(dept.id)
             return (
-              <Card key={dept.id}>
-                <CardHeader className="pb-3">
+              <Card key={dept.id} className="border-0 border-t border-border bg-transparent p-0 shadow-none rounded-none">
+                <CardHeader className="px-0 pb-2 pt-4">
                   <div className="flex items-center justify-between">
                     <button
                       type="button"
@@ -331,7 +331,7 @@ export default function CoursesManagementPage() {
                       ) : (
                         <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
                       )}
-                      <CardTitle className="text-lg">
+                      <CardTitle className="text-[15px] font-medium">
                         {dept.name}
                         <Badge variant="secondary" className="ml-2 font-mono">
                           {dept.code}
@@ -369,13 +369,13 @@ export default function CoursesManagementPage() {
                           })
                         }
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2 className="h-4 w-4 text-muted-foreground" />
                       </Button>
                     </div>
                   </div>
                 </CardHeader>
                 {isExpanded && (
-                  <CardContent>
+                  <CardContent className="px-0 pb-0">
                     {!dept.courses || dept.courses.length === 0 ? (
                       <p className="text-sm text-muted-foreground py-2 pl-7">
                         No courses in this department yet.
@@ -385,7 +385,7 @@ export default function CoursesManagementPage() {
                         {dept.courses.map((course) => (
                           <div
                             key={course.id}
-                            className="flex items-center justify-between rounded-md border px-4 py-3 hover:bg-muted/50 transition-colors"
+                            className="flex items-center justify-between border-t border-border/60 py-2.5 pl-7 transition-colors hover:bg-muted/40"
                           >
                             <div className="flex items-center gap-3">
                               <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -427,7 +427,7 @@ export default function CoursesManagementPage() {
                                   })
                                 }
                               >
-                                <Trash2 className="h-4 w-4 text-destructive" />
+                                <Trash2 className="h-4 w-4 text-muted-foreground" />
                               </Button>
                             </div>
                           </div>

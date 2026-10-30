@@ -35,6 +35,8 @@ import {
 } from "lucide-react"
 import { useUser } from "@/contexts/AuthContext"
 import VerifiedBadge from "@/components/VerifiedBadge"
+import StarRating from "@/components/StarRating"
+import { NOTE_STATUS, VISIBILITY_BADGE } from "@/lib/status-styles"
 import TagSelector from "@/components/TagSelector"
 import { SUPERVISOR_ROLES } from "@/lib/roles"
 
@@ -44,17 +46,17 @@ const statusConfig = {
   UNREVIEWED: {
     label: "Unreviewed",
     className:
-      "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+      NOTE_STATUS.UNREVIEWED.badge,
   },
   APPROVED: {
     label: "Approved",
     className:
-      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+      NOTE_STATUS.APPROVED.badge,
   },
   REJECTED: {
     label: "Rejected",
     className:
-      "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+      NOTE_STATUS.REJECTED.badge,
   },
 }
 
@@ -62,36 +64,17 @@ const decisionConfig = {
   APPROVE: {
     label: "Approved",
     className:
-      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+      NOTE_STATUS.APPROVED.badge,
   },
   REJECT: {
     label: "Rejected",
     className:
-      "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+      NOTE_STATUS.REJECTED.badge,
   },
   COMMENT_ONLY: {
     label: "Comment Only",
     className: "bg-muted text-muted-foreground",
   },
-}
-
-const StarRating = ({ rating, setRating, isInteractive = true, size = "default" }) => {
-  const sizeClass = size === "small" ? "w-4 h-4" : "w-5 h-5"
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star
-          key={star}
-          className={`${sizeClass} ${isInteractive ? "cursor-pointer" : ""} ${
-            rating >= star
-              ? "text-secondary fill-secondary"
-              : "text-muted-foreground/50"
-          }`}
-          onClick={() => isInteractive && setRating(star)}
-        />
-      ))}
-    </div>
-  )
 }
 
 export default function ViewNotePage() {
@@ -384,39 +367,47 @@ export default function ViewNotePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Note viewer */}
-          <div className="h-[70vh] lg:h-[85vh]">
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col bg-background">
+      {/* Document-first: the file fills the page, metadata sits in a narrow
+          rail beside it. Everything secondary is one scroll away, not
+          competing for width with the thing the user came to read. */}
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        {/* Document */}
+        <div className="min-w-0 flex-1 p-4 lg:p-5">
+          <div className="h-[70vh] lg:h-full">
             <InlineNoteViewer
               filePath={note.fileUrl}
+              fileType={note.fileType}
               allowDownload={canDownload}
             />
           </div>
+        </div>
 
-          {/* Sidebar */}
-          <div className="flex flex-col gap-4">
+        {/* Rail */}
+        <aside className="w-full shrink-0 overflow-y-auto border-border px-5 pb-10 lg:w-[340px] lg:border-l lg:px-6 lg:py-6">
+          <div className="flex flex-col gap-6">
 
-            {/* Card 1 — Note Info */}
-            <Card>
-              <CardHeader>
+            <section>
+              <div>
                 <div className="flex items-start gap-2 flex-wrap">
-                  <CardTitle className="text-xl leading-snug">
+                  <h1 className="text-lg font-semibold leading-snug tracking-tight">
                     {note.title}
-                  </CardTitle>
+                  </h1>
                   {note.isVerified && (
                     <VerifiedBadge
                       verifiedBy={note.verifiedBy}
                       verifiedAt={note.verifiedAt}
+                      size="small"
                     />
                   )}
                 </div>
                 {note.description && (
-                  <CardDescription>{note.description}</CardDescription>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                    {note.description}
+                  </p>
                 )}
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="mt-4 space-y-4">
                 {/* Status + Public badges */}
                 <div className="flex flex-wrap gap-2">
                   {note.status && statusConfig[note.status] && (
@@ -430,7 +421,7 @@ export default function ViewNotePage() {
                   {note.isPublic && (
                     <Badge
                       variant="outline"
-                      className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                      className={VISIBILITY_BADGE}
                     >
                       <Globe className="w-3 h-3 mr-1" />
                       Public
@@ -488,7 +479,7 @@ export default function ViewNotePage() {
                         className={
                           note.isVerified
                             ? ""
-                            : "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white"
+                            : ""
                         }
                       >
                         {verifying ? (
@@ -508,19 +499,19 @@ export default function ViewNotePage() {
                     </div>
                   </>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </section>
 
             {/* Card 2 — Tutor Review (only for TUTOR_LEVEL_ROLES) */}
             {isTutorLevel && (
-              <Card>
-                <CardHeader>
+              <Card className="border-0 bg-transparent p-0 shadow-none">
+                <CardHeader className="px-0 pt-0 pb-3">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-5 w-5 text-primary" />
                     <CardTitle className="text-lg">Tutor Review</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="px-0 pb-0 space-y-4">
                   {/* Existing tutor reviews */}
                   {tutorReviews.length > 0 && (
                     <>
@@ -652,14 +643,14 @@ export default function ViewNotePage() {
             )}
 
             {/* Card 3 — Community Reviews */}
-            <Card>
-              <CardHeader>
+            <Card className="border-0 bg-transparent p-0 shadow-none">
+              <CardHeader className="px-0 pt-0 pb-3">
                 <CardTitle className="text-lg">Reviews</CardTitle>
                 <CardDescription>
                   {reviews.length} review{reviews.length !== 1 ? "s" : ""}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="px-0 pb-0 space-y-4">
                 {/* Leave a review form */}
                 <form onSubmit={handleReviewSubmit} className="space-y-4">
                   <div>
@@ -720,7 +711,7 @@ export default function ViewNotePage() {
               </CardContent>
             </Card>
           </div>
-        </div>
+        </aside>
       </div>
 
       {/* Tag Edit Dialog */}

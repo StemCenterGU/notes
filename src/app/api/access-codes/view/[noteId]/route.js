@@ -38,6 +38,7 @@ export async function GET(req, { params }) {
 
     // Get access code with notes
     const accessCode = await prisma.accessCode.findUnique({
+      relationLoadStrategy: 'join',
       where: { id: decoded.codeId },
       include: {
         notes: {

@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 import { SUPERVISOR_ROLES } from '@/lib/roles'
 
 // PUT /api/notes/[id]/status - Override note status (LEAD_TUTOR/ADMIN only)
 export async function PUT(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser || !SUPERVISOR_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -30,11 +28,9 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 })
     }
 
-    // If status is being changed away from APPROVED, also set isPublic to false
-    const updateData = { status }
-    if (status !== 'APPROVED' && note.isPublic) {
-      updateData.isPublic = false
-    }
+    // Visibility follows the status so the two can never disagree: approving
+    // publishes, anything else unpublishes. Matches the tutor review action.
+    const updateData = { status, isPublic: status === 'APPROVED' }
 
     const updatedNote = await prisma.note.update({
       where: { id: noteId },

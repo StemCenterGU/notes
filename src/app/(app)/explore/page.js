@@ -1,13 +1,12 @@
 "use client"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Search, Star, X } from "lucide-react"
+
 import { useUser } from "@/contexts/AuthContext"
-import NotesGrid from "@/components/Dashboard/notes-grid"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -16,50 +15,85 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { FileText, CheckCircle, Search } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+import VerifiedBadge from "@/components/VerifiedBadge"
+import { noteStatus } from "@/lib/status-styles"
+import { cn } from "@/lib/utils"
+import {
+  Page,
+  PageHeader,
+  DataTable,
+  Td,
+  EmptyState,
+  TableSkeleton,
+} from "@/components/page"
 
-function MultiSelectFilter({ title, options, selected, onSelectedChange }) {
+function FilterMenu({ title, options, selected, onChange }) {
+  const active = selected.length > 0
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className={selected.length > 0 ? "border-primary text-primary" : ""}>
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn("h-8 font-normal", active && "border-foreground/30")}
+        >
           {title}
-          {selected.length > 0 && (
-            <span className="ml-1.5 rounded-full bg-primary text-primary-foreground text-xs w-4 h-4 inline-flex items-center justify-center">
-              {selected.length}
-            </span>
+          {active && (
+            <span className="tabular ml-1.5 text-xs text-muted-foreground">{selected.length}</span>
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{title}</DropdownMenuLabel>
+      <DropdownMenuContent className="max-h-80 w-60 overflow-y-auto">
+        <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+          {title}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {options.map((option) => (
-          <DropdownMenuCheckboxItem
-            key={option}
-            checked={selected.includes(option)}
-            onCheckedChange={() => {
-              const newSelected = selected.includes(option)
-                ? selected.filter((item) => item !== option)
-                : [...selected, option]
-              onSelectedChange(newSelected)
-            }}
-          >
-            {option}
-          </DropdownMenuCheckboxItem>
-        ))}
+        {options.length === 0 ? (
+          <p className="px-2 py-3 text-xs text-muted-foreground">Nothing to filter by yet.</p>
+        ) : (
+          options.map((option) => (
+            <DropdownMenuCheckboxItem
+              key={option}
+              checked={selected.includes(option)}
+              onCheckedChange={() =>
+                onChange(
+                  selected.includes(option)
+                    ? selected.filter((v) => v !== option)
+                    : [...selected, option]
+                )
+              }
+            >
+              {option}
+            </DropdownMenuCheckboxItem>
+          ))
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )
 }
 
+const COLUMNS = [
+  { key: "note", label: "Note" },
+  { key: "course", label: "Course", className: "hidden md:table-cell" },
+  { key: "uploader", label: "Shared by", className: "hidden lg:table-cell" },
+  { key: "status", label: "Status", className: "hidden sm:table-cell" },
+  { key: "rating", label: "Rating", align: "right" },
+]
+
 export default function ExplorePage() {
-  const { role, isLoading: authLoading } = useUser()
+  const { role } = useUser()
+  const router = useRouter()
+
   const [loading, setLoading] = useState(true)
-  const [allNotes, setAllNotes] = useState([])
-  const [filterOptions, setFilterOptions] = useState({ courses: [], professors: [], semesters: [] })
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [notes, setNotes] = useState([])
+  const [nextCursor, setNextCursor] = useState(null)
+  const [hasMore, setHasMore] = useState(false)
+  const [filterOptions, setFilterOptions] = useState({
+    courses: [],
+    professors: [],
+    semesters: [],
+  })
   const [activeFilters, setActiveFilters] = useState({
     course: [],
     semester: [],
@@ -67,43 +101,70 @@ export default function ExplorePage() {
   })
   const [searchQuery, setSearchQuery] = useState("")
   const [verifiedOnly, setVerifiedOnly] = useState(false)
-  const router = useRouter()
 
-  const isStudent = role === 'STUDENT'
+  const isStudent = role === "STUDENT"
 
+  /** Builds the query string the server filters on. */
+  const buildQuery = useCallback(
+    (cursor) => {
+      const p = new URLSearchParams()
+      if (searchQuery.trim()) p.set("q", searchQuery.trim())
+      activeFilters.course.forEach((v) => p.append("course", v))
+      activeFilters.professor.forEach((v) => p.append("professor", v))
+      activeFilters.semester.forEach((v) => p.append("semester", v))
+      if (verifiedOnly) p.set("verified", "1")
+      if (cursor) p.set("cursor", cursor)
+      return p.toString()
+    },
+    [searchQuery, activeFilters, verifiedOnly]
+  )
+
+  // Filters and search run on the server. Debounced so typing does not fire
+  // a request per keystroke.
   useEffect(() => {
-    const fetchData = async () => {
+    let cancelled = false
+    const handle = setTimeout(async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/notes/explore")
+        const res = await fetch(`/api/notes/explore?${buildQuery(null)}`)
         if (!res.ok) {
-          router.replace("/dashboard")
+          if (res.status === 401 || res.status === 403) router.replace("/dashboard")
           return
         }
         const data = await res.json()
-        setAllNotes(data.notes || [])
-        setFilterOptions(data.filterOptions || { courses: [], professors: [], semesters: [] })
+        if (cancelled) return
+        setNotes(data.notes || [])
+        setNextCursor(data.nextCursor ?? null)
+        setHasMore(Boolean(data.hasMore))
+        if (data.filterOptions) setFilterOptions(data.filterOptions)
       } catch (err) {
         console.error("Fetch error:", err)
-        router.replace("/dashboard")
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
-    }
-    fetchData()
-  }, [router])
+    }, 250)
 
-  const filteredNotes = useMemo(() => {
-    return allNotes
-      .filter((note) => {
-        const isCourseMatch = activeFilters.course.length === 0 || activeFilters.course.includes(note.course?.name)
-        const isSemesterMatch = activeFilters.semester.length === 0 || activeFilters.semester.includes(`${note.semester?.name} ${note.semester?.year}`)
-        const isProfessorMatch = activeFilters.professor.length === 0 || activeFilters.professor.includes(note.course?.professor?.name)
-        const isSearchMatch = !searchQuery || note.title.toLowerCase().includes(searchQuery.toLowerCase())
-        const isVerifiedMatch = !verifiedOnly || note.isVerified
-        return isCourseMatch && isSemesterMatch && isProfessorMatch && isSearchMatch && isVerifiedMatch
-      })
-  }, [allNotes, activeFilters, searchQuery, verifiedOnly])
+    return () => {
+      cancelled = true
+      clearTimeout(handle)
+    }
+  }, [buildQuery, router])
+
+  const loadMore = useCallback(async () => {
+    if (!nextCursor || loadingMore) return
+    setLoadingMore(true)
+    try {
+      const res = await fetch(`/api/notes/explore?${buildQuery(nextCursor)}`)
+      if (res.ok) {
+        const data = await res.json()
+        setNotes((prev) => [...prev, ...(data.notes || [])])
+        setNextCursor(data.nextCursor ?? null)
+        setHasMore(Boolean(data.hasMore))
+      }
+    } finally {
+      setLoadingMore(false)
+    }
+  }, [nextCursor, loadingMore, buildQuery])
 
   const hasActiveFilters =
     activeFilters.course.length > 0 ||
@@ -112,167 +173,168 @@ export default function ExplorePage() {
     searchQuery.length > 0 ||
     verifiedOnly
 
-  const renderSkeletons = () => (
-    <div>
-      {/* Filter bar skeleton */}
-      <Card className="mb-8">
-        <CardContent className="py-4">
-          <div className="flex flex-col md:flex-row gap-3 items-center">
-            <Skeleton className="h-9 flex-1 w-full rounded-md" />
-            <Separator orientation="vertical" className="hidden md:block h-8" />
-            <div className="flex flex-wrap gap-2">
-              <Skeleton className="h-9 w-24 rounded-md" />
-              <Skeleton className="h-9 w-28 rounded-md" />
-              <Skeleton className="h-9 w-24 rounded-md" />
-              <Skeleton className="h-9 w-36 rounded-md" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Results count skeleton */}
-      <Skeleton className="h-4 w-40 mb-6 rounded" />
-
-      {/* Card grid skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="overflow-hidden">
-            <CardHeader className="pb-3">
-              <Skeleton className="h-5 w-3/4 rounded" />
-              <Skeleton className="h-4 w-1/2 rounded mt-1" />
-            </CardHeader>
-            <CardContent className="pt-0">
-              <Skeleton className="h-4 w-full rounded mb-2" />
-              <Skeleton className="h-4 w-5/6 rounded mb-4" />
-              <div className="flex gap-2">
-                <Skeleton className="h-5 w-16 rounded-full" />
-                <Skeleton className="h-5 w-16 rounded-full" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-
-  const renderEmptyState = () => {
-    if (hasActiveFilters) {
-      return (
-        <div className="text-center py-24">
-          <Search className="mx-auto h-14 w-14 text-muted-foreground" />
-          <h3 className="mt-6 text-xl font-semibold">No matching notes</h3>
-          <p className="text-muted-foreground text-sm mt-2 max-w-sm mx-auto">
-            No notes match your filters. Try adjusting your search criteria.
-          </p>
-          <Button
-            variant="outline"
-            className="mt-4"
-            onClick={() => {
-              setSearchQuery("")
-              setActiveFilters({ course: [], semester: [], professor: [] })
-              setVerifiedOnly(false)
-            }}
-          >
-            Clear filters
-          </Button>
-        </div>
-      )
-    }
-    return (
-      <div className="text-center py-24">
-        <FileText className="mx-auto h-14 w-14 text-muted-foreground" />
-        <h3 className="mt-6 text-xl font-semibold">No Notes to Explore</h3>
-        <p className="text-muted-foreground text-sm mt-2">
-          It looks like no notes have been shared by other users yet.
-        </p>
-      </div>
-    )
+  const clearFilters = () => {
+    setSearchQuery("")
+    setActiveFilters({ course: [], semester: [], professor: [] })
+    setVerifiedOnly(false)
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero header */}
-      <div className="bg-gradient-to-b from-primary/5 to-transparent py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Explore Notes</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-3">
-            {isStudent
-              ? "Browse approved public notes from our community."
-              : "Find the study materials you need from our community."}
-          </p>
+    <Page wide>
+      <PageHeader
+        eyebrow="Library"
+        title="Explore notes"
+        description={
+          isStudent
+            ? "Approved notes shared publicly by the community."
+            : "Every note shared across the platform."
+        }
+      />
+
+      {/* Filters sit on one line with the search — no container around them. */}
+      <div className="mt-7 flex flex-wrap items-center gap-2">
+        <div className="relative min-w-[200px] flex-1">
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search by title or course code"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-8 pl-8 text-sm"
+          />
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {loading ? (
-          renderSkeletons()
-        ) : (
-          <>
-            {/* Sticky filter bar */}
-            <Card className="sticky top-16 z-10 mb-8">
-              <CardContent className="py-4">
-                <div className="flex flex-col md:flex-row gap-3 items-center">
-                  <div className="relative flex-1 w-full">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      placeholder="Search notes..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9"
-                    />
-                  </div>
-                  <Separator orientation="vertical" className="hidden md:block h-8" />
-                  <div className="flex flex-wrap gap-2 items-center">
-                    <MultiSelectFilter
-                      title="Courses"
-                      options={filterOptions.courses}
-                      selected={activeFilters.course}
-                      onSelectedChange={(selected) => setActiveFilters(prev => ({ ...prev, course: selected }))}
-                    />
-                    <MultiSelectFilter
-                      title="Professors"
-                      options={filterOptions.professors}
-                      selected={activeFilters.professor}
-                      onSelectedChange={(selected) => setActiveFilters(prev => ({ ...prev, professor: selected }))}
-                    />
-                    <MultiSelectFilter
-                      title="Semesters"
-                      options={filterOptions.semesters}
-                      selected={activeFilters.semester}
-                      onSelectedChange={(selected) => setActiveFilters(prev => ({ ...prev, semester: selected }))}
-                    />
-                    <div className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-background">
-                      <Switch
-                        id="verified-only"
-                        checked={verifiedOnly}
-                        onCheckedChange={setVerifiedOnly}
-                      />
-                      <Label htmlFor="verified-only" className="flex items-center gap-1 cursor-pointer text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        Verified Only
-                      </Label>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        <FilterMenu
+          title="Course"
+          options={filterOptions.courses}
+          selected={activeFilters.course}
+          onChange={(v) => setActiveFilters((p) => ({ ...p, course: v }))}
+        />
+        <FilterMenu
+          title="Professor"
+          options={filterOptions.professors}
+          selected={activeFilters.professor}
+          onChange={(v) => setActiveFilters((p) => ({ ...p, professor: v }))}
+        />
+        <FilterMenu
+          title="Semester"
+          options={filterOptions.semesters}
+          selected={activeFilters.semester}
+          onChange={(v) => setActiveFilters((p) => ({ ...p, semester: v }))}
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setVerifiedOnly((v) => !v)}
+          aria-pressed={verifiedOnly}
+          className={cn("h-8 font-normal", verifiedOnly && "border-foreground/30 bg-accent")}
+        >
+          Verified only
+        </Button>
 
-            {/* Results count */}
-            {allNotes.length > 0 && (
-              <p className="text-sm text-muted-foreground mb-6">
-                Showing <span className="font-medium text-foreground">{filteredNotes.length}</span> of{" "}
-                <span className="font-medium text-foreground">{allNotes.length}</span> notes
-              </p>
-            )}
-
-            {/* Content */}
-            {allNotes.length === 0 || filteredNotes.length === 0
-              ? renderEmptyState()
-              : <NotesGrid notes={filteredNotes} showUploader={true} />
-            }
-          </>
+        {hasActiveFilters && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearFilters}
+            className="h-8 px-2 font-normal text-muted-foreground"
+          >
+            <X className="mr-1 h-3.5 w-3.5" />
+            Clear
+          </Button>
         )}
       </div>
-    </div>
+
+      <p className="tabular mt-5 text-xs text-muted-foreground">
+        {loading
+          ? "Loading…"
+          : `${notes.length}${hasMore ? "+" : ""} note${notes.length === 1 ? "" : "s"}`}
+      </p>
+
+      <div className="mt-2">
+        {loading ? (
+          <TableSkeleton rows={6} cols={4} />
+        ) : notes.length === 0 ? (
+          <EmptyState
+            title={hasActiveFilters ? "No matching notes" : "Nothing shared yet"}
+            description={
+              hasActiveFilters
+                ? "No notes match the current filters."
+                : "When students share notes, they will appear here."
+            }
+            action={
+              hasActiveFilters ? (
+                <Button variant="outline" size="sm" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              ) : null
+            }
+          />
+        ) : (
+          <DataTable columns={COLUMNS}>
+            {notes.map((note) => {
+              const status = noteStatus(note.status)
+              const rating = Number(note.averageRating) || 0
+              return (
+                <tr key={note.id} className="group">
+                  <Td>
+                    <div className="flex items-center gap-1.5">
+                      <Link
+                        href={`/view/${note.id}`}
+                        className="truncate font-medium text-foreground hover:text-primary"
+                      >
+                        {note.title}
+                      </Link>
+                      {note.isVerified && <VerifiedBadge size="small" compact />}
+                    </div>
+                    {note.semester && (
+                      <p className="mt-0.5 text-xs text-muted-foreground md:hidden">
+                        {note.course?.code} · {note.semester.name} {note.semester.year}
+                      </p>
+                    )}
+                  </Td>
+                  <Td className="hidden md:table-cell">
+                    <span className="text-muted-foreground">{note.course?.code || "—"}</span>
+                    {note.semester && (
+                      <span className="ml-1.5 text-xs text-muted-foreground/70">
+                        {note.semester.name} {note.semester.year}
+                      </span>
+                    )}
+                  </Td>
+                  <Td className="hidden lg:table-cell">
+                    <span className="text-muted-foreground">{note.uploader?.name || "—"}</span>
+                  </Td>
+                  <Td className="hidden sm:table-cell">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className={cn("h-1.5 w-1.5 rounded-full", status.dot)} />
+                      <span className="text-xs text-muted-foreground">{status.label}</span>
+                    </span>
+                  </Td>
+                  <Td align="right">
+                    {rating > 0 ? (
+                      <span className="inline-flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-warning text-warning" />
+                        <span className="tabular text-xs text-muted-foreground">
+                          {rating.toFixed(1)}
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/50">—</span>
+                    )}
+                  </Td>
+                </tr>
+              )
+            })}
+          </DataTable>
+        )}
+
+        {hasMore && !loading && (
+          <div className="mt-6 flex justify-center">
+            <Button variant="outline" size="sm" onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? "Loading…" : "Load more"}
+            </Button>
+          </div>
+        )}
+      </div>
+    </Page>
   )
 }

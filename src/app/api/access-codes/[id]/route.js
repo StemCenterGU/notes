@@ -1,21 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
 // DELETE /api/access-codes/[id] - Revoke an access code
 export async function DELETE(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-  })
 
   if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -54,16 +49,11 @@ export async function DELETE(req, { params }) {
 
 // GET /api/access-codes/[id] - Get details of a specific code
 export async function GET(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-  })
 
   if (!dbUser || !['TUTOR', 'ADMIN', 'PROFESSOR', 'LEAD_TUTOR', 'STEMPASS_TUTOR'].includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -73,6 +63,7 @@ export async function GET(req, { params }) {
     const { id } = await params
 
     const accessCode = await prisma.accessCode.findUnique({
+      relationLoadStrategy: 'join',
       where: { id },
       include: {
         notes: {

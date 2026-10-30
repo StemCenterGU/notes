@@ -1,40 +1,47 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { signedUrlFor } from '@/lib/file-url'
+import { SUPERVISOR_ROLES } from '@/lib/roles'
 
 // GET /api/notes/[id] - Fetches a single note by its ID
 export async function GET(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
 
   try {
     const { id } = await params
-    const note = await prisma.note.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: { reviews: true },
-        },
-        verifiedBy: {
-          select: { name: true, email: true },
-        },
-        noteTags: {
-          include: {
-            tag: true,
+
+    // The note and its rating average are independent reads keyed on the same
+    // id, so they go out together instead of one after the other.
+    const [note, aggregate] = await Promise.all([
+      prisma.note.findUnique({
+        relationLoadStrategy: 'join',
+        where: { id },
+        include: {
+          _count: {
+            select: { reviews: true },
+          },
+          verifiedBy: {
+            select: { name: true, email: true },
+          },
+          noteTags: {
+            include: {
+              tag: true,
+            },
           },
         },
-      },
-    })
+      }),
+      prisma.review.aggregate({ _avg: { rating: true }, where: { noteId: id } }),
+    ])
 
     if (!note) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 })
@@ -48,20 +55,17 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Manually calculate average rating
-    const aggregate = await prisma.review.aggregate({
-      _avg: {
-        rating: true,
-      },
-      where: {
-        noteId: id,
-      },
-    })
     note.averageRating = aggregate._avg.rating || 0
 
     // Add ownership info for download permission
     note.isOwner = note.uploaderId === dbUser.id
     note.canDownload = note.isOwner || isPrivileged
+
+    // The bucket is private, so the stored public URL does not resolve. Mint a
+    // short-lived signed URL now that the caller has passed the checks above.
+    // Never ship the raw storage path or the stored URL to the browser.
+    note.fileUrl = await signedUrlFor(note.filePath)
+    delete note.filePath
 
     return NextResponse.json({ note })
   } catch (error) {
@@ -72,14 +76,12 @@ export async function GET(req, { params }) {
 
 // PUT /api/notes/[id] - Updates a note
 export async function PUT(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
@@ -118,14 +120,12 @@ export async function PUT(req, { params }) {
 
 // DELETE /api/notes/[id] - Deletes a note
 export async function DELETE(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
@@ -138,8 +138,11 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 })
     }
 
-    // Security Check: Ensure the user owns the note
-    if (note.uploaderId !== dbUser.id) {
+    // The uploader can withdraw their own note; a lead tutor or admin can
+    // remove anyone's. Without the second case there is no way to take a file
+    // down at all -- rejecting a note only hides it from the feed.
+    const canDelete = note.uploaderId === dbUser.id || SUPERVISOR_ROLES.includes(dbUser.role)
+    if (!canDelete) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

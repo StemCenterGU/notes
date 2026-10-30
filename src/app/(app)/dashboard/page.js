@@ -1,16 +1,16 @@
 'use client'
-import React, { useState, useEffect, useCallback } from "react"
+import React, { Suspense, useState, useEffect, useCallback, useMemo } from "react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { ArrowRight, Compass, KeyRound, Loader2, Trash2 } from "lucide-react"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import NotesGrid from "@/components/Dashboard/notes-grid"
+import NotesList from "@/components/Dashboard/notes-list"
 import UploadSection from "@/components/Dashboard/upload-section"
 import EditNoteModal from "@/components/Dashboard/EditNoteModal"
 import RaffleHighlightCard from "@/components/Dashboard/RaffleHighlightCard"
-import Link from "next/link"
-import { Award, FileText, Lock, Loader2, Trash2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -20,229 +20,228 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-const NotesGridSkeleton = () => (
-  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4">
-    {[...Array(8)].map((_, i) => (
-      <Card key={i} className="overflow-hidden">
-        <CardHeader className="pb-3">
-          <div className="flex items-start gap-3">
-            <Skeleton className="h-10 w-10 rounded-lg shrink-0" />
-            <div className="space-y-2 flex-1">
-              <Skeleton className="h-4 w-4/5" />
-              <Skeleton className="h-3 w-3/5" />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pb-3">
-          <div className="space-y-2">
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-2/3" />
-          </div>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
-)
+function greeting(date = new Date()) {
+  const h = date.getHours()
+  if (h < 12) return "Good morning"
+  if (h < 18) return "Good afternoon"
+  return "Good evening"
+}
 
-export default function Dashboard() {
+/** A single figure. No container — whitespace separates these, not borders. */
+function Stat({ label, value, loading }) {
+  return (
+    <div>
+      {loading ? (
+        <Skeleton className="h-7 w-8" />
+      ) : (
+        <p className="font-display tabular text-[28px] text-foreground">{value}</p>
+      )}
+      <p className="mt-0.5 text-[13px] text-muted-foreground">{label}</p>
+    </div>
+  )
+}
+
+function QuickLink({ href, icon: Icon, title }) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-center gap-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      <span>{title}</span>
+      <ArrowRight className="h-3.5 w-3.5 shrink-0 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-60" />
+    </Link>
+  )
+}
+
+function DashboardContent() {
   const [notes, setNotes] = useState([])
   const [user, setUser] = useState(null)
   const [editingNote, setEditingNote] = useState(null)
   const [academics, setAcademics] = useState({ courses: [], semesters: [] })
+  const [activeRaffle, setActiveRaffle] = useState(undefined)
   const [loading, setLoading] = useState(true)
+  const searchParams = useSearchParams()
+  const [tab, setTab] = useState(searchParams.get("tab") === "upload" ? "upload" : "notes")
   const [pendingDeleteId, setPendingDeleteId] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState(null)
 
-  const fetchAcademics = useCallback(async () => {
-    const res = await fetch("/api/academics")
-    if (res.ok) {
-      setAcademics(await res.json())
+  // Everything below comes from one request. Re-fetching after a mutation
+  // re-reads the whole bundle, which is still a single round-trip.
+  const loadAll = useCallback(async () => {
+    try {
+      const res = await fetch("/api/bootstrap")
+      if (!res.ok) {
+        console.error("Bootstrap failed:", await res.text())
+        return
+      }
+      const data = await res.json()
+      setUser(data.user)
+      setNotes(data.notes || [])
+      setAcademics(data.academics || { courses: [], semesters: [] })
+      setActiveRaffle(data.activeRaffle ?? null)
+    } catch (err) {
+      console.error("Error loading dashboard:", err)
     }
   }, [])
 
-  const fetchNotes = useCallback(async () => {
-    try {
-      const res = await fetch("/api/notes/mine")
-      if (res.ok) {
-        const data = await res.json()
-        setNotes(data.notes || [])
-      } else {
-        const errorData = await res.json()
-        if (errorData.error !== 'User not found') {
-          console.error("Failed to fetch notes:", errorData)
-        }
-      }
-    } catch (err) {
-      console.error("Error fetching user notes:", err)
-    }
-  }, [])
+  const fetchNotes = loadAll
+
+  // Keep the tab in step with the sidebar's "Upload notes" action.
+  useEffect(() => {
+    setTab(searchParams.get("tab") === "upload" ? "upload" : "notes")
+  }, [searchParams])
 
   useEffect(() => {
-    const initializeUserAndFetchData = async () => {
+    const init = async () => {
       setLoading(true)
-      const userRes = await fetch('/api/init-user');
-      if (userRes.ok) {
-        const { user } = await userRes.json();
-        setUser(user);
-      }
-      await Promise.all([fetchNotes(), fetchAcademics()])
+      await loadAll()
       setLoading(false)
     }
-    initializeUserAndFetchData()
-  }, [fetchNotes, fetchAcademics])
+    init()
+  }, [loadAll])
+
+  const stats = useMemo(
+    () => ({
+      total: notes.length,
+      verified: notes.filter((n) => n.isVerified).length,
+      inReview: notes.filter((n) => n.status === "UNREVIEWED").length,
+    }),
+    [notes]
+  )
 
   const handleNoteUploaded = useCallback(() => {
-    fetchNotes()
-    setUser(prev => prev ? { ...prev, kudosPoints: prev.kudosPoints + 10 } : null)
-  }, [fetchNotes])
-
-  const handleDeleteNote = (noteId) => {
-    setPendingDeleteId(noteId)
-  }
+    loadAll()
+    setUser((prev) => (prev ? { ...prev, kudosPoints: prev.kudosPoints + 10 } : null))
+    setTab("notes")
+  }, [loadAll])
 
   const handleConfirmDelete = async () => {
     if (!pendingDeleteId) return
     setIsDeleting(true)
     setDeleteError(null)
-    const res = await fetch(`/api/notes/${pendingDeleteId}`, { method: 'DELETE' })
+    const res = await fetch(`/api/notes/${pendingDeleteId}`, { method: "DELETE" })
     setIsDeleting(false)
+    setPendingDeleteId(null)
     if (res.ok) {
-      fetchNotes()
-      setPendingDeleteId(null)
+      loadAll()
     } else {
-      setPendingDeleteId(null)
       setDeleteError("Failed to delete the note. Please try again.")
     }
   }
 
-  const handleCancelDelete = () => {
-    setPendingDeleteId(null)
-  }
+  const firstName = user?.name?.split(" ")[0]
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto max-w-6xl px-6 py-10 lg:px-10">
+      {/* ---------------- Header ---------------- */}
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+          <h1 className="font-display mt-1.5 text-4xl text-foreground">
+            {greeting()}
+            {firstName ? `, ${firstName}` : ""}
+          </h1>
+        </div>
 
-        {/* Welcome banner */}
-        <Card className="mb-8 overflow-hidden border-border/50">
-          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                  Welcome back{user?.name ? `, ${user.name}` : ""}
-                </h1>
-                <p className="text-muted-foreground mt-1 text-sm">
-                  Manage your notes, track uploads, and earn rewards for contributing.
-                </p>
-              </div>
-              {user && (
-                <Badge
-                  variant="secondary"
-                  className="self-start md:self-auto flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium"
-                >
-                  <Award className="h-4 w-4 text-amber-500" />
-                  {user.kudosPoints} Kudos Points
-                </Badge>
+        {user && (
+          <p className="text-sm text-muted-foreground">
+            <span className="tabular font-medium text-foreground">{user.kudosPoints}</span> kudos
+          </p>
+        )}
+      </header>
+
+      {/* ---------------- Stat strip ---------------- */}
+      <div className="mt-7 flex gap-12">
+        <Stat label="Uploaded" value={stats.total} loading={loading} />
+        <Stat label="Verified" value={stats.verified} loading={loading} />
+        <Stat label="In review" value={stats.inReview} loading={loading} />
+      </div>
+
+      {/* ---------------- Body ---------------- */}
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <section className="min-w-0">
+          <Tabs value={tab} onValueChange={setTab}>
+            {/* Understated underline tabs — chrome should not outshout content. */}
+            <TabsList className="h-auto w-full justify-start gap-6 rounded-none border-b border-border bg-transparent p-0">
+              <TabsTrigger
+                value="notes"
+                className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-0 text-sm font-medium text-muted-foreground shadow-none data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Your notes
+                {!loading && notes.length > 0 && (
+                  <span className="tabular ml-2 text-xs text-muted-foreground">{notes.length}</span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="upload"
+                className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-0 text-sm font-medium text-muted-foreground shadow-none data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Upload
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="notes" className="mt-6">
+              {deleteError && (
+                <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {deleteError}
+                </div>
               )}
-            </div>
-          </div>
-        </Card>
 
-        <Tabs defaultValue="my-notes" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="my-notes" className="flex items-center gap-2">
-              My Notes
-              {!loading && notes.length > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="ml-1 h-5 min-w-5 px-1.5 text-xs font-semibold leading-none"
-                >
-                  {notes.length}
-                </Badge>
+              {loading ? (
+                <div className="divide-y divide-border border-t border-border">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-4 py-3.5">
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-3.5 w-1/2" />
+                        <Skeleton className="h-3 w-1/4" />
+                      </div>
+                      <Skeleton className="h-3 w-20 shrink-0" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <NotesList
+                  notes={notes}
+                  onEdit={setEditingNote}
+                  onDelete={setPendingDeleteId}
+                  onUploadClick={() => setTab("upload")}
+                />
               )}
-            </TabsTrigger>
-            <TabsTrigger value="upload">Upload Notes</TabsTrigger>
-          </TabsList>
+            </TabsContent>
 
-          <TabsContent value="my-notes">
-            {deleteError && (
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive mb-4">
-                {deleteError}
-              </div>
-            )}
-            {loading ? (
-              <NotesGridSkeleton />
-            ) : (
-              <NotesGrid
-                notes={notes}
-                currentUserId={user?.id}
-                onEdit={setEditingNote}
-                onDelete={handleDeleteNote}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="upload">
-            {/* Upload CTA — full width at the top */}
-            <div className="mb-6">
+            <TabsContent value="upload" className="mt-6">
               <UploadSection onNoteUploaded={handleNoteUploaded} />
-            </div>
+            </TabsContent>
+          </Tabs>
+        </section>
 
-            {/* Supporting cards in a 3-column grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <RaffleHighlightCard />
+        {/* ---------------- Right rail ---------------- */}
+        <aside className="space-y-8 lg:pt-[42px]">
+          <section>
+            <h2 className="mb-3 border-b border-border pb-2 text-[13px] font-medium text-foreground">
+              Active raffle
+            </h2>
+            <RaffleHighlightCard raffle={activeRaffle} />
+          </section>
 
-              {/* STEM Tutoring Resources card */}
-              <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <FileText className="text-primary w-6 h-6" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-medium">STEM Tutoring Resources</CardTitle>
-                      <CardDescription>Access study materials</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Browse resources from tutors and other students
-                  </p>
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href="/explore">Browse Resources</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Enter Access Code card — students only */}
-              {user?.role === 'STUDENT' && (
-                <Card className="transition-all hover:shadow-md hover:-translate-y-0.5">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-secondary/10 p-2 rounded-full">
-                        <Lock className="text-secondary w-6 h-6" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-base font-medium">Enter Access Code</CardTitle>
-                        <CardDescription>View notes with code</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Got a code from your tutor? Enter it here to access secure notes.
-                    </p>
-                    <Button asChild className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                      <Link href="/access">Enter Code</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
+          <section>
+            <h2 className="mb-2 border-b border-border pb-2 text-[13px] font-medium text-foreground">
+              Shortcuts
+            </h2>
+            <QuickLink href="/explore" icon={Compass} title="Explore notes" />
+            {user?.role === "STUDENT" && (
+              <QuickLink href="/access" icon={KeyRound} title="Enter access code" />
+            )}
+          </section>
+        </aside>
       </div>
 
       {editingNote && (
@@ -251,26 +250,30 @@ export default function Dashboard() {
           academics={academics}
           isOpen={!!editingNote}
           onClose={() => setEditingNote(null)}
-          onNoteUpdated={fetchNotes}
+          onNoteUpdated={loadAll}
         />
       )}
 
-      {/* Delete confirmation dialog */}
-      <Dialog open={!!pendingDeleteId} onOpenChange={(open) => { if (!open) handleCancelDelete() }}>
+      <Dialog
+        open={!!pendingDeleteId}
+        onOpenChange={(open) => {
+          if (!open) setPendingDeleteId(null)
+        }}
+      >
         <DialogContent>
           <DialogHeader>
-            <div className="flex flex-col items-center gap-3 mb-1">
+            <div className="mb-1 flex flex-col items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
                 <Trash2 className="h-6 w-6 text-destructive" />
               </div>
             </div>
-            <DialogTitle className="text-center">Delete Note</DialogTitle>
+            <DialogTitle className="text-center">Delete note</DialogTitle>
             <DialogDescription className="text-center text-sm text-muted-foreground">
-              Are you sure you want to delete this note? This action is permanent and cannot be undone.
+              This permanently removes the note and its file. It cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-2">
-            <Button variant="outline" onClick={handleCancelDelete} disabled={isDeleting}>
+            <Button variant="outline" onClick={() => setPendingDeleteId(null)} disabled={isDeleting}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleConfirmDelete} disabled={isDeleting}>
@@ -281,5 +284,39 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+/** Skeleton shown while the search params resolve on first paint. */
+function DashboardFallback() {
+  return (
+    <div className="mx-auto max-w-6xl px-6 py-10 lg:px-10">
+      <Skeleton className="h-3 w-40" />
+      <Skeleton className="mt-3 h-9 w-72" />
+      <div className="mt-7 flex gap-12">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i}>
+            <Skeleton className="h-7 w-8" />
+            <Skeleton className="mt-1.5 h-3 w-16" />
+          </div>
+        ))}
+      </div>
+      <div className="mt-10 divide-y divide-border border-t border-border">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="py-3.5">
+            <Skeleton className="h-3.5 w-1/3" />
+            <Skeleton className="mt-2 h-3 w-1/5" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<DashboardFallback />}>
+      <DashboardContent />
+    </Suspense>
   )
 }
