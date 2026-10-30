@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 import { TUTOR_LEVEL_ROLES } from '@/lib/roles'
 
 // POST /api/notes/[id]/tutor-review - Submit a tutor review
 export async function POST(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser || !TUTOR_LEVEL_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -56,12 +54,21 @@ export async function POST(req, { params }) {
       },
     })
 
-    // Update note status if decision is APPROVE or REJECT and note is currently UNREVIEWED
+    // Approving publishes the note in the same action.
+    //
+    // These used to be two steps: a tutor approved, and a lead tutor then had
+    // to flip a separate "public" switch before students could see anything.
+    // Nothing in the UI told the tutor that second step existed, so approved
+    // notes silently never reached students. A lead tutor can still unpublish
+    // from the review queue, so approving by mistake stays reversible.
     if (decision !== 'COMMENT_ONLY' && note.status === 'UNREVIEWED') {
-      const newStatus = decision === 'APPROVE' ? 'APPROVED' : 'REJECTED'
+      const approved = decision === 'APPROVE'
       await prisma.note.update({
         where: { id: noteId },
-        data: { status: newStatus },
+        data: {
+          status: approved ? 'APPROVED' : 'REJECTED',
+          isPublic: approved,
+        },
       })
     }
 
@@ -77,14 +84,12 @@ export async function POST(req, { params }) {
 
 // GET /api/notes/[id]/tutor-review - Get all tutor reviews for a note
 export async function GET(req, { params }) {
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } })
   if (!dbUser || !TUTOR_LEVEL_ROLES.includes(dbUser.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -93,6 +98,7 @@ export async function GET(req, { params }) {
     const { id: noteId } = await params
 
     const reviews = await prisma.tutorReview.findMany({
+      relationLoadStrategy: 'join',
       where: { noteId },
       include: {
         reviewer: {
