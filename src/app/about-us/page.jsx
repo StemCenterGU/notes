@@ -1,92 +1,77 @@
-'use client'
+import Link from "next/link"
+import { Footer } from "@/components/footer"
 
+export const metadata = {
+  title: "About · Gannon Notes",
+}
+
+/**
+ * A short, plain About page.
+ *
+ * What was here before was a leftover placeholder: a maroon-to-gold gradient
+ * headed "What Our Users Say", carrying invented testimonials from invented
+ * students -- one of them a lorem-ipsum joke about burning your mouth. It was
+ * reachable by anyone and sat on a real university's site.
+ */
 export default function AboutUsPage() {
   return (
-    <section
-      id="testimonials"
-      className="py-16 px-5 bg-gradient-to-r from-[#6a1919] to-[#c99a00] shadow-lg"
-    >
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-white text-center mb-4">
-          What Our Users Say
-        </h2>
-        <p className="text-lg text-gray-200 text-center mb-10 max-w-2xl mx-auto">
-          Hear from students who have transformed their study experience with
-          GUNotes.
-        </p>
+    <div className="min-h-screen bg-background text-foreground">
+      <main className="px-6 py-20 lg:px-10 lg:py-28">
+        <div className="mx-auto w-full max-w-3xl">
+          <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            About
+          </p>
+          <h1 className="font-display mt-5 text-[34px] leading-[1.08] md:text-[44px]">
+            A note library run by the STEM Center.
+          </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Testimonial 1 */}
-          <div className="border-5 border-[#ff7e5f] rounded-lg transform transition-transform duration-300 hover:scale-105 animate-slideIn">
-            <div className="bg-white rounded-md shadow-xl p-8 text-center relative">
-              <span className="text-2xl font-extrabold text-black mb-4 block">
-                Saving notes is easy
-              </span>
-              <blockquote className="text-gray-700 italic mb-6">
-                "I expected it to taste bad, but it didn't. Burned my mouth
-                though."
-              </blockquote>
-              <h3 className="text-xl font-light text-gray-800">
-                Mina MacClellan
-              </h3>
-              <h4 className="text-base font-extralight text-gray-600 mb-6">
-                Massage Therapist
-              </h4>
-              <img
-                src="https://assets.codepen.io/5303666/1.jpg"
-                alt="Mina MacClellan"
-                className="w-20 h-20 rounded-full mx-auto -mt-8 shadow-lg"
-              />
-            </div>
+          <div className="mt-10 space-y-5 text-[15px] leading-relaxed text-muted-foreground">
+            <p>
+              Gannon Notes is where students in STEM courses put the notes they
+              take, so the people in the same class can find them. It is run by
+              the Gannon University STEM Center and staffed by the same tutors
+              who hold hours there.
+            </p>
+            <p>
+              The part that makes it worth using is the review. Anything
+              uploaded is read by a tutor before it becomes visible, and they
+              write back when something needs fixing — a page that did not scan,
+              a formula copied down wrong. Nothing reaches the rest of your
+              class unchecked.
+            </p>
+            <p>
+              Uploading during the semester also enters you in the raffle the
+              STEM Center runs each term.
+            </p>
           </div>
 
-          {/* Testimonial 2 */}
-          <div className="border-5 border-[#ff7e5f] rounded-lg transform transition-transform duration-300 hover:scale-105 animate-slideIn">
-            <div className="bg-white rounded-md shadow-xl p-8 text-center relative">
-              <span className="text-2xl font-extrabold text-black mb-4 block">
-                Good Management
-              </span>
-              <blockquote className="text-gray-700 italic mb-6">
-                "Pizza Box takes the guesswork out of a common dilemma by making
-                it easy."
-              </blockquote>
-              <h3 className="text-xl font-light text-gray-800">
-                Edgars Abrams
-              </h3>
-              <h4 className="text-base font-extralight text-gray-600 mb-6">
-                Accountant
-              </h4>
-              <img
-                src="https://assets.codepen.io/5303666/2.jpg"
-                alt="Edgars Abrams"
-                className="w-20 h-20 rounded-full mx-auto -mt-8 shadow-lg"
-              />
-            </div>
+          <div className="mt-12 border-t border-border pt-8">
+            <h2 className="text-[15px] font-medium text-foreground">Questions</h2>
+            <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
+              Come by the STEM Center, or read more about what it does on the{" "}
+              <a
+                href="https://www.gannon.edu/academics/centers-of-excellence/stem-center/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground underline underline-offset-4 hover:text-primary"
+              >
+                university site
+              </a>
+              .
+            </p>
           </div>
 
-          {/* Testimonial 3 */}
-          <div className="border-5 border-[#ff7e5f] rounded-lg transform transition-transform duration-300 hover:scale-105 animate-slideIn">
-            <div className="bg-white rounded-md shadow-xl p-8 text-center relative">
-              <span className="text-2xl font-extrabold text-black mb-4 block">
-                Accessibility of notes
-              </span>
-              <blockquote className="text-gray-700 italic mb-6">
-                "So if I sign this saying you can use my picture on the website,
-                I get $50?"
-              </blockquote>
-              <h3 className="text-xl font-light text-gray-800">Seth Hull</h3>
-              <h4 className="text-base font-extralight text-gray-600 mb-6">
-                Model Train Engineer
-              </h4>
-              <img
-                src="https://assets.codepen.io/5303666/3.jpg"
-                alt="Seth Hull"
-                className="w-20 h-20 rounded-full mx-auto -mt-8 shadow-lg"
-              />
-            </div>
+          <div className="mt-12">
+            <Link
+              href="/signup"
+              className="text-[15px] text-primary underline underline-offset-4"
+            >
+              Create an account →
+            </Link>
           </div>
         </div>
-      </div>
-    </section>
+      </main>
+      <Footer />
+    </div>
   )
 }
