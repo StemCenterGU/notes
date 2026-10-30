@@ -1,118 +1,60 @@
 /**
- * In-memory sliding window rate limiter.
- * No external dependencies - uses a Map keyed by IP address.
+ * Fixed-window rate limiter.
  *
- * Each entry stores an array of request timestamps within the current window.
- * Expired timestamps are pruned on every check, and a periodic cleanup job
- * removes keys that have had no activity for longer than the interval so the
- * Map does not grow unbounded.
+ * In-process, so the real budget is (limit x instance count). That is fine as
+ * a brute-force brake but is NOT a billing-grade quota — move this to Redis
+ * before running more than a couple of instances.
  */
+const windows = new Map()
 
-/**
- * Creates a rate limiter instance.
- *
- * @param {object} options
- * @param {number} options.interval - Window size in milliseconds.
- * @param {number} options.limit    - Maximum number of requests allowed per window.
- * @returns {{ check: (request: Request) => { success: boolean, remaining: number, reset: number } }}
- */
-export function rateLimit({ interval, limit }) {
-  // Map<ip, number[]> — stores timestamps of recent requests per IP
-  const store = new Map()
+export function rateLimit(key, { limit, windowMs }) {
+  const now = Date.now()
+  const entry = windows.get(key)
 
-  // Periodically remove IPs that have had no requests in the last interval.
-  // This prevents memory from growing if many unique IPs hit the server once.
-  const cleanupTimer = setInterval(() => {
-    const now = Date.now()
-    for (const [ip, timestamps] of store) {
-      const active = timestamps.filter((t) => now - t < interval)
-      if (active.length === 0) {
-        store.delete(ip)
-      } else {
-        store.set(ip, active)
-      }
+  if (!entry || entry.resetAt <= now) {
+    windows.set(key, { count: 1, resetAt: now + windowMs })
+    if (windows.size > 10_000) {
+      for (const [k, v] of windows) if (v.resetAt <= now) windows.delete(k)
     }
-  }, interval)
-
-  // In Next.js serverless/edge environments the process may not stay alive long
-  // enough to need cleanup, but we unref the timer when possible so it does not
-  // prevent Node.js from exiting in long-running development servers.
-  if (cleanupTimer.unref) {
-    cleanupTimer.unref()
+    return { allowed: true, remaining: limit - 1, retryAfterMs: 0 }
   }
 
-  /**
-   * Extracts the client IP from a Next.js request object.
-   * Falls back through common proxy headers before using a placeholder.
-   *
-   * @param {Request} request
-   * @returns {string}
-   */
-  function getIP(request) {
-    // Next.js 15 App Router exposes headers via request.headers
-    const forwarded = request.headers.get('x-forwarded-for')
-    if (forwarded) {
-      // x-forwarded-for may contain a comma-separated list; the first entry is
-      // the original client IP.
-      return forwarded.split(',')[0].trim()
-    }
-    return request.headers.get('x-real-ip') ?? 'unknown'
+  entry.count += 1
+  if (entry.count > limit) {
+    return { allowed: false, remaining: 0, retryAfterMs: entry.resetAt - now }
   }
-
-  /**
-   * Checks whether the caller identified by IP is within their rate limit.
-   *
-   * @param {Request} request - The incoming Next.js App Router request.
-   * @returns {{ success: boolean, remaining: number, reset: number }}
-   *   success   - true if the request is allowed, false if it is rate-limited.
-   *   remaining - number of requests the caller may still make in this window.
-   *   reset     - Unix timestamp (ms) when the oldest request in the window expires.
-   */
-  function check(request) {
-    const now = Date.now()
-    const ip = getIP(request)
-
-    const timestamps = store.get(ip) ?? []
-
-    // Drop timestamps that fall outside the sliding window
-    const windowStart = now - interval
-    const active = timestamps.filter((t) => t > windowStart)
-
-    if (active.length >= limit) {
-      // Caller has exhausted their quota; compute when the window next frees up.
-      const oldest = Math.min(...active)
-      const reset = oldest + interval
-
-      store.set(ip, active)
-      return { success: false, remaining: 0, reset }
-    }
-
-    // Request is within quota — record this timestamp
-    active.push(now)
-    store.set(ip, active)
-
-    const oldest = Math.min(...active)
-    const reset = oldest + interval
-
-    return {
-      success: true,
-      remaining: limit - active.length,
-      reset,
-    }
-  }
-
-  return { check }
+  return { allowed: true, remaining: limit - entry.count, retryAfterMs: 0 }
 }
 
-// ---------------------------------------------------------------------------
-// Pre-configured limiter instances
-// ---------------------------------------------------------------------------
+/** Best-effort client address behind a proxy/load balancer. */
+export function clientKey(req, prefix = '') {
+  const fwd = req.headers.get('x-forwarded-for') || ''
+  const ip = fwd.split(',')[0].trim() || req.headers.get('x-real-ip') || 'unknown'
+  return `${prefix}:${ip}`
+}
+/**
+ * Request-scoped limiter with a `.check(req)` interface.
+ *
+ * Write endpoints share this shape so a route only has to say which bucket it
+ * belongs to. Built on rateLimit() above, so there is one window store.
+ */
+function makeLimiter(name, { interval, limit }) {
+  return {
+    check(req) {
+      const { allowed, remaining, retryAfterMs } = rateLimit(clientKey(req, name), {
+        limit,
+        windowMs: interval,
+      })
+      return { success: allowed, remaining, reset: Date.now() + retryAfterMs }
+    },
+  }
+}
 
-/** For auth-related endpoints: 10 requests per minute. */
-export const authLimiter = rateLimit({ interval: 60_000, limit: 10 })
+/** Auth-related endpoints: 10 requests per minute per IP. */
+export const authLimiter = makeLimiter('auth', { interval: 60_000, limit: 10 })
 
-/** For write operations (POST/PUT/DELETE): 30 requests per minute. */
-export const writeLimiter = rateLimit({ interval: 60_000, limit: 30 })
+/** Write operations (POST/PUT/DELETE): 30 requests per minute per IP. */
+export const writeLimiter = makeLimiter('write', { interval: 60_000, limit: 30 })
 
-/** For read operations (GET): 60 requests per minute. */
-export const readLimiter = rateLimit({ interval: 60_000, limit: 60 })
+/** Read operations (GET): 60 requests per minute per IP. */
+export const readLimiter = makeLimiter('read', { interval: 60_000, limit: 60 })

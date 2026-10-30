@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import { randomUUID } from 'crypto'
 import prisma from '@/lib/prisma'
+import { getAuthedUser } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { writeLimiter } from '@/lib/rate-limit'
 
@@ -13,17 +13,11 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
   }
 
-  const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { authUser, dbUser } = await getAuthedUser()
 
-  if (error || !user) {
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { supabaseId: user.id },
-    select: { id: true },
-  })
 
   if (!dbUser) {
     return NextResponse.json({ error: 'User not found in database' }, { status: 404 })
@@ -42,24 +36,55 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  // Validate file type
-  const ALLOWED_TYPES = [
-    'application/pdf',
-    'image/jpeg',
-    'image/png',
-    'image/gif',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  ]
-  const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'doc', 'docx', 'ppt', 'pptx']
+  // Validate file type.
+  //
+  // Extension is the source of truth and the MIME type is only cross-checked,
+  // because browsers disagree about MIME for Office files (.xlsx arrives as
+  // application/octet-stream or an empty string from some clients) and a
+  // strict MIME check silently rejected valid uploads.
+  //
+  // Spreadsheets and plain text are allowed because the viewer already renders
+  // them; they were missing from this list, so students could not upload the
+  // one format a lab or problem set most often comes in.
+  const ALLOWED_EXTENSIONS = {
+    pdf: ['application/pdf'],
+    jpg: ['image/jpeg'],
+    jpeg: ['image/jpeg'],
+    png: ['image/png'],
+    gif: ['image/gif'],
+    webp: ['image/webp'],
+    doc: ['application/msword'],
+    docx: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    xls: ['application/vnd.ms-excel'],
+    xlsx: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+    csv: ['text/csv', 'application/csv'],
+    txt: ['text/plain'],
+    ppt: ['application/vnd.ms-powerpoint'],
+    pptx: ['application/vnd.openxmlformats-officedocument.presentationml.presentation'],
+  }
+  const GENERIC_TYPES = ['', 'application/octet-stream', 'binary/octet-stream']
 
   const fileExt = file.name.split('.').pop()?.toLowerCase()
+  const expectedTypes = ALLOWED_EXTENSIONS[fileExt]
 
-  if (!ALLOWED_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(fileExt)) {
-    return NextResponse.json({ error: 'Invalid file type. Allowed: PDF, images, Word, PowerPoint' }, { status: 400 })
+  if (!expectedTypes) {
+    return NextResponse.json({
+      error: `Unsupported file type ".${fileExt ?? ''}". Allowed: PDF, Word, Excel, PowerPoint, images, CSV and text.`,
+    }, { status: 400 })
   }
+
+  // A declared MIME type that contradicts the extension is a mismatch worth
+  // rejecting; a generic or absent one just means the browser did not know.
+  const declaredType = (file.type || '').toLowerCase()
+  if (!GENERIC_TYPES.includes(declaredType) && !expectedTypes.includes(declaredType)) {
+    return NextResponse.json({
+      error: `This file says it is ${declaredType} but is named ".${fileExt}". Re-save it and try again.`,
+    }, { status: 400 })
+  }
+
+  // Normalise what we store so the viewer gets a type it recognises, whatever
+  // the browser claimed.
+  const contentType = expectedTypes[0]
 
   // Validate file size (max 10MB)
   const MAX_SIZE = 10 * 1024 * 1024
@@ -75,7 +100,7 @@ export async function POST(req) {
     .upload(filePath, file, {
       cacheControl: '3600',
       upsert: false,
-      contentType: file.type,
+      contentType,
     })
 
   if (uploadError) {
